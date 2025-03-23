@@ -154,7 +154,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
     const fontSize = config?.fontSize || '12px';
     
     return `
-      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: A4_HEIGHT_PX; color: #333; position: relative;">
+      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; position: relative;">
         <!-- Two-column layout with fixed heights -->
         <div style="display: flex; min-height: 1123px;">
           <!-- Left Sidebar - must extend to the full height -->
@@ -210,7 +210,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
             <!-- Recipient -->
             <div style="margin-bottom: 20px;">
               ${data.recipientName ? `<p style="margin: 0 0 3px;">${data.recipientName}</p>` : ''}
-              ${data.recipientCompany ? `<p style="margin: 0 0 3px;">${data.recipientCompany</p>` : ''}
+              ${data.recipientCompany ? `<p style="margin: 0 0 3px;">${data.recipientCompany}</p>` : ''}
               ${data.recipientAddress ? `<p style="margin: 0 0 3px;">${data.recipientAddress}</p>` : ''}
             </div>
             
