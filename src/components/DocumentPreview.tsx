@@ -7,6 +7,7 @@ import { DocumentTemplate } from '@/lib/templates';
 import { generatePdfFromHtml, estimatePageCount } from '@/lib/utils/pdf-generator';
 import { toast } from '@/components/ui/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Pagination, 
   PaginationContent, 
@@ -38,6 +39,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [previewLoaded, setPreviewLoaded] = useState(false);
+  const [scale, setScale] = useState(1);
   
   const htmlContent = template.template(formData, config);
   
@@ -53,6 +55,19 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         console.log(`Estimated page count: ${count}, content height: ${actualRef.current.scrollHeight}px`);
         setPageCount(Math.max(1, count));
         setPreviewLoaded(true);
+        
+        // Calculate scale to fit the preview container if needed
+        const previewContainer = actualRef.current.parentElement;
+        if (previewContainer && count === 1) {
+          const containerHeight = previewContainer.clientHeight;
+          const contentHeight = actualRef.current.scrollHeight;
+          if (contentHeight > containerHeight) {
+            const newScale = Math.min(0.95, containerHeight / contentHeight);
+            setScale(newScale);
+          } else {
+            setScale(1);
+          }
+        }
       }
     }, 500);
     
@@ -244,19 +259,27 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         
         <div className="bg-white rounded-md border overflow-hidden shadow-sm">
           <div className="relative">
-            <div 
-              ref={actualRef}
-              className="w-full h-[800px] overflow-auto"
-              style={{ 
-                padding: 0,
-                scrollbarGutter: 'stable',
-                scrollbarWidth: 'thin'
-              }}
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
-            />
-            
-            {/* Page break indicators */}
-            {previewLoaded && renderPageBreaks()}
+            <ScrollArea 
+              className="w-full h-[800px]"
+              scrollHideDelay={0}
+            >
+              <div 
+                ref={actualRef}
+                className="a4-preview w-[21cm]"
+                style={{ 
+                  padding: 0,
+                  transform: `scale(${scale})`,
+                  transformOrigin: 'top center',
+                  margin: '0 auto',
+                  maxWidth: '100%',
+                  backgroundColor: '#fff'
+                }}
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
+              />
+              
+              {/* Page break indicators */}
+              {previewLoaded && renderPageBreaks()}
+            </ScrollArea>
             
             {/* Page navigation overlay */}
             {pageCount > 1 && (
