@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { DocumentTemplate } from '@/lib/templates';
-import { ArrowLeft, FileDown, ArrowRight, Upload } from 'lucide-react';
+import { ArrowLeft, FileDown, ArrowRight, Upload, Plus } from 'lucide-react';
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -31,6 +32,10 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setFormData(prev => ({ ...prev, [id]: value }));
   };
   
+  const handleCheckboxChange = (id: string, checked: boolean) => {
+    setFormData(prev => ({ ...prev, [id]: checked ? 'true' : 'false' }));
+  };
+  
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -52,6 +57,52 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     'tresc_listu': 'Treść listu',
     'klauzula': 'Klauzula',
     'konfiguracja': 'Konfiguracja',
+    'podsumowanie': 'Podsumowanie',
+    'doswiadczenie': 'Doświadczenie zawodowe',
+    'wyksztalcenie': 'Wykształcenie',
+    'umiejetnosci': 'Umiejętności',
+    'dodatkowe': 'Dodatkowe informacje'
+  };
+  
+  // Funkcja do renderowania przycisków akcji dla sekcji
+  const renderAddButton = () => {
+    if (currentSection === 'doswiadczenie') {
+      return (
+        <Button 
+          variant="add-button" 
+          className="mt-4"
+          onClick={() => console.log('Dodaj doświadczenie zawodowe')}
+        >
+          <Plus className="h-4 w-4 mr-1" /> Dodaj doświadczenie zawodowe
+        </Button>
+      );
+    }
+    
+    if (currentSection === 'wyksztalcenie') {
+      return (
+        <Button 
+          variant="add-button" 
+          className="mt-4"
+          onClick={() => console.log('Dodaj wykształcenie')}
+        >
+          <Plus className="h-4 w-4 mr-1" /> Dodaj wykształcenie
+        </Button>
+      );
+    }
+    
+    if (currentSection === 'umiejetnosci') {
+      return (
+        <Button 
+          variant="add-button" 
+          className="mt-4"
+          onClick={() => console.log('Dodaj umiejętność')}
+        >
+          <Plus className="h-4 w-4 mr-1" /> Dodaj umiejętność
+        </Button>
+      );
+    }
+    
+    return null;
   };
 
   return (
@@ -62,7 +113,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             <ArrowLeft className="h-4 w-4" />
             <span>Wróć</span>
           </Button>
-          <Button size="sm" onClick={onExport} className="flex items-center gap-1">
+          <Button variant="blue" size="sm" onClick={onExport} className="flex items-center gap-1">
             <FileDown className="h-4 w-4" />
             <span>Eksportuj PDF</span>
           </Button>
@@ -74,6 +125,11 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
           {currentSection === 'tresc_listu' && 'Napisz treść swojego listu motywacyjnego'}
           {currentSection === 'klauzula' && 'Dodaj klauzulę o przetwarzaniu danych osobowych'}
           {currentSection === 'konfiguracja' && 'Dostosuj wygląd dokumentu'}
+          {currentSection === 'podsumowanie' && 'Przedstaw krótki opis swoich umiejętności, osiągnięć i doświadczenia'}
+          {currentSection === 'doswiadczenie' && 'Dodaj informacje o swoim doświadczeniu zawodowym'}
+          {currentSection === 'wyksztalcenie' && 'Dodaj informacje o swoim wykształceniu'}
+          {currentSection === 'umiejetnosci' && 'Dodaj swoje umiejętności i określ ich poziom'}
+          {currentSection === 'dodatkowe' && 'Dodaj informacje o językach i zainteresowaniach'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -110,59 +166,83 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             </div>
           )}
 
-          {sectionFields.filter(field => field.type !== 'photo').map((field) => (
-            <div key={field.id} className="space-y-2">
-              <Label htmlFor={field.id}>
-                {field.label}
-                {field.required && <span className="text-destructive ml-1">*</span>}
-              </Label>
-              {field.type === 'textarea' ? (
-                <Textarea
-                  id={field.id}
-                  placeholder={field.placeholder}
-                  value={formData[field.id] || field.defaultValue || ''}
-                  onChange={(e) => handleChange(field.id, e.target.value)}
-                  required={field.required}
-                  className="min-h-[120px]"
-                />
-              ) : field.type === 'date' ? (
-                <Input
-                  id={field.id}
-                  type="date"
-                  value={formData[field.id] || field.defaultValue || ''}
-                  onChange={(e) => handleChange(field.id, e.target.value)}
-                  required={field.required}
-                />
-              ) : field.type === 'email' ? (
-                <Input
-                  id={field.id}
-                  type="email"
-                  placeholder={field.placeholder}
-                  value={formData[field.id] || field.defaultValue || ''}
-                  onChange={(e) => handleChange(field.id, e.target.value)}
-                  required={field.required}
-                />
-              ) : field.type === 'tel' ? (
-                <Input
-                  id={field.id}
-                  type="tel"
-                  placeholder={field.placeholder}
-                  value={formData[field.id] || field.defaultValue || ''}
-                  onChange={(e) => handleChange(field.id, e.target.value)}
-                  required={field.required}
-                />
-              ) : (
-                <Input
-                  id={field.id}
-                  type="text"
-                  placeholder={field.placeholder}
-                  value={formData[field.id] || field.defaultValue || ''}
-                  onChange={(e) => handleChange(field.id, e.target.value)}
-                  required={field.required}
-                />
-              )}
-            </div>
-          ))}
+          {sectionFields
+            .filter(field => field.type !== 'photo')
+            .map((field) => (
+              <div key={field.id} className="space-y-2">
+                {field.type === 'checkbox' ? (
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id={field.id}
+                      checked={formData[field.id] === 'true'}
+                      onCheckedChange={(checked) => 
+                        handleCheckboxChange(field.id, checked as boolean)
+                      }
+                    />
+                    <Label 
+                      htmlFor={field.id}
+                      className="text-sm font-medium cursor-pointer"
+                    >
+                      {field.label}
+                    </Label>
+                  </div>
+                ) : (
+                  <>
+                    <Label htmlFor={field.id}>
+                      {field.label}
+                      {field.required && <span className="text-destructive ml-1">*</span>}
+                    </Label>
+                    {field.type === 'textarea' ? (
+                      <Textarea
+                        id={field.id}
+                        placeholder={field.placeholder}
+                        value={formData[field.id] || field.defaultValue || ''}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        required={field.required}
+                        className="min-h-[120px]"
+                      />
+                    ) : field.type === 'date' ? (
+                      <Input
+                        id={field.id}
+                        type="date"
+                        value={formData[field.id] || field.defaultValue || ''}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        required={field.required}
+                      />
+                    ) : field.type === 'email' ? (
+                      <Input
+                        id={field.id}
+                        type="email"
+                        placeholder={field.placeholder}
+                        value={formData[field.id] || field.defaultValue || ''}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        required={field.required}
+                      />
+                    ) : field.type === 'tel' ? (
+                      <Input
+                        id={field.id}
+                        type="tel"
+                        placeholder={field.placeholder}
+                        value={formData[field.id] || field.defaultValue || ''}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        required={field.required}
+                      />
+                    ) : (
+                      <Input
+                        id={field.id}
+                        type="text"
+                        placeholder={field.placeholder}
+                        value={formData[field.id] || field.defaultValue || ''}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        required={field.required}
+                      />
+                    )}
+                  </>
+                )}
+              </div>
+            ))}
+            
+          {renderAddButton()}
         </div>
       </CardContent>
       <CardFooter className="flex justify-between pt-4">
@@ -171,12 +251,12 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
           Wróć
         </Button>
         {onNext ? (
-          <Button onClick={onNext} className="flex items-center gap-1">
+          <Button variant="blue" onClick={onNext} className="flex items-center gap-1">
             Dalej
             <ArrowRight className="h-4 w-4" />
           </Button>
         ) : (
-          <Button onClick={onExport} className="flex items-center gap-1">
+          <Button variant="blue" onClick={onExport} className="flex items-center gap-1">
             <FileDown className="h-4 w-4" />
             Eksportuj PDF
           </Button>

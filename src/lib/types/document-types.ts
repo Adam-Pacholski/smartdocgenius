@@ -3,7 +3,7 @@ export interface TemplateField {
   id: string;
   label: string;
   placeholder: string;
-  type: 'text' | 'textarea' | 'date' | 'email' | 'tel' | 'photo';
+  type: 'text' | 'textarea' | 'date' | 'email' | 'tel' | 'photo' | 'checkbox';
   required?: boolean;
   section: string;
   defaultValue?: string;
