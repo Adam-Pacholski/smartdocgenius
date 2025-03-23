@@ -40,7 +40,26 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const [previewLoaded, setPreviewLoaded] = useState(false);
   const [scale, setScale] = useState(0.85);
 
-  const htmlContent = template.template(formData, config);
+  const sanitizeFormData = () => {
+    const sanitized = { ...formData };
+    
+    Object.keys(sanitized).forEach(key => {
+      if (typeof sanitized[key] === 'string' && 
+          (sanitized[key].startsWith('[{') || sanitized[key].startsWith('{"'))) {
+        try {
+          const parsed = JSON.parse(sanitized[key]);
+          sanitized[key] = JSON.stringify(parsed);
+        } catch (e) {
+          console.error(`Failed to parse JSON for ${key}:`, e);
+        }
+      }
+    });
+    
+    return sanitized;
+  };
+
+  const sanitizedFormData = sanitizeFormData();
+  const htmlContent = template.template(sanitizedFormData, config);
   
   useEffect(() => {
     setCurrentPage(1);
@@ -255,14 +274,15 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             <div className="flex justify-center py-4 px-2">
               <div 
                 ref={actualRef}
-                className="a4-preview mx-auto"
+                className="a4-preview"
                 style={{ 
                   padding: 0,
                   width: '21cm',
                   transform: `scale(${scale})`,
                   transformOrigin: 'top center',
                   backgroundColor: '#fff',
-                  maxWidth: '100%'
+                  maxWidth: '100%',
+                  margin: '0 auto'
                 }}
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
               />
