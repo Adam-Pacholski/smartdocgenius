@@ -1,7 +1,11 @@
 
 import React, { useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { FileDown } from 'lucide-react';
 import { DocumentTemplate } from '@/lib/templates';
+import { generatePdfFromHtml } from '@/lib/utils/pdf-generator';
+import { toast } from '@/components/ui/use-toast';
 
 interface DocumentPreviewProps {
   template: DocumentTemplate;
@@ -13,6 +17,26 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ template, formData, c
   const previewRef = useRef<HTMLDivElement>(null);
   
   const htmlContent = template.template(formData, config);
+  
+  const handleExportPdf = async () => {
+    if (previewRef.current) {
+      const fileName = `${formData.firstName || 'dokument'}_${formData.lastName || ''}_${new Date().toISOString().slice(0, 10)}.pdf`;
+      
+      try {
+        await generatePdfFromHtml(previewRef.current, fileName);
+        toast({
+          title: "Eksport PDF",
+          description: "Dokument został wygenerowany i pobrany.",
+        });
+      } catch (error) {
+        toast({
+          title: "Błąd eksportu",
+          description: "Nie udało się wygenerować dokumentu PDF.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
   
   return (
     <Card className="shadow-subtle h-full">
@@ -28,6 +52,16 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ template, formData, c
           />
         </div>
       </CardContent>
+      <CardFooter>
+        <Button 
+          onClick={handleExportPdf} 
+          variant="outline" 
+          className="ml-auto flex items-center gap-1"
+        >
+          <FileDown className="h-4 w-4" />
+          Eksportuj PDF
+        </Button>
+      </CardFooter>
     </Card>
   );
 };

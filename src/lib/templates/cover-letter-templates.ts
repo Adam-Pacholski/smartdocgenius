@@ -35,13 +35,13 @@ export const blueHeaderTemplate: DocumentTemplate = {
           </div>
           ${data.photo ? `
             <div style="width: 120px; height: 150px; overflow: hidden;">
-              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" alt="${fullName}" />
+              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullName}" />
             </div>
           ` : ''}
         </div>
         
         <!-- Document Body -->
-        <div style="padding: 20px; background-color: #f9f9f9;">
+        <div style="padding: 20px; background-color: #f9f9f9; position: relative; min-height: 800px;">
           <!-- Date -->
           <p style="margin-bottom: 15px;">${date}</p>
           
@@ -65,7 +65,7 @@ export const blueHeaderTemplate: DocumentTemplate = {
           <p style="margin-top: 5px; font-weight: bold;">${fullName}</p>
           
           <!-- Clause -->
-          <p style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 40px; left: 40px; right: 40px;">
+          <p style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 20px; right: 20px;">
             ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
           </p>
         </div>
@@ -102,13 +102,13 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
           
           ${data.photo ? `
             <div style="width: 150px; height: 170px; border: 1px solid #ddd; overflow: hidden;">
-              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" alt="${fullName}" />
+              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullName}" />
             </div>
           ` : ''}
         </div>
         
         <!-- Main content -->
-        <div style="padding: 0 20px 20px 20px; position: relative; min-height: 600px;">
+        <div style="padding: 0 20px 20px 20px; position: relative; min-height: 800px;">
           <!-- Recipient -->
           <div style="margin-bottom: 20px;">
             ${data.recipientName ? `<p style="margin: 0 0 3px;">${data.recipientName}</p>` : ''}
@@ -157,10 +157,10 @@ export const tealSidebarTemplate: DocumentTemplate = {
     return `
       <div style="max-width: 21cm; margin: 0 auto; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; display: flex; min-height: 100vh;">
         <!-- Left Sidebar - full height, wider -->
-        <div style="width: 35%; background-color: ${primaryColor}; color: white; padding: 25px; box-sizing: border-box;">
+        <div style="width: 35%; background-color: ${primaryColor}; color: white; padding: 25px; box-sizing: border-box; min-height: 100vh;">
           ${data.photo ? `
             <div style="width: 130px; height: 160px; overflow: hidden; margin: 0 auto 20px; display: block; text-align: center;">
-              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" alt="${fullName}" />
+              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullName}" />
             </div>
           ` : ''}
           
@@ -168,28 +168,28 @@ export const tealSidebarTemplate: DocumentTemplate = {
           
           <div style="margin-bottom: 30px; font-size: 13px;">
             ${data.email ? `
-              <p style="margin: 0 0 10px;">
+              <p style="margin: 0 0 10px; word-break: break-word;">
                 <strong>Email:</strong><br/>
                 ${data.email}
               </p>
             ` : ''}
             
             ${data.phone ? `
-              <p style="margin: 0 0 10px;">
+              <p style="margin: 0 0 10px; word-break: break-word;">
                 <strong>Telefon:</strong><br/>
                 ${data.phone}
               </p>
             ` : ''}
             
             ${data.birthDate ? `
-              <p style="margin: 0 0 10px;">
+              <p style="margin: 0 0 10px; word-break: break-word;">
                 <strong>Data urodzenia:</strong><br/>
                 ${data.birthDate}
               </p>
             ` : ''}
             
             ${data.address ? `
-              <p style="margin: 0 0 10px;">
+              <p style="margin: 0 0 10px; word-break: break-word;">
                 <strong>Adres:</strong><br/>
                 ${data.address}
               </p>
@@ -262,17 +262,17 @@ export const minimalistIconsTemplate: DocumentTemplate = {
           
           ${data.photo ? `
             <div style="width: 120px; height: 150px; overflow: hidden;">
-              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" alt="${fullName}" />
+              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullName}" />
             </div>
           ` : ''}
         </div>
         
         <!-- Contact Info Icons -->
-        <div style="display: flex; justify-content: flex-end; margin: 15px 0; color: #666; font-size: 13px;">
-          ${data.email ? `<span style="margin-left: 15px;"><span style="color: ${primaryColor}; font-size: 16px;">✉</span> ${data.email}</span>` : ''}
-          ${data.phone ? `<span style="margin-left: 15px;"><span style="color: ${primaryColor}; font-size: 16px;">✆</span> ${data.phone}</span>` : ''}
-          ${data.birthDate ? `<span style="margin-left: 15px;"><span style="color: ${primaryColor}; font-size: 16px;">📅</span> ${data.birthDate}</span>` : ''}
-          ${data.address ? `<span style="margin-left: 15px;"><span style="color: ${primaryColor}; font-size: 16px;">📍</span> ${data.address}</span>` : ''}
+        <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; margin: 15px 0; color: #666; font-size: 13px;">
+          ${data.email ? `<span style="margin-left: 15px; margin-bottom: 5px;"><span style="color: ${primaryColor}; font-size: 16px;">✉</span> ${data.email}</span>` : ''}
+          ${data.phone ? `<span style="margin-left: 15px; margin-bottom: 5px;"><span style="color: ${primaryColor}; font-size: 16px;">✆</span> ${data.phone}</span>` : ''}
+          ${data.birthDate ? `<span style="margin-left: 15px; margin-bottom: 5px;"><span style="color: ${primaryColor}; font-size: 16px;">📅</span> ${data.birthDate}</span>` : ''}
+          ${data.address ? `<span style="margin-left: 15px; margin-bottom: 5px;"><span style="color: ${primaryColor}; font-size: 16px;">📍</span> ${data.address}</span>` : ''}
         </div>
         
         <!-- Date -->

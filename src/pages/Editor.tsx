@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
@@ -10,6 +9,7 @@ import TemplateConfiguration from '@/components/TemplateConfiguration';
 import documentTypes, { DocumentTemplate } from '@/lib/templates';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { SECTIONS } from '@/lib/types/document-types';
+import { sampleCoverLetterData } from '@/lib/utils/sample-data';
 
 enum EditorStep {
   SelectType,
@@ -30,7 +30,7 @@ const Editor: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<EditorStep>(EditorStep.SelectType);
   const [selectedTypeId, setSelectedTypeId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
-  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState<Record<string, string>>(sampleCoverLetterData);
   const [config, setConfig] = useState<Record<string, any>>({
     documentName: 'List motywacyjny',
     primaryColor: '#3498db',
@@ -47,14 +47,14 @@ const Editor: React.FC = () => {
   const handleSelectTemplate = (template: DocumentTemplate) => {
     setSelectedTemplate(template);
     
-    // Initialize form data with empty values for all fields
-    const initialData: Record<string, string> = {};
+    const initialData: Record<string, string> = { ...sampleCoverLetterData };
     template.fields.forEach(field => {
-      initialData[field.id] = '';
+      if (!initialData[field.id]) {
+        initialData[field.id] = field.defaultValue || '';
+      }
     });
     setFormData(initialData);
     
-    // Reset to first section
     setCurrentSectionIndex(0);
     setCurrentStep(EditorStep.EditDocument);
   };
@@ -81,8 +81,7 @@ const Editor: React.FC = () => {
     }
   };
 
-  const handleExport = () => {
-    // Check if required fields are filled
+  const handleExport = async () => {
     let missingFields: string[] = [];
     
     if (selectedTemplate) {
@@ -104,7 +103,6 @@ const Editor: React.FC = () => {
       return;
     }
     
-    // In a real application, this would generate and download a PDF
     toast({
       title: "Eksport PDF",
       description: "Dokument został wygenerowany i pobrany.",
@@ -113,7 +111,6 @@ const Editor: React.FC = () => {
 
   const currentSection = SECTION_ORDER[currentSectionIndex];
 
-  // Mapowanie sekcji na tytuły
   const sectionTitles: Record<string, string> = {
     'dane_osobowe': 'Dane osobowe',
     'odbiorca': 'Odbiorca',
