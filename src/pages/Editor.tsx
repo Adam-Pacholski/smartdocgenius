@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
@@ -99,6 +98,7 @@ const Editor: React.FC = () => {
           description: "Dokument został wygenerowany i pobrany.",
         });
       } catch (error) {
+        console.error("PDF export error:", error);
         toast({
           title: "Błąd eksportu",
           description: "Nie udało się wygenerować dokumentu PDF.",

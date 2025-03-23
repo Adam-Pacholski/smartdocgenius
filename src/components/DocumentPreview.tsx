@@ -2,11 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileDown, ArrowLeft } from 'lucide-react';
+import { FileDown, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { DocumentTemplate } from '@/lib/templates';
 import { generatePdfFromHtml, estimatePageCount } from '@/lib/utils/pdf-generator';
 import { toast } from '@/components/ui/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationEllipsis, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from '@/components/ui/pagination';
 
 interface DocumentPreviewProps {
   template: DocumentTemplate;
@@ -26,33 +35,21 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const internalRef = React.useRef<HTMLDivElement>(null);
   const actualRef = previewRef || internalRef;
   const [pageCount, setPageCount] = useState(1);
-  const [pageBreaks, setPageBreaks] = useState<number[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   
   const htmlContent = template.template(formData, config);
   
   useEffect(() => {
+    // Reset to page 1 when content changes
+    setCurrentPage(1);
+    
     // Check page count after the content renders
     const timer = setTimeout(() => {
       if (actualRef.current) {
         const count = estimatePageCount(actualRef.current);
         setPageCount(count);
-        
-        // Calculate page break positions for visualization
-        if (count > 1) {
-          const computedStyle = window.getComputedStyle(actualRef.current);
-          const elementHeight = parseInt(computedStyle.height);
-          const pageHeight = elementHeight / count;
-          
-          const breaks = [];
-          for (let i = 1; i < count; i++) {
-            breaks.push(pageHeight * i);
-          }
-          setPageBreaks(breaks);
-        } else {
-          setPageBreaks([]);
-        }
       }
     }, 500);
     
@@ -95,6 +92,53 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     }
   };
   
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= pageCount) {
+      setCurrentPage(page);
+    }
+  };
+  
+  // Calculate preview scroll position based on current page
+  const previewScrollPosition = (currentPage - 1) * 1000; // 1000px per page estimate
+  
+  const renderPagination = () => {
+    if (pageCount <= 1) return null;
+    
+    return (
+      <Pagination className="mt-4">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious 
+              onClick={() => handlePageChange(currentPage - 1)}
+              className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+            />
+          </PaginationItem>
+          
+          {Array.from({ length: pageCount }).map((_, index) => {
+            const pageNumber = index + 1;
+            return (
+              <PaginationItem key={pageNumber}>
+                <PaginationLink 
+                  onClick={() => handlePageChange(pageNumber)}
+                  isActive={currentPage === pageNumber}
+                >
+                  {pageNumber}
+                </PaginationLink>
+              </PaginationItem>
+            );
+          })}
+          
+          <PaginationItem>
+            <PaginationNext 
+              onClick={() => handlePageChange(currentPage + 1)}
+              className={currentPage === pageCount ? 'pointer-events-none opacity-50' : ''}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    );
+  };
+  
   return (
     <Card className="shadow-subtle h-full">
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
@@ -111,6 +155,11 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             </Button>
           )}
           <CardTitle className="text-lg">Podgląd</CardTitle>
+          {pageCount > 1 && (
+            <span className="text-sm text-muted-foreground ml-2">
+              Strona {currentPage} z {pageCount}
+            </span>
+          )}
         </div>
         <Button 
           onClick={handleExportPdf} 
@@ -126,7 +175,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         {pageCount > 1 && (
           <Alert className="mb-4">
             <AlertDescription>
-              Dokument zajmie {pageCount} strony. Dostosuj treść, aby zmieścić się na jednej stronie lub upewnij się, że podział na strony jest prawidłowy.
+              Dokument zajmie {pageCount} strony. Przy eksporcie do PDF zawartość zostanie automatycznie podzielona na strony.
             </AlertDescription>
           </Alert>
         )}
@@ -144,17 +193,45 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             <div 
               ref={actualRef}
               className="w-full h-[800px] overflow-auto"
-              style={{ padding: 0 }}
+              style={{ 
+                padding: 0,
+                scrollbarGutter: 'stable',
+                scrollbarWidth: 'thin'
+              }}
               dangerouslySetInnerHTML={{ __html: htmlContent }}
             />
             
+            {pageCount > 1 && (
+              <div className="absolute top-2 right-2 bg-white shadow-md rounded-md px-2 py-1 text-sm flex items-center">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8"
+                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span>{currentPage} / {pageCount}</span>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8"
+                  disabled={currentPage === pageCount}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+            
             {/* Visual page break indicators */}
-            {pageBreaks.map((breakPoint, index) => (
+            {pageCount > 1 && Array.from({ length: pageCount - 1 }).map((_, index) => (
               <div 
                 key={index}
                 className="absolute left-0 right-0 border-b-2 border-red-400 border-dashed pointer-events-none"
                 style={{ 
-                  top: `${breakPoint}px`,
+                  top: `${(index + 1) * 1000}px`,
                   zIndex: 10
                 }}
               >
@@ -165,6 +242,8 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             ))}
           </div>
         </div>
+        
+        {renderPagination()}
       </CardContent>
     </Card>
   );
