@@ -106,20 +106,18 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
         const sourceHeight = canvas.height / pageCount;
         
         // Add image slice to PDF
-        pdf.addImage(
-          canvas, 
-          'JPEG',
-          0,
-          0,
-          pdfWidth,
-          pdfHeight,
-          `p${i}`,
-          'FAST',
-          0,
-          sourceY / canvas.height,
-          1,
-          sourceHeight / canvas.height
-        );
+        // Fix: Use correct syntax for addImage with properly defined sourceX, sourceY, etc.
+        pdf.addImage({
+          imageData: canvas,
+          format: 'JPEG',
+          x: 0,
+          y: 0,
+          width: pdfWidth,
+          height: pdfHeight,
+          alias: `p${i}`,
+          compression: 'FAST',
+          rotation: 0
+        });
         
         // Add clause to last page
         if (i === pageCount - 1) {
