@@ -1,4 +1,3 @@
-
 import { DocumentTemplate } from '../types/document-types';
 import { allCoverLetterFields } from '../form-fields/cover-letter-fields';
 import { currentDate } from '../utils/document-utils';
@@ -155,9 +154,9 @@ export const tealSidebarTemplate: DocumentTemplate = {
     const fontSize = config?.fontSize || '12px';
     
     return `
-      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; display: flex; min-height: 100vh;">
+      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; display: flex; height: 29.7cm; box-sizing: border-box;">
         <!-- Left Sidebar -->
-        <div style="width: 35%; background-color: ${primaryColor}; color: white; padding: 25px 16px; box-sizing: border-box; min-height: 100%; margin: 0;">
+        <div style="width: 35%; background-color: ${primaryColor}; color: white; padding: 25px 16px; box-sizing: border-box; height: 100%; margin: 0;">
           ${data.photo ? `
             <div style="width: 130px; height: 160px; overflow: hidden; margin: 0 auto 20px; display: block; text-align: center;">
               <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullName}" />
@@ -198,7 +197,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
         </div>
         
         <!-- Main Content -->
-        <div style="width: 65%; padding: 25px 25px 80px 25px; box-sizing: border-box; background-color: white; position: relative; min-height: 100%;">
+        <div style="width: 65%; padding: 25px 25px 100px 25px; box-sizing: border-box; background-color: white; position: relative; height: 100%;">
           <!-- Header -->
           <div style="margin-bottom: 30px;">
             <h1 style="margin: 0; color: ${primaryColor}; font-size: 26px;">${fullName}</h1>
@@ -226,9 +225,11 @@ export const tealSidebarTemplate: DocumentTemplate = {
           <p style="margin-top: 5px;">${data.firstName} ${data.lastName}</p>
           
           <!-- Clause -->
-          <p data-clause style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 25px; right: 25px; text-align: justify;">
-            ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
-          </p>
+          <div style="position: absolute; bottom: 20px; left: 25px; right: 25px; text-align: justify;">
+            <p data-clause style="margin: 0; font-size: 10px; color: #666;">
+              ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
+            </p>
+          </div>
         </div>
       </div>
     `;
