@@ -8,6 +8,7 @@ import DocumentEditor from '@/components/DocumentEditor';
 import DocumentPreview from '@/components/DocumentPreview';
 import TemplateConfiguration from '@/components/TemplateConfiguration';
 import documentTypes, { DocumentTemplate } from '@/lib/templates';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 enum EditorStep {
   SelectType,
@@ -78,6 +79,10 @@ const Editor: React.FC = () => {
     }
   };
 
+  const handleSectionChange = (sectionIndex: number) => {
+    setCurrentSectionIndex(sectionIndex);
+  };
+
   const handleNext = () => {
     if (currentSectionIndex < SECTION_ORDER.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
@@ -116,6 +121,15 @@ const Editor: React.FC = () => {
 
   const currentSection = SECTION_ORDER[currentSectionIndex];
 
+  // Mapowanie sekcji na tytuły
+  const sectionTitles: Record<string, string> = {
+    'dane_osobowe': 'Dane osobowe',
+    'odbiorca': 'Odbiorca',
+    'tresc_listu': 'Treść listu',
+    'klauzula': 'Klauzula',
+    'konfiguracja': 'Konfiguracja',
+  };
+
   return (
     <Layout className="pb-12">
       <div className="space-y-6">
@@ -151,23 +165,53 @@ const Editor: React.FC = () => {
           {currentStep === EditorStep.EditDocument && selectedTemplate && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
               <div>
-                {currentSection === SECTIONS.CONFIG ? (
-                  <TemplateConfiguration 
-                    config={config}
-                    setConfig={setConfig}
-                    onBack={handleBack}
-                    onNext={handleNext}
-                  />
-                ) : (
-                  <DocumentEditor
-                    template={selectedTemplate}
-                    formData={formData}
-                    setFormData={setFormData}
-                    onBack={handleBack}
-                    onExport={handleExport}
-                    onNext={currentSectionIndex < SECTION_ORDER.length - 1 ? handleNext : undefined}
-                    currentSection={currentSection}
-                  />
+                {currentStep === EditorStep.EditDocument && (
+                  <Tabs 
+                    defaultValue={SECTION_ORDER[currentSectionIndex]} 
+                    value={currentSection}
+                    onValueChange={(value) => {
+                      const newIndex = SECTION_ORDER.findIndex(section => section === value);
+                      if (newIndex !== -1) {
+                        setCurrentSectionIndex(newIndex);
+                      }
+                    }}
+                    className="mb-4"
+                  >
+                    <TabsList className="grid grid-cols-5 w-full">
+                      {SECTION_ORDER.map((section, index) => (
+                        <TabsTrigger 
+                          key={section}
+                          value={section} 
+                          className="text-xs sm:text-sm"
+                        >
+                          {sectionTitles[section]}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                    
+                    {SECTION_ORDER.map((section) => (
+                      <TabsContent key={section} value={section}>
+                        {section === SECTIONS.CONFIG ? (
+                          <TemplateConfiguration 
+                            config={config}
+                            setConfig={setConfig}
+                            onBack={handleBack}
+                            onNext={handleNext}
+                          />
+                        ) : (
+                          <DocumentEditor
+                            template={selectedTemplate}
+                            formData={formData}
+                            setFormData={setFormData}
+                            onBack={handleBack}
+                            onExport={handleExport}
+                            onNext={currentSectionIndex < SECTION_ORDER.length - 1 ? handleNext : undefined}
+                            currentSection={section}
+                          />
+                        )}
+                      </TabsContent>
+                    ))}
+                  </Tabs>
                 )}
               </div>
               <div>
