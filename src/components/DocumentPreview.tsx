@@ -10,7 +10,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Pagination, 
   PaginationContent, 
-  PaginationEllipsis, 
   PaginationItem, 
   PaginationLink, 
   PaginationNext, 
@@ -38,18 +37,22 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [previewLoaded, setPreviewLoaded] = useState(false);
   
   const htmlContent = template.template(formData, config);
   
+  // Update page count and reset to page 1 when content changes
   useEffect(() => {
-    // Reset to page 1 when content changes
     setCurrentPage(1);
+    setPreviewLoaded(false);
     
-    // Check page count after the content renders
+    // Using a timeout to ensure DOM has rendered
     const timer = setTimeout(() => {
       if (actualRef.current) {
         const count = estimatePageCount(actualRef.current);
+        console.log(`Estimated page count: ${count}, content height: ${actualRef.current.scrollHeight}px`);
         setPageCount(count);
+        setPreviewLoaded(true);
       }
     }, 500);
     
@@ -84,7 +87,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       setExportError(errorMessage);
       toast({
         title: "Błąd eksportu",
-        description: "Nie udało się wygenerować dokumentu PDF. Szczegóły w konsoli.",
+        description: "Nie udało się wygenerować dokumentu PDF.",
         variant: "destructive",
       });
     } finally {
@@ -95,12 +98,33 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= pageCount) {
       setCurrentPage(page);
+      
+      if (actualRef.current) {
+        // Scroll to the appropriate position in the preview
+        const scrollPosition = (page - 1) * 1123; // A4 height in pixels
+        actualRef.current.scrollTop = scrollPosition;
+      }
     }
   };
   
-  // Calculate preview scroll position based on current page
-  const previewScrollPosition = (currentPage - 1) * 1000; // 1000px per page estimate
+  // Render page break indicators
+  const renderPageBreaks = () => {
+    if (pageCount <= 1) return null;
+    
+    return Array.from({ length: pageCount - 1 }).map((_, index) => (
+      <div 
+        key={index}
+        className="absolute left-0 right-0 border-b-2 border-red-400 border-dashed pointer-events-none z-10"
+        style={{ top: `${(index + 1) * 1123}px` }}
+      >
+        <div className="absolute right-0 bg-red-100 text-red-800 px-2 py-0.5 text-xs rounded-tl-md">
+          Podział strony
+        </div>
+      </div>
+    ));
+  };
   
+  // Render pagination controls
   const renderPagination = () => {
     if (pageCount <= 1) return null;
     
@@ -114,8 +138,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             />
           </PaginationItem>
           
-          {Array.from({ length: pageCount }).map((_, index) => {
+          {Array.from({ length: Math.min(pageCount, 5) }).map((_, index) => {
             const pageNumber = index + 1;
+            
             return (
               <PaginationItem key={pageNumber}>
                 <PaginationLink 
@@ -127,6 +152,23 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
               </PaginationItem>
             );
           })}
+          
+          {pageCount > 5 && currentPage < pageCount - 2 && (
+            <PaginationItem>
+              <PaginationLink disabled>...</PaginationLink>
+            </PaginationItem>
+          )}
+          
+          {pageCount > 5 && (
+            <PaginationItem>
+              <PaginationLink 
+                onClick={() => handlePageChange(pageCount)}
+                isActive={currentPage === pageCount}
+              >
+                {pageCount}
+              </PaginationLink>
+            </PaginationItem>
+          )}
           
           <PaginationItem>
             <PaginationNext 
@@ -201,6 +243,10 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
               dangerouslySetInnerHTML={{ __html: htmlContent }}
             />
             
+            {/* Page break indicators */}
+            {previewLoaded && renderPageBreaks()}
+            
+            {/* Page navigation overlay */}
             {pageCount > 1 && (
               <div className="absolute top-2 right-2 bg-white shadow-md rounded-md px-2 py-1 text-sm flex items-center">
                 <Button 
@@ -224,25 +270,10 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
                 </Button>
               </div>
             )}
-            
-            {/* Visual page break indicators */}
-            {pageCount > 1 && Array.from({ length: pageCount - 1 }).map((_, index) => (
-              <div 
-                key={index}
-                className="absolute left-0 right-0 border-b-2 border-red-400 border-dashed pointer-events-none"
-                style={{ 
-                  top: `${(index + 1) * 1000}px`,
-                  zIndex: 10
-                }}
-              >
-                <div className="absolute right-0 bg-red-100 text-red-800 px-2 py-0.5 text-xs rounded-tl-md">
-                  Podział strony
-                </div>
-              </div>
-            ))}
           </div>
         </div>
         
+        {/* Pagination controls below the preview */}
         {renderPagination()}
       </CardContent>
     </Card>
