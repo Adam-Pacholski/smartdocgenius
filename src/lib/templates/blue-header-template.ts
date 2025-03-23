@@ -41,10 +41,10 @@ export const blueHeaderTemplate: DocumentTemplate = {
     } = prepareTemplateData(data, config);
     
     return `
-      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; box-sizing: border-box;">
+      <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; box-sizing: border-box;">
         <!-- Header -->
-        <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px 20px 20px 20px; margin: 0; width: 100%; box-sizing: border-box;">
-          <div style="flex: 1; padding: 0 0;">
+        <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px; margin: 0; width: 100%; box-sizing: border-box;">
+          <div style="flex: 1; padding: 0;">
             <h1 style="margin: 0; font-size: 24px; text-transform: uppercase;">${fullName}</h1>
             <p style="margin: 0; text-transform: uppercase; font-size: 14px;">${position}</p>
             <div style="margin-top: 15px; font-size: 13px;">

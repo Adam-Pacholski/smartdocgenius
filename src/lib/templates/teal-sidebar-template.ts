@@ -45,7 +45,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
     } = prepareTemplateData(data, config);
     
     return `
-      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; position: relative;">
+      <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; position: relative; box-sizing: border-box;">
         <!-- Two-column layout with fixed heights -->
         <div style="display: flex; min-height: 1123px;">
           <!-- Left Sidebar - must extend to the full height -->
@@ -90,7 +90,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
           </div>
           
           <!-- Main Content -->
-          <div style="width: 65%; padding: 25px 25px 80px 25px; box-sizing: border-box; background-color: white; position: relative;">
+          <div style="width: 65%; padding: 25px 25px; box-sizing: border-box; background-color: white; position: relative; display: flex; flex-direction: column; min-height: 1123px;">
             <!-- Header -->
             <div style="margin-bottom: 30px;">
               <h1 style="margin: 0; color: ${primaryColor}; font-size: 26px;">${fullNameUpper}</h1>
@@ -109,17 +109,17 @@ export const tealSidebarTemplate: DocumentTemplate = {
             <p style="margin-bottom: 15px;">${data.opening || 'Szanowni Państwo,'}</p>
             
             <!-- Letter Content -->
-            <div style="text-align: justify;">
+            <div style="text-align: justify; flex: 1;">
               <p style="white-space: pre-line; margin-bottom: 20px;">${data.body || ''}</p>
+            
+              <!-- Closing -->
+              <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
+              <p style="margin-top: 5px;">${firstName} ${lastName}</p>
             </div>
             
-            <!-- Closing -->
-            <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
-            <p style="margin-top: 5px;">${firstName} ${lastName}</p>
-            
-            <!-- Clause -->
-            <div style="position: absolute; bottom: 20px; left: 25px; right: 25px; text-align: justify;">
-              <p data-clause style="margin: 0; font-size: 10px; color: #666;">
+            <!-- Clause - Non-absolute positioning -->
+            <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px;">
+              <p data-clause style="margin: 0; font-size: 10px; color: #666; text-align: justify;">
                 ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
               </p>
             </div>
