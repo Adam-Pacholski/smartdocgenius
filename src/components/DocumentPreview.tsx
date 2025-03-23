@@ -27,6 +27,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const actualRef = previewRef || internalRef;
   const [pageCount, setPageCount] = useState(1);
   const [pageBreaks, setPageBreaks] = useState<number[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
   
   const htmlContent = template.template(formData, config);
   
@@ -58,22 +59,35 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   }, [htmlContent, actualRef]);
   
   const handleExportPdf = async () => {
-    if (actualRef.current) {
-      const fileName = `${formData.firstName || 'dokument'}_${formData.lastName || ''}_${new Date().toISOString().slice(0, 10)}.pdf`;
-      
-      try {
-        await generatePdfFromHtml(actualRef.current, fileName);
-        toast({
-          title: "Eksport PDF",
-          description: "Dokument został wygenerowany i pobrany.",
-        });
-      } catch (error) {
-        toast({
-          title: "Błąd eksportu",
-          description: "Nie udało się wygenerować dokumentu PDF.",
-          variant: "destructive",
-        });
-      }
+    if (!actualRef.current) {
+      toast({
+        title: "Błąd eksportu",
+        description: "Nie znaleziono elementu do eksportu.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const fileName = `${formData.firstName || 'dokument'}_${formData.lastName || ''}_${new Date().toISOString().slice(0, 10)}.pdf`;
+    
+    setIsExporting(true);
+    
+    try {
+      console.log("Starting PDF export");
+      await generatePdfFromHtml(actualRef.current, fileName);
+      toast({
+        title: "Eksport PDF",
+        description: "Dokument został wygenerowany i pobrany.",
+      });
+    } catch (error) {
+      console.error("PDF export error:", error);
+      toast({
+        title: "Błąd eksportu",
+        description: "Nie udało się wygenerować dokumentu PDF. Spróbuj ponownie za chwilę.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsExporting(false);
     }
   };
   
@@ -98,9 +112,10 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           onClick={handleExportPdf} 
           variant="outline" 
           className="flex items-center gap-1"
+          disabled={isExporting}
         >
           <FileDown className="h-4 w-4" />
-          Eksportuj PDF
+          {isExporting ? 'Eksportowanie...' : 'Eksportuj PDF'}
         </Button>
       </CardHeader>
       <CardContent>
