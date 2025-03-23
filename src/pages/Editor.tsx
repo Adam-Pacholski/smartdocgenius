@@ -188,19 +188,22 @@ const Editor: React.FC = () => {
                     }}
                     className="mb-4"
                   >
-                    <TabsList className="mb-6 w-full grid" style={{ 
-                      gridTemplateColumns: `repeat(${activeSectionOrder.length}, minmax(0, 1fr))` 
-                    }}>
-                      {activeSectionOrder.map((section) => (
-                        <TabsTrigger 
-                          key={section}
-                          value={section} 
-                          className="text-xs sm:text-sm whitespace-nowrap px-2"
-                        >
-                          {sectionTitles[section]}
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
+                    <div className="overflow-x-auto pb-3">
+                      <TabsList className="mb-6 grid w-max min-w-full" style={{ 
+                        gridTemplateColumns: `repeat(${activeSectionOrder.length}, minmax(auto, 1fr))`,
+                        gap: '2px'
+                      }}>
+                        {activeSectionOrder.map((section) => (
+                          <TabsTrigger 
+                            key={section}
+                            value={section} 
+                            className="text-xs whitespace-nowrap px-2"
+                          >
+                            {sectionTitles[section]}
+                          </TabsTrigger>
+                        ))}
+                      </TabsList>
+                    </div>
                     
                     {activeSectionOrder.map((section) => (
                       <TabsContent key={section} value={section}>

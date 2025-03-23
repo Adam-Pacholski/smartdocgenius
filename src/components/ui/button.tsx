@@ -22,7 +22,7 @@ const buttonVariants = cva(
         blue: "bg-blue-500 text-white hover:bg-blue-600",
         action: "bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded-md shadow-sm",
         pill: "rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200 px-3 py-1 text-xs font-medium",
-        "add-button": "bg-blue-50 text-blue-600 hover:bg-blue-100 w-full py-3 rounded-md font-medium border border-blue-100",
+        "add-button": "bg-blue-50 text-blue-600 hover:bg-blue-100 w-full py-3 rounded-md font-medium border border-blue-100 flex items-center justify-center",
       },
       size: {
         default: "h-10 px-4 py-2",

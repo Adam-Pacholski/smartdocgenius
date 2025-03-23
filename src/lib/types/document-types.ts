@@ -26,7 +26,7 @@ export interface DocumentType {
   templates: DocumentTemplate[];
 }
 
-// Sekcje formularza
+// Sections for forms
 export const SECTIONS = {
   PERSONAL: 'dane_osobowe',
   RECIPIENT: 'odbiorca',
@@ -42,7 +42,136 @@ export const SECTIONS = {
   ADDITIONAL: 'dodatkowe'
 };
 
-// Helpers for template generation
+// Helper for parsing JSON safely
+export const parseSafeJson = <T>(jsonString: string | undefined, fallback: T): T => {
+  if (!jsonString) return fallback;
+  try {
+    return JSON.parse(jsonString) as T;
+  } catch (e) {
+    console.error('Error parsing JSON:', e);
+    return fallback;
+  }
+};
+
+// Helper for formatting education items
+export const formatEducation = (educationJson: string | undefined): string => {
+  if (!educationJson) return '';
+
+  try {
+    const educationItems = parseSafeJson(educationJson, []);
+    let html = '';
+
+    for (const item of educationItems) {
+      const { data } = item;
+      if (!data) continue;
+
+      const school = data.school || '';
+      const startDate = data.educationStartDate || '';
+      const endDate = data.currentEducation === 'true' ? 'obecnie' : (data.educationEndDate || '');
+      const description = data.educationDescription || '';
+
+      html += `
+        <div class="education-item" style="margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <strong>${school}</strong>
+            <span>${startDate}${startDate && endDate ? ' — ' : ''}${endDate}</span>
+          </div>
+          <div>${description.replace(/\n/g, '<br>')}</div>
+        </div>
+      `;
+    }
+
+    return html;
+  } catch (e) {
+    console.error('Error formatting education:', e);
+    return '';
+  }
+};
+
+// Helper for formatting experience items
+export const formatExperience = (experienceJson: string | undefined): string => {
+  if (!experienceJson) return '';
+
+  try {
+    const experienceItems = parseSafeJson(experienceJson, []);
+    let html = '';
+
+    for (const item of experienceItems) {
+      const { data } = item;
+      if (!data) continue;
+
+      const jobTitle = data.jobTitle || '';
+      const company = data.company || '';
+      const location = data.location ? `, ${data.location}` : '';
+      const startDate = data.startDate || '';
+      const endDate = data.currentJob === 'true' ? 'obecnie' : (data.endDate || '');
+      const description = data.jobDescription || '';
+
+      html += `
+        <div class="experience-item" style="margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <strong>${jobTitle}</strong>
+            <span>${startDate}${startDate && endDate ? ' — ' : ''}${endDate}</span>
+          </div>
+          <div style="margin-bottom: 4px;">${company}${location}</div>
+          <div>${description.replace(/\n/g, '<br>')}</div>
+        </div>
+      `;
+    }
+
+    return html;
+  } catch (e) {
+    console.error('Error formatting experience:', e);
+    return '';
+  }
+};
+
+// Helper for formatting skills items
+export const formatSkills = (skillsJson: string | undefined, primaryColor: string = '#3498db'): string => {
+  if (!skillsJson) return '';
+
+  try {
+    const skillItems = parseSafeJson(skillsJson, []);
+    let html = '';
+
+    for (const item of skillItems) {
+      const { data } = item;
+      if (!data || !data.skillName) continue;
+
+      const skillName = data.skillName;
+      const skillLevel = parseInt(data.skillLevel || '3');
+      const hideLevel = data.hideSkillLevel === 'true';
+      const percentage = Math.min(Math.max(skillLevel, 0), 5) * 20; // Convert 0-5 to 0-100%
+
+      if (hideLevel) {
+        html += `
+          <div class="skill-item" style="margin-bottom: 8px;">
+            <div style="font-size: 12px;">${skillName}</div>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="skill-item" style="margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+              <span style="font-size: 12px;">${skillName}</span>
+              <span style="font-size: 12px;">${skillLevel}/5</span>
+            </div>
+            <div style="height: 6px; background-color: rgba(0,0,0,0.1); border-radius: 3px; overflow: hidden;">
+              <div style="height: 100%; width: ${percentage}%; background-color: ${primaryColor}; border-radius: 3px;"></div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    return html;
+  } catch (e) {
+    console.error('Error formatting skills:', e);
+    return '';
+  }
+};
+
+// Helper for formatting section content
 export const formatSectionContent = (content: string | undefined): string => {
   if (!content) return '';
   
@@ -56,12 +185,42 @@ export const formatSectionContent = (content: string | undefined): string => {
   return html;
 };
 
-export const formatSkills = (skillsText: string | undefined): string => {
-  if (!skillsText) return '';
-  return skillsText.replace(/\n/g, '<br>');
-};
-
+// Helper for formatting languages
 export const formatLanguages = (languagesText: string | undefined): string => {
   if (!languagesText) return '';
-  return languagesText.replace(/\n/g, '<br>');
+  
+  const languageLines = languagesText.split('\n').filter(line => line.trim());
+  let html = '';
+  
+  for (const line of languageLines) {
+    html += `<div style="margin-bottom: 4px;">${line}</div>`;
+  }
+  
+  return html;
+};
+
+// Helper for formatting hobbies as tags
+export const formatHobbies = (hobbiesText: string | undefined, primaryColor: string = '#3498db'): string => {
+  if (!hobbiesText) return '';
+  
+  const hobbies = hobbiesText.split(',').map(hobby => hobby.trim()).filter(hobby => hobby);
+  let html = '<div style="display: flex; flex-wrap: wrap; gap: 8px;">';
+  
+  for (const hobby of hobbies) {
+    html += `
+      <span style="
+        padding: 3px 10px;
+        background-color: ${primaryColor}20;
+        color: ${primaryColor};
+        border-radius: 30px;
+        font-size: 12px;
+        white-space: nowrap;
+      ">
+        ${hobby}
+      </span>
+    `;
+  }
+  
+  html += '</div>';
+  return html;
 };
