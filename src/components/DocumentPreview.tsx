@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,14 +43,11 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const sanitizeFormData = () => {
     const sanitized = { ...formData };
     
-    // Process any JSON strings in the form data
     Object.keys(sanitized).forEach(key => {
       if (typeof sanitized[key] === 'string' && 
           (sanitized[key].startsWith('[{') || sanitized[key].startsWith('{"'))) {
         try {
-          // For JSON arrays, we'll parse them to be used by the template functions
-          const parsed = JSON.parse(sanitized[key]);
-          sanitized[key] = sanitized[key]; // Keep the JSON string as is for template functions that expect it
+          JSON.parse(sanitized[key]);
         } catch (e) {
           console.error(`Failed to parse JSON for ${key}:`, e);
         }
@@ -75,11 +71,11 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         setPageCount(Math.max(1, count));
         setPreviewLoaded(true);
         
-        // Calculate scale to fit the content within the container
-        const previewContainer = actualRef.current.parentElement?.parentElement;
+        const previewContainer = actualRef.current.closest('.preview-container');
         if (previewContainer) {
-          const containerHeight = previewContainer.clientHeight;
+          const containerHeight = previewContainer.clientHeight - 40;
           const contentHeight = actualRef.current.scrollHeight;
+          
           if (contentHeight > containerHeight) {
             const newScale = Math.max(0.7, Math.min(0.85, containerHeight / contentHeight));
             setScale(newScale);
@@ -270,22 +266,21 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           </Alert>
         )}
         
-        <div className="bg-white rounded-md border overflow-hidden shadow-sm relative flex justify-center">
+        <div className="preview-container bg-gray-100 rounded-md border overflow-hidden shadow-sm relative h-[700px]">
           <ScrollArea 
-            className="max-w-full h-[700px] w-full flex justify-center"
+            className="w-full h-full"
             scrollHideDelay={0}
           >
-            <div className="flex justify-center py-4 px-2">
+            <div className="flex justify-center py-8 px-2">
               <div 
                 ref={actualRef}
-                className="a4-preview"
+                className="a4-preview bg-white shadow-md"
                 style={{ 
-                  padding: 0,
                   width: '21cm',
                   transform: `scale(${scale})`,
                   transformOrigin: 'top center',
-                  backgroundColor: '#fff',
-                  maxWidth: '100%',
+                  minHeight: '29.7cm',
+                  padding: '1cm',
                   margin: '0 auto'
                 }}
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
