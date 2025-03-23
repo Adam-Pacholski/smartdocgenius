@@ -37,7 +37,7 @@ const Index: React.FC = () => {
               Twoje profesjonalne dokumenty. Szybko i prosto.
             </h1>
             <p className="max-w-[650px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed animate-fade-in">
-              SmartDocs to nowoczesna aplikacja, która pomoże Ci stworzyć profesjonalne dokumenty w kilka minut.
+              APDocs to nowoczesna aplikacja, która pomoże Ci stworzyć profesjonalne dokumenty w kilka minut.
               Wybieraj spośród różnych typów dokumentów i szablonów dostosowanych do Twoich potrzeb.
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 animate-fade-in">
@@ -64,7 +64,7 @@ const Index: React.FC = () => {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center text-center space-y-4 mb-12">
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
-              Dlaczego SmartDocs?
+              Dlaczego APDocs?
             </h2>
             <p className="max-w-[650px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Narzędzie stworzone, aby ułatwić i przyspieszyć proces tworzenia profesjonalnych dokumentów.

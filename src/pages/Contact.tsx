@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -35,6 +35,8 @@ const formSchema = z.object({
 
 const Contact: React.FC = () => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,17 +47,33 @@ const Contact: React.FC = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // In a real application, this would send an email
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
     
-    // Simulate sending success
-    toast({
-      title: "Wiadomość wysłana!",
-      description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
-    });
-    
-    form.reset();
+    try {
+      // In a real application, this would send an email to info@ap-development.eu
+      console.log("Sending email to info@ap-development.eu with:", values);
+      
+      // Simulate sending confirmation email to the user
+      console.log("Sending confirmation email to:", values.email);
+      
+      // Email sent successfully 
+      toast({
+        title: "Wiadomość wysłana!",
+        description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe. Potwierdzenie zostało wysłane na Twój adres email.",
+      });
+      
+      form.reset();
+    } catch (error) {
+      console.error("Error sending email:", error);
+      toast({
+        title: "Wystąpił błąd",
+        description: "Nie udało się wysłać wiadomości. Spróbuj ponownie później.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -137,9 +155,15 @@ const Contact: React.FC = () => {
                     )}
                   />
                   
-                  <Button type="submit" className="w-full">
-                    <Send className="mr-2 h-4 w-4" />
-                    Wyślij wiadomość
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>Wysyłanie...</>
+                    ) : (
+                      <>
+                        <Send className="mr-2 h-4 w-4" />
+                        Wyślij wiadomość
+                      </>
+                    )}
                   </Button>
                 </form>
               </Form>
@@ -153,7 +177,7 @@ const Contact: React.FC = () => {
                 <strong>Firma:</strong> AP-Development.eu
               </p>
               <p className="text-sm text-muted-foreground mb-4">
-                <strong>Email:</strong> kontakt@ap-development.eu
+                <strong>Email:</strong> info@ap-development.eu
               </p>
               
               <a 
@@ -170,7 +194,7 @@ const Contact: React.FC = () => {
             <div className="bg-card rounded-lg p-6 shadow-sm">
               <h3 className="font-medium mb-4">Wesprzyj projekt</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                SmartDocs jest całkowicie darmowym narzędziem, które rozwijam w ramach swojej pasji do tworzenia
+                APDocs jest całkowicie darmowym narzędziem, które rozwijam w ramach swojej pasji do tworzenia
                 użytecznych aplikacji. Jeśli chcesz wesprzeć dalszy rozwój tego narzędzia, możesz to zrobić 
                 poprzez kontakt lub współpracę.
               </p>

@@ -13,7 +13,7 @@ const Header: React.FC = () => {
       <div className="container flex h-16 items-center px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center space-x-2">
           <FileText className="h-6 w-6 text-primary" />
-          <span className="font-medium tracking-tight text-lg">SmartDocs</span>
+          <span className="font-medium tracking-tight text-lg">APDocs</span>
         </Link>
         <nav className="hidden ml-10 md:flex items-center space-x-4 lg:space-x-6">
           <NavigationItem to="/" label="Strona główna" />

@@ -48,9 +48,9 @@ const About: React.FC = () => {
         </div>
 
         <div className="bg-card rounded-lg p-6 shadow-sm mb-8">
-          <h2 className="text-xl font-medium text-primary mb-4">O projekcie SmartDocs</h2>
+          <h2 className="text-xl font-medium text-primary mb-4">O projekcie APDocs</h2>
           <p className="mb-4 text-muted-foreground">
-            SmartDocs powstał w ramach mojej edukacji i doskonalenia umiejętności programistycznych przy współpracy z technologiami AI. 
+            APDocs powstał w ramach mojej edukacji i doskonalenia umiejętności programistycznych przy współpracy z technologiami AI. 
             Jest to projekt, który łączy moją pasję do tworzenia użytecznych narzędzi z nauką najnowszych technologii.
           </p>
           <p className="mb-4 text-muted-foreground">
