@@ -44,11 +44,9 @@ const colorOptions: ColorOption[] = [
   { value: '#c0392b', label: 'Bordowy', hex: '#c0392b' },
   { value: '#7f8c8d', label: 'Szary', hex: '#7f8c8d' },
   { value: '#2980b9', label: 'Jasnoniebieski', hex: '#2980b9' },
-  { value: '#8e44ad', label: 'Purpurowy', hex: '#8e44ad' },
-  { value: '#2c3e50', label: 'Grafitowy', hex: '#2c3e50' },
-  { value: '#f1c40f', label: 'Żółty', hex: '#f1c40f' },
   { value: '#273c75', label: 'Granatowy', hex: '#273c75' },
   { value: '#c23616', label: 'Ceglasty', hex: '#c23616' },
+  { value: '#f1c40f', label: 'Żółty', hex: '#f1c40f' },
 ];
 
 const fontOptions: FontOption[] = [
@@ -77,6 +75,13 @@ const TemplateConfiguration: React.FC<TemplateConfigurationProps> = ({
   onBack,
   onNext,
 }) => {
+  React.useEffect(() => {
+    // Ensure 12px is set as the default font size
+    if (config.fontSize !== '12px') {
+      setConfig(prev => ({ ...prev, fontSize: '12px' }));
+    }
+  }, []);
+
   const handleColorChange = (value: string) => {
     setConfig(prev => ({ ...prev, primaryColor: value }));
   };
@@ -138,6 +143,7 @@ const TemplateConfiguration: React.FC<TemplateConfigurationProps> = ({
             <Select 
               value={config.fontSize || '12px'} 
               onValueChange={handleFontSizeChange}
+              defaultValue="12px"
             >
               <SelectTrigger id="fontSize">
                 <SelectValue placeholder="Wybierz rozmiar" />

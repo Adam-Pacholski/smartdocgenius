@@ -62,7 +62,8 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         <div className="bg-white rounded-md border overflow-hidden shadow-sm">
           <div 
             ref={actualRef}
-            className="w-full h-[800px] overflow-auto p-6"
+            className="w-full h-[800px] overflow-auto"
+            style={{ padding: 0 }}
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         </div>

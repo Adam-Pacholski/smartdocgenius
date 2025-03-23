@@ -9,55 +9,96 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
   }
 
   try {
-    // Create a canvas from the HTML element
-    const canvas = await html2canvas(elementRef, {
+    // Get the computed style of the element to determine its width and content
+    const computedStyle = window.getComputedStyle(elementRef);
+    const elementWidth = parseInt(computedStyle.width);
+    
+    // Create a clone of the element for capturing to avoid modifying the displayed element
+    const clone = elementRef.cloneNode(true) as HTMLElement;
+    clone.style.position = 'absolute';
+    clone.style.left = '-9999px';
+    clone.style.top = '0';
+    clone.style.width = `${elementWidth}px`;
+    clone.style.height = 'auto';
+    clone.style.overflow = 'visible';
+    
+    // Add to document to calculate proper layout
+    document.body.appendChild(clone);
+    
+    // Create canvas with higher resolution
+    const canvas = await html2canvas(clone, {
       scale: 2, // Higher scale for better quality
       useCORS: true, // Allow loading cross-origin images
       logging: false,
+      windowWidth: elementWidth,
+      onclone: (doc) => {
+        // Further processing can be done here if needed
+        const clonedElement = doc.body.querySelector('#cloned-element') as HTMLElement;
+        if (clonedElement) {
+          clonedElement.style.height = 'auto';
+        }
+      }
     });
-
-    // Calculate PDF dimensions (A4 format)
-    const imgWidth = 210; // A4 width in mm
-    const pageHeight = 297; // A4 height in mm
+    
+    // Remove clone from document
+    document.body.removeChild(clone);
+    
+    // A4 dimensions in mm
+    const a4Width = 210; // A4 width in mm
+    const a4Height = 297; // A4 height in mm
+    
+    // Calculate PDF dimensions
+    const imgWidth = a4Width;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
-    // Create PDF instance
+    // Create PDF instance - portrait, mm, A4
     const pdf = new jsPDF('p', 'mm', 'a4');
     
-    // Handle multi-page content
-    let heightLeft = imgHeight;
     let position = 0;
+    let remainingHeight = imgHeight;
+    let pageCount = 0;
     
-    // Add first page
-    pdf.addImage(
-      canvas.toDataURL('image/jpeg', 1.0), 
-      'JPEG', 
-      0, 
-      position, 
-      imgWidth, 
-      imgHeight
-    );
-    
-    heightLeft -= pageHeight;
-    
-    // Add additional pages if content overflows
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
+    // Add pages as needed to fit content
+    while (remainingHeight > 0) {
+      // Add a new page if this isn't the first page
+      if (pageCount > 0) {
+        pdf.addPage();
+      }
+      
+      // Calculate how much of the image to render on this page
+      const pageHeight = Math.min(a4Height, remainingHeight);
+      
+      // Calculate source coordinates for slicing the canvas
+      // These are in canvas pixels
+      const sourceY = pageCount * (canvas.height * a4Height / imgHeight);
+      const sourceHeight = canvas.height * pageHeight / imgHeight;
+      
+      // For the first page, we use standard positioning
+      // For subsequent pages, we position at the top of the page
       pdf.addImage(
-        canvas.toDataURL('image/jpeg', 1.0),
-        'JPEG',
-        0,
-        position,
-        imgWidth,
-        imgHeight
+        canvas,
+        'JPEG', 
+        0, // x position - no margin
+        0, // y position - no margin
+        a4Width, // width
+        pageHeight, // height for this page slice
+        undefined, // alias
+        'FAST', // compression
+        0, // rotation
+        sourceY, // source x - always 0 for vertical slicing
+        0, // source y - based on which page we're on
+        canvas.width, // source width - full width
+        sourceHeight // source height - calculated for this slice
       );
-      heightLeft -= pageHeight;
+      
+      remainingHeight -= a4Height;
+      pageCount++;
     }
     
-    // Save PDF
+    // Save the PDF
     pdf.save(fileName);
   } catch (error) {
     console.error('Error generating PDF:', error);
+    throw error;
   }
 };
