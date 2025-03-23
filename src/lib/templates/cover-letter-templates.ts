@@ -17,20 +17,20 @@ export const blueHeaderTemplate: DocumentTemplate = {
     
     const primaryColor = config?.primaryColor || '#2c3e50';
     const fontFamily = config?.fontFamily || 'Arial, sans-serif';
-    const fontSize = config?.fontSize || '14px';
+    const fontSize = config?.fontSize || '12px';
     
     return `
-      <div style="max-width: 21cm; margin: 0 auto; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333;">
+      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333;">
         <!-- Header -->
         <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px;">
           <div style="flex: 1;">
             <h1 style="margin: 0; font-size: 24px; text-transform: uppercase;">${fullName}</h1>
             <p style="margin: 0; text-transform: uppercase; font-size: 14px;">${position}</p>
             <div style="margin-top: 15px; font-size: 13px;">
-              ${data.email ? `<p style="margin: 0 0 5px;"><span>✉</span> ${data.email}</p>` : ''}
-              ${data.phone ? `<p style="margin: 0 0 5px;"><span>✆</span> ${data.phone}</p>` : ''}
-              ${data.birthDate ? `<p style="margin: 0 0 5px;"><span>📅</span> ${data.birthDate}</p>` : ''}
-              ${data.address ? `<p style="margin: 0 0 5px;"><span>📍</span> ${data.address}</p>` : ''}
+              ${data.email ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>✉</span> ${data.email}</p>` : ''}
+              ${data.phone ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>✆</span> ${data.phone}</p>` : ''}
+              ${data.birthDate ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>📅</span> ${data.birthDate}</p>` : ''}
+              ${data.address ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>📍</span> ${data.address}</p>` : ''}
             </div>
           </div>
           ${data.photo ? `
@@ -88,10 +88,10 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
     
     const primaryColor = config?.primaryColor || '#333333';
     const fontFamily = config?.fontFamily || 'Arial, sans-serif';
-    const fontSize = config?.fontSize || '14px';
+    const fontSize = config?.fontSize || '12px';
     
     return `
-      <div style="max-width: 21cm; margin: 0 auto; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; display: flex; flex-direction: column;">
+      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; display: flex; flex-direction: column;">
         <!-- Header section -->
         <div style="display: flex; justify-content: space-between; padding: 20px;">
           <div>
@@ -152,10 +152,10 @@ export const tealSidebarTemplate: DocumentTemplate = {
     
     const primaryColor = config?.primaryColor || '#1e88e5';
     const fontFamily = config?.fontFamily || 'Arial, sans-serif';
-    const fontSize = config?.fontSize || '14px';
+    const fontSize = config?.fontSize || '12px';
     
     return `
-      <div style="max-width: 21cm; margin: 0 auto; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; display: flex; min-height: 100vh;">
+      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; display: flex; min-height: 100vh;">
         <!-- Left Sidebar - full height, wider -->
         <div style="width: 35%; background-color: ${primaryColor}; color: white; padding: 25px; box-sizing: border-box; min-height: 100vh;">
           ${data.photo ? `
@@ -168,28 +168,28 @@ export const tealSidebarTemplate: DocumentTemplate = {
           
           <div style="margin-bottom: 30px; font-size: 13px;">
             ${data.email ? `
-              <p style="margin: 0 0 10px; word-break: break-word;">
+              <p style="margin: 0 0 10px; overflow-wrap: break-word; word-break: break-all;">
                 <strong>Email:</strong><br/>
                 ${data.email}
               </p>
             ` : ''}
             
             ${data.phone ? `
-              <p style="margin: 0 0 10px; word-break: break-word;">
+              <p style="margin: 0 0 10px; overflow-wrap: break-word; word-break: break-all;">
                 <strong>Telefon:</strong><br/>
                 ${data.phone}
               </p>
             ` : ''}
             
             ${data.birthDate ? `
-              <p style="margin: 0 0 10px; word-break: break-word;">
+              <p style="margin: 0 0 10px; overflow-wrap: break-word; word-break: break-all;">
                 <strong>Data urodzenia:</strong><br/>
                 ${data.birthDate}
               </p>
             ` : ''}
             
             ${data.address ? `
-              <p style="margin: 0 0 10px; word-break: break-word;">
+              <p style="margin: 0 0 10px; overflow-wrap: break-word; word-break: break-all;">
                 <strong>Adres:</strong><br/>
                 ${data.address}
               </p>
@@ -249,10 +249,10 @@ export const minimalistIconsTemplate: DocumentTemplate = {
     
     const primaryColor = config?.primaryColor || '#c0392b';
     const fontFamily = config?.fontFamily || 'Arial, sans-serif';
-    const fontSize = config?.fontSize || '14px';
+    const fontSize = config?.fontSize || '12px';
     
     return `
-      <div style="max-width: 21cm; margin: 0 auto; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; position: relative; min-height: 100vh;">
+      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; position: relative; min-height: 100vh;">
         <!-- Header -->
         <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
           <div>
@@ -269,10 +269,10 @@ export const minimalistIconsTemplate: DocumentTemplate = {
         
         <!-- Contact Info Icons -->
         <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; margin: 15px 0; color: #666; font-size: 13px;">
-          ${data.email ? `<span style="margin-left: 15px; margin-bottom: 5px;"><span style="color: ${primaryColor}; font-size: 16px;">✉</span> ${data.email}</span>` : ''}
-          ${data.phone ? `<span style="margin-left: 15px; margin-bottom: 5px;"><span style="color: ${primaryColor}; font-size: 16px;">✆</span> ${data.phone}</span>` : ''}
-          ${data.birthDate ? `<span style="margin-left: 15px; margin-bottom: 5px;"><span style="color: ${primaryColor}; font-size: 16px;">📅</span> ${data.birthDate}</span>` : ''}
-          ${data.address ? `<span style="margin-left: 15px; margin-bottom: 5px;"><span style="color: ${primaryColor}; font-size: 16px;">📍</span> ${data.address}</span>` : ''}
+          ${data.email ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">✉</span> ${data.email}</span>` : ''}
+          ${data.phone ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">✆</span> ${data.phone}</span>` : ''}
+          ${data.birthDate ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">📅</span> ${data.birthDate}</span>` : ''}
+          ${data.address ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">📍</span> ${data.address}</span>` : ''}
         </div>
         
         <!-- Date -->

@@ -23,9 +23,12 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     
     // Create PDF instance
     const pdf = new jsPDF('p', 'mm', 'a4');
+    
+    // Handle multi-page content
+    let heightLeft = imgHeight;
     let position = 0;
     
-    // Add image to PDF
+    // Add first page
     pdf.addImage(
       canvas.toDataURL('image/jpeg', 1.0), 
       'JPEG', 
@@ -34,6 +37,23 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
       imgWidth, 
       imgHeight
     );
+    
+    heightLeft -= pageHeight;
+    
+    // Add additional pages if content overflows
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(
+        canvas.toDataURL('image/jpeg', 1.0),
+        'JPEG',
+        0,
+        position,
+        imgWidth,
+        imgHeight
+      );
+      heightLeft -= pageHeight;
+    }
     
     // Save PDF
     pdf.save(fileName);

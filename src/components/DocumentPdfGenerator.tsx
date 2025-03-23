@@ -9,6 +9,8 @@ Font.register({
   src: 'https://fonts.gstatic.com/s/sourcesanspro/v14/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rAkw.ttf',
 });
 
+// This component is no longer used - PDF generation is handled by DocumentPreview component
+// It's kept for reference only
 interface DocumentPdfGeneratorProps {
   template: DocumentTemplate;
   formData: Record<string, string>;

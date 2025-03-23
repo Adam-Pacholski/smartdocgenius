@@ -136,7 +136,7 @@ const TemplateConfiguration: React.FC<TemplateConfigurationProps> = ({
           <div className="space-y-2">
             <Label htmlFor="fontSize">Rozmiar czcionki:</Label>
             <Select 
-              value={config.fontSize || '14px'} 
+              value={config.fontSize || '12px'} 
               onValueChange={handleFontSizeChange}
             >
               <SelectTrigger id="fontSize">

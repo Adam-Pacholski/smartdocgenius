@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
@@ -35,7 +36,7 @@ const Editor: React.FC = () => {
     documentName: 'List motywacyjny',
     primaryColor: '#3498db',
     fontFamily: 'Arial, sans-serif',
-    fontSize: '14px',
+    fontSize: '12px',
   });
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
@@ -79,34 +80,6 @@ const Editor: React.FC = () => {
     if (currentSectionIndex < SECTION_ORDER.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
     }
-  };
-
-  const handleExport = async () => {
-    let missingFields: string[] = [];
-    
-    if (selectedTemplate) {
-      selectedTemplate.fields
-        .filter(field => field.required)
-        .forEach(field => {
-          if (!formData[field.id]) {
-            missingFields.push(field.label);
-          }
-        });
-    }
-    
-    if (missingFields.length > 0) {
-      toast({
-        title: "Brakujące dane",
-        description: `Proszę wypełnić wszystkie wymagane pola: ${missingFields.join(', ')}`,
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    toast({
-      title: "Eksport PDF",
-      description: "Dokument został wygenerowany i pobrany.",
-    });
   };
 
   const currentSection = SECTION_ORDER[currentSectionIndex];
@@ -167,7 +140,7 @@ const Editor: React.FC = () => {
                     className="mb-4"
                   >
                     <TabsList className="grid grid-cols-5 w-full">
-                      {SECTION_ORDER.map((section, index) => (
+                      {SECTION_ORDER.map((section) => (
                         <TabsTrigger 
                           key={section}
                           value={section} 
@@ -193,7 +166,6 @@ const Editor: React.FC = () => {
                             formData={formData}
                             setFormData={setFormData}
                             onBack={handleBack}
-                            onExport={handleExport}
                             onNext={currentSectionIndex < SECTION_ORDER.length - 1 ? handleNext : undefined}
                             currentSection={section}
                           />
