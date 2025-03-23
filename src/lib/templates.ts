@@ -19,9 +19,9 @@ const documentTypes: DocumentType[] = [
     templates: cvTemplates,
   },
   {
-    id: 'invoice',
-    name: 'Faktury i umowy',
-    description: 'Wkrótce dostępne - profesjonalne szablony faktur i umów dla Twojej firmy',
+    id: 'other',
+    name: 'Inne dokumenty',
+    description: 'Masz pomysł na nowy typ dokumentu? Daj nam znać, a rozważymy dodanie go do naszej oferty!',
     icon: 'file-text',
     templates: [],
   }
