@@ -1,3 +1,4 @@
+
 export interface TemplateField {
   id: string;
   label: string;
@@ -23,6 +24,7 @@ export interface DocumentType {
   description: string;
   icon: string;
   templates: DocumentTemplate[];
+  comingSoon?: boolean;
 }
 
 // Sekcje formularza
@@ -31,5 +33,11 @@ export const SECTIONS = {
   RECIPIENT: 'odbiorca',
   CONTENT: 'tresc_listu',
   CLAUSE: 'klauzula',
-  CONFIG: 'konfiguracja'
+  CONFIG: 'konfiguracja',
+  // CV sections
+  EXPERIENCE: 'doswiadczenie',
+  EDUCATION: 'edukacja',
+  SKILLS: 'umiejetnosci',
+  LANGUAGES: 'jezyki',
+  INTERESTS: 'zainteresowania'
 };
