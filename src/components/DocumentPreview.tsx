@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -39,16 +38,14 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [previewLoaded, setPreviewLoaded] = useState(false);
-  const [scale, setScale] = useState(1);
-  
+  const [scale, setScale] = useState(0.9);
+
   const htmlContent = template.template(formData, config);
   
-  // Update page count and reset to page 1 when content changes
   useEffect(() => {
     setCurrentPage(1);
     setPreviewLoaded(false);
     
-    // Using a timeout to ensure DOM has rendered
     const timer = setTimeout(() => {
       if (actualRef.current) {
         const count = estimatePageCount(actualRef.current);
@@ -56,16 +53,15 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         setPageCount(Math.max(1, count));
         setPreviewLoaded(true);
         
-        // Calculate scale to fit the preview container if needed
         const previewContainer = actualRef.current.parentElement;
-        if (previewContainer && count === 1) {
+        if (previewContainer) {
           const containerHeight = previewContainer.clientHeight;
           const contentHeight = actualRef.current.scrollHeight;
           if (contentHeight > containerHeight) {
-            const newScale = Math.min(0.95, containerHeight / contentHeight);
+            const newScale = Math.max(0.7, Math.min(0.9, containerHeight / contentHeight));
             setScale(newScale);
           } else {
-            setScale(1);
+            setScale(0.9);
           }
         }
       }
@@ -115,14 +111,12 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       setCurrentPage(page);
       
       if (actualRef.current) {
-        // Scroll to the appropriate position in the preview
-        const scrollPosition = (page - 1) * 1123; // A4 height in pixels
+        const scrollPosition = (page - 1) * 1123;
         actualRef.current.scrollTop = scrollPosition;
       }
     }
   };
   
-  // Render page break indicators with improved visibility
   const renderPageBreaks = () => {
     if (pageCount <= 1) return null;
     
@@ -139,16 +133,13 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     ));
   };
   
-  // Render pagination controls with improved navigation
   const renderPagination = () => {
     if (pageCount <= 1) return null;
     
-    // Generate page numbers to show (first, last, and around current)
     const pagesToShow = new Set<number>();
-    pagesToShow.add(1); // Always show first page
-    pagesToShow.add(pageCount); // Always show last page
+    pagesToShow.add(1);
+    pagesToShow.add(pageCount);
     
-    // Show pages around current
     for (let i = Math.max(1, currentPage - 1); i <= Math.min(pageCount, currentPage + 1); i++) {
       pagesToShow.add(i);
     }
@@ -166,7 +157,6 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           </PaginationItem>
           
           {sortedPages.map((page, index) => {
-            // Check if we need to add ellipsis
             if (index > 0 && page > sortedPages[index - 1] + 1) {
               return (
                 <React.Fragment key={`ellipsis-${page}`}>
@@ -260,7 +250,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         <div className="bg-white rounded-md border overflow-hidden shadow-sm">
           <div className="relative">
             <ScrollArea 
-              className="w-full h-[800px]"
+              className="w-full h-[700px]"
               scrollHideDelay={0}
             >
               <div 
@@ -277,11 +267,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
               />
               
-              {/* Page break indicators */}
               {previewLoaded && renderPageBreaks()}
             </ScrollArea>
             
-            {/* Page navigation overlay */}
             {pageCount > 1 && (
               <div className="absolute top-2 right-2 bg-white shadow-md rounded-md px-2 py-1 text-sm flex items-center">
                 <Button 
@@ -308,7 +296,6 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           </div>
         </div>
         
-        {/* Pagination controls below the preview */}
         {renderPagination()}
       </CardContent>
     </Card>

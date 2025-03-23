@@ -1,6 +1,5 @@
 
-import { DocumentTemplate } from '../types/document-types';
-import { prepareTemplateData, formatSectionContent, formatLanguages } from './template-utils';
+import { DocumentTemplate, formatSectionContent, formatSkills, formatLanguages } from '../types/document-types';
 
 /**
  * CV Template with blue header
@@ -12,13 +11,16 @@ import { prepareTemplateData, formatSectionContent, formatLanguages } from './te
  * - Professional and clean design
  */
 export const blueHeaderCvTemplate: DocumentTemplate['template'] = (data: Record<string, string>, config: Record<string, any> = {}) => {
-  const {
-    fullName,
-    position,
-    primaryColor,
-    fontFamily,
-    fontSize
-  } = prepareTemplateData(data, config);
+  // Prepare data
+  const firstName = data.firstName || '';
+  const lastName = data.lastName || '';
+  const fullName = `${firstName} ${lastName}`;
+  const position = data.position || '';
+  
+  // Apply custom configurations or use defaults
+  const primaryColor = config?.primaryColor || '#1e88e5';
+  const fontFamily = config?.fontFamily || 'Arial, sans-serif';
+  const fontSize = config?.fontSize || '12px';
   
   return `
     <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; box-sizing: border-box;">
@@ -74,7 +76,7 @@ export const blueHeaderCvTemplate: DocumentTemplate['template'] = (data: Record<
             ${data.skills ? `
               <div style="margin-bottom: 25px;">
                 <h2 style="font-size: 16px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 5px; margin-bottom: 10px; color: ${primaryColor};">UMIEJĘTNOŚCI</h2>
-                <div>${data.skills.replace(/\n/g, '<br>')}</div>
+                <div>${formatSkills(data.skills)}</div>
               </div>
             ` : ''}
           </div>

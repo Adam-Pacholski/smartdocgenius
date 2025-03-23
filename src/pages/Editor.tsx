@@ -68,11 +68,10 @@ const Editor: React.FC = () => {
   const handleSelectTemplate = (template: DocumentTemplate) => {
     setSelectedTemplate(template);
     
-    const initialData: Record<string, string> = { ...sampleCoverLetterData };
+    // Initialize form data with default values from the template fields
+    const initialData: Record<string, string> = {};
     template.fields.forEach(field => {
-      if (!initialData[field.id]) {
-        initialData[field.id] = field.defaultValue || '';
-      }
+      initialData[field.id] = field.defaultValue || '';
     });
     setFormData(initialData);
     
@@ -189,12 +188,14 @@ const Editor: React.FC = () => {
                     }}
                     className="mb-4"
                   >
-                    <TabsList className="grid grid-cols-5 w-full">
+                    <TabsList className="mb-6 w-full grid" style={{ 
+                      gridTemplateColumns: `repeat(${activeSectionOrder.length}, minmax(0, 1fr))` 
+                    }}>
                       {activeSectionOrder.map((section) => (
                         <TabsTrigger 
                           key={section}
                           value={section} 
-                          className="text-xs sm:text-sm"
+                          className="text-xs sm:text-sm whitespace-nowrap px-2"
                         >
                           {sectionTitles[section]}
                         </TabsTrigger>

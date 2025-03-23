@@ -1,6 +1,5 @@
 
-import { DocumentTemplate } from '../types/document-types';
-import { prepareTemplateData, formatSectionContent, formatLanguages } from './template-utils';
+import { DocumentTemplate, formatSectionContent, formatSkills, formatLanguages } from '../types/document-types';
 
 /**
  * CV Template with minimalist icons
@@ -11,19 +10,17 @@ import { prepareTemplateData, formatSectionContent, formatLanguages } from './te
  * - Modern and professional appearance
  */
 export const minimalistIconsCvTemplate: DocumentTemplate['template'] = (data: Record<string, string>, config: Record<string, any> = {}) => {
-  // Prepare data and styles
-  const {
-    firstName,
-    lastName,
-    fullNameUpper,
-    position,
-    primaryColor,
-    fontFamily,
-    fontSize
-  } = prepareTemplateData(data, {
-    ...config,
-    primaryColor: config.primaryColor || '#c0392b'
-  });
+  // Prepare data
+  const firstName = data.firstName || '';
+  const lastName = data.lastName || '';
+  const fullName = `${firstName} ${lastName}`;
+  const fullNameUpper = fullName.toUpperCase();
+  const position = data.position || '';
+  
+  // Apply custom configurations or use defaults
+  const primaryColor = config?.primaryColor || '#c0392b';
+  const fontFamily = config?.fontFamily || 'Arial, sans-serif';
+  const fontSize = config?.fontSize || '12px';
   
   return `
     <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333;">
@@ -85,7 +82,7 @@ export const minimalistIconsCvTemplate: DocumentTemplate['template'] = (data: Re
             ${data.skills ? `
               <div style="margin-bottom: 25px;">
                 <h2 style="font-size: 16px; border-bottom: 1px solid ${primaryColor}; padding-bottom: 5px; margin-bottom: 10px; color: ${primaryColor};">UMIEJĘTNOŚCI</h2>
-                <div style="text-align: justify;">${data.skills.replace(/\n/g, '<br>')}</div>
+                <div style="text-align: justify;">${formatSkills(data.skills)}</div>
               </div>
             ` : ''}
             

@@ -41,3 +41,27 @@ export const SECTIONS = {
   SKILLS: 'umiejetnosci',
   ADDITIONAL: 'dodatkowe'
 };
+
+// Helpers for template generation
+export const formatSectionContent = (content: string | undefined): string => {
+  if (!content) return '';
+  
+  const lines = content.split('\n\n').filter(line => line.trim());
+  let html = '';
+  
+  for (const line of lines) {
+    html += `<div style="margin-bottom: 12px;">${line.replace(/\n/g, '<br>')}</div>`;
+  }
+  
+  return html;
+};
+
+export const formatSkills = (skillsText: string | undefined): string => {
+  if (!skillsText) return '';
+  return skillsText.replace(/\n/g, '<br>');
+};
+
+export const formatLanguages = (languagesText: string | undefined): string => {
+  if (!languagesText) return '';
+  return languagesText.replace(/\n/g, '<br>');
+};
