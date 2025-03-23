@@ -1,3 +1,4 @@
+
 export interface TemplateField {
   id: string;
   label: string;
@@ -31,5 +32,12 @@ export const SECTIONS = {
   RECIPIENT: 'odbiorca',
   CONTENT: 'tresc_listu',
   CLAUSE: 'klauzula',
-  CONFIG: 'konfiguracja'
+  CONFIG: 'konfiguracja',
+  
+  // CV sections
+  SUMMARY: 'podsumowanie',
+  EXPERIENCE: 'doswiadczenie',
+  EDUCATION: 'wyksztalcenie',
+  SKILLS: 'umiejetnosci',
+  ADDITIONAL: 'dodatkowe'
 };
