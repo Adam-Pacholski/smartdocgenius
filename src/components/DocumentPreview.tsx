@@ -51,7 +51,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       if (actualRef.current) {
         const count = estimatePageCount(actualRef.current);
         console.log(`Estimated page count: ${count}, content height: ${actualRef.current.scrollHeight}px`);
-        setPageCount(count);
+        setPageCount(Math.max(1, count));
         setPreviewLoaded(true);
       }
     }, 500);
@@ -107,7 +107,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     }
   };
   
-  // Render page break indicators
+  // Render page break indicators with improved visibility
   const renderPageBreaks = () => {
     if (pageCount <= 1) return null;
     
@@ -124,9 +124,21 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     ));
   };
   
-  // Render pagination controls
+  // Render pagination controls with improved navigation
   const renderPagination = () => {
     if (pageCount <= 1) return null;
+    
+    // Generate page numbers to show (first, last, and around current)
+    const pagesToShow = new Set<number>();
+    pagesToShow.add(1); // Always show first page
+    pagesToShow.add(pageCount); // Always show last page
+    
+    // Show pages around current
+    for (let i = Math.max(1, currentPage - 1); i <= Math.min(pageCount, currentPage + 1); i++) {
+      pagesToShow.add(i);
+    }
+    
+    const sortedPages = Array.from(pagesToShow).sort((a, b) => a - b);
     
     return (
       <Pagination className="mt-4">
@@ -138,38 +150,37 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             />
           </PaginationItem>
           
-          {Array.from({ length: Math.min(pageCount, 5) }).map((_, index) => {
-            const pageNumber = index + 1;
+          {sortedPages.map((page, index) => {
+            // Check if we need to add ellipsis
+            if (index > 0 && page > sortedPages[index - 1] + 1) {
+              return (
+                <React.Fragment key={`ellipsis-${page}`}>
+                  <PaginationItem>
+                    <span className="flex h-9 w-9 items-center justify-center opacity-50">...</span>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink 
+                      onClick={() => handlePageChange(page)}
+                      isActive={currentPage === page}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                </React.Fragment>
+              );
+            }
             
             return (
-              <PaginationItem key={pageNumber}>
+              <PaginationItem key={page}>
                 <PaginationLink 
-                  onClick={() => handlePageChange(pageNumber)}
-                  isActive={currentPage === pageNumber}
+                  onClick={() => handlePageChange(page)}
+                  isActive={currentPage === page}
                 >
-                  {pageNumber}
+                  {page}
                 </PaginationLink>
               </PaginationItem>
             );
           })}
-          
-          {pageCount > 5 && currentPage < pageCount - 2 && (
-            <PaginationItem>
-              {/* Fixed: Replaced disabled prop with a CSS class for styling */}
-              <span className="flex h-9 w-9 items-center justify-center opacity-50">...</span>
-            </PaginationItem>
-          )}
-          
-          {pageCount > 5 && (
-            <PaginationItem>
-              <PaginationLink 
-                onClick={() => handlePageChange(pageCount)}
-                isActive={currentPage === pageCount}
-              >
-                {pageCount}
-              </PaginationLink>
-            </PaginationItem>
-          )}
           
           <PaginationItem>
             <PaginationNext 

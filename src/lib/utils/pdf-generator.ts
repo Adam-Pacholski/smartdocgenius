@@ -9,7 +9,7 @@ const A4_HEIGHT_MM = 297;
 
 // A4 dimensions in pixels at 96 DPI (approximate)
 const A4_WIDTH_PX = 794;
-const A4_HEIGHT_PX = 1123;
+export const A4_HEIGHT_PX = 1123;
 
 // Function to check if document needs multiple pages
 export const estimatePageCount = (elementRef: HTMLElement): number => {
