@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileDown } from 'lucide-react';
@@ -11,19 +11,26 @@ interface DocumentPreviewProps {
   template: DocumentTemplate;
   formData: Record<string, string>;
   config?: Record<string, any>;
+  previewRef?: React.RefObject<HTMLDivElement>;
 }
 
-const DocumentPreview: React.FC<DocumentPreviewProps> = ({ template, formData, config }) => {
-  const previewRef = useRef<HTMLDivElement>(null);
+const DocumentPreview: React.FC<DocumentPreviewProps> = ({ 
+  template, 
+  formData, 
+  config,
+  previewRef
+}) => {
+  const internalRef = React.useRef<HTMLDivElement>(null);
+  const actualRef = previewRef || internalRef;
   
   const htmlContent = template.template(formData, config);
   
   const handleExportPdf = async () => {
-    if (previewRef.current) {
+    if (actualRef.current) {
       const fileName = `${formData.firstName || 'dokument'}_${formData.lastName || ''}_${new Date().toISOString().slice(0, 10)}.pdf`;
       
       try {
-        await generatePdfFromHtml(previewRef.current, fileName);
+        await generatePdfFromHtml(actualRef.current, fileName);
         toast({
           title: "Eksport PDF",
           description: "Dokument został wygenerowany i pobrany.",
@@ -54,7 +61,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ template, formData, c
       <CardContent>
         <div className="bg-white rounded-md border overflow-hidden shadow-sm">
           <div 
-            ref={previewRef}
+            ref={actualRef}
             className="w-full h-[800px] overflow-auto p-6"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />

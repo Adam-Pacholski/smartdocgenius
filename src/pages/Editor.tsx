@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
 import DocumentTypeSelector from '@/components/DocumentTypeSelector';
@@ -11,6 +11,7 @@ import documentTypes, { DocumentTemplate } from '@/lib/templates';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { SECTIONS } from '@/lib/types/document-types';
 import { sampleCoverLetterData } from '@/lib/utils/sample-data';
+import { generatePdfFromHtml } from '@/lib/utils/pdf-generator';
 
 enum EditorStep {
   SelectType,
@@ -28,6 +29,7 @@ const SECTION_ORDER = [
 ];
 
 const Editor: React.FC = () => {
+  const previewRef = useRef<HTMLDivElement>(null);
   const [currentStep, setCurrentStep] = useState<EditorStep>(EditorStep.SelectType);
   const [selectedTypeId, setSelectedTypeId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
@@ -79,6 +81,26 @@ const Editor: React.FC = () => {
   const handleNext = () => {
     if (currentSectionIndex < SECTION_ORDER.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
+    }
+  };
+
+  const handleExportPdf = async () => {
+    if (previewRef.current && selectedTemplate) {
+      const fileName = `${formData.firstName || 'dokument'}_${formData.lastName || ''}_${new Date().toISOString().slice(0, 10)}.pdf`;
+      
+      try {
+        await generatePdfFromHtml(previewRef.current, fileName);
+        toast({
+          title: "Eksport PDF",
+          description: "Dokument został wygenerowany i pobrany.",
+        });
+      } catch (error) {
+        toast({
+          title: "Błąd eksportu",
+          description: "Nie udało się wygenerować dokumentu PDF.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -168,6 +190,7 @@ const Editor: React.FC = () => {
                             onBack={handleBack}
                             onNext={currentSectionIndex < SECTION_ORDER.length - 1 ? handleNext : undefined}
                             currentSection={section}
+                            onExport={handleExportPdf}
                           />
                         )}
                       </TabsContent>
@@ -180,6 +203,7 @@ const Editor: React.FC = () => {
                   template={selectedTemplate}
                   formData={formData}
                   config={config}
+                  previewRef={previewRef}
                 />
               </div>
             </div>
