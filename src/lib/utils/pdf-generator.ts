@@ -26,22 +26,29 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
   try {
     console.log("Starting PDF generation");
     
-    // Create a new div to hold the content
-    const container = document.createElement('div');
-    container.innerHTML = elementRef.innerHTML;
-    container.style.position = 'fixed';
-    container.style.left = '-9999px';
-    container.style.top = '0';
-    container.style.width = '794px'; // A4 width in pixels at 96 DPI
-    container.style.height = 'auto';
+    // Create a new jsPDF instance
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
     
-    // Append to document body
-    document.body.appendChild(container);
+    // Create a deep clone of the element to avoid modifying the original
+    const clone = elementRef.cloneNode(true) as HTMLElement;
     
-    // Find the clause element
-    const clauseElement = container.querySelector('[data-clause]') as HTMLElement;
+    // Create a temporary container
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.top = '0';
+    tempContainer.style.width = '794px'; // A4 width in pixels at 96 DPI
+    tempContainer.style.height = 'auto';
+    tempContainer.appendChild(clone);
+    document.body.appendChild(tempContainer);
+    
+    // Find the clause element in the clone
+    const clauseElement = clone.querySelector('[data-clause]') as HTMLElement;
     let clauseHtml = '';
     
+    // Extract clause content if it exists
     if (clauseElement) {
       clauseHtml = clauseElement.outerHTML;
       clauseElement.style.display = 'none'; // Hide clause for main content
@@ -49,108 +56,85 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     
     console.log("Creating canvas for document");
     
-    // Create canvas for the document
-    const canvas = await html2canvas(container, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      logging: true,
-      backgroundColor: '#ffffff'
-    });
-    
-    document.body.removeChild(container);
-    
-    // Initialize PDF
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    
-    // Get PDF dimensions
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-    
-    // Calculate scaling
-    const ratio = canvas.width / canvas.height;
-    const width = pdfWidth;
-    const height = width / ratio;
-    
-    // If content fills multiple pages
-    const pageCount = Math.ceil(height / pdfHeight);
-    
-    console.log(`Document will use ${pageCount} pages`);
-    
-    // Add clause to a separate div for rendering
-    if (clauseHtml && pageCount > 0) {
-      const clauseContainer = document.createElement('div');
-      clauseContainer.innerHTML = clauseHtml;
-      clauseContainer.style.position = 'fixed';
-      clauseContainer.style.left = '-9999px';
-      clauseContainer.style.padding = '0 30px'; // Add padding to match the template
-      document.body.appendChild(clauseContainer);
-      
-      const clauseCanvas = await html2canvas(clauseContainer, {
+    try {
+      // Generate canvas for main content
+      const mainCanvas = await html2canvas(clone, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
+        logging: true,
         backgroundColor: '#ffffff'
       });
       
-      document.body.removeChild(clauseContainer);
-      
-      // Add content page by page
-      for (let i = 0; i < pageCount; i++) {
-        if (i > 0) {
-          pdf.addPage();
-        }
-        
-        // Source height and position
-        const sourceY = i * canvas.height / pageCount;
-        const sourceHeight = canvas.height / pageCount;
-        
-        // Add image slice to PDF
-        // Fix: Use correct syntax for addImage with properly defined sourceX, sourceY, etc.
+      // Add main content to PDF
+      if (mainCanvas.width > 0 && mainCanvas.height > 0) {
         pdf.addImage({
-          imageData: canvas,
+          imageData: mainCanvas,
           format: 'JPEG',
           x: 0,
           y: 0,
           width: pdfWidth,
-          height: pdfHeight,
-          alias: `p${i}`,
-          compression: 'FAST',
-          rotation: 0
+          height: pdfHeight * 0.9, // Leave space for clause
+          compression: 'MEDIUM'
         });
+      } else {
+        console.error('Main canvas has zero dimensions:', mainCanvas.width, mainCanvas.height);
+        throw new Error('Main canvas has no dimensions');
+      }
+      
+      // Add clause if it exists
+      if (clauseHtml) {
+        // Create a separate element for the clause
+        const clauseContainer = document.createElement('div');
+        clauseContainer.innerHTML = clauseHtml;
+        clauseContainer.style.position = 'absolute';
+        clauseContainer.style.left = '-9999px';
+        clauseContainer.style.width = '794px';
+        clauseContainer.style.padding = '0 30px';
+        document.body.appendChild(clauseContainer);
         
-        // Add clause to last page
-        if (i === pageCount - 1) {
-          const clauseRatio = clauseCanvas.width / clauseCanvas.height;
-          const clauseWidth = pdfWidth;
-          const clauseHeight = clauseWidth / clauseRatio;
+        try {
+          // Generate canvas for clause
+          const clauseCanvas = await html2canvas(clauseContainer, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff'
+          });
           
-          // Position at bottom of page with proper margin
-          pdf.addImage(
-            clauseCanvas,
-            'JPEG',
-            0,
-            pdfHeight - clauseHeight - 5, // 5mm from bottom
-            clauseWidth,
-            clauseHeight
-          );
+          // Check if clause canvas has dimensions
+          if (clauseCanvas.width > 0 && clauseCanvas.height > 0) {
+            // Add clause to bottom of page
+            pdf.addImage({
+              imageData: clauseCanvas,
+              format: 'JPEG',
+              x: 0,
+              y: pdfHeight * 0.9, // Position at bottom
+              width: pdfWidth,
+              height: pdfHeight * 0.1,
+              compression: 'MEDIUM'
+            });
+          } else {
+            console.error('Clause canvas has zero dimensions:', clauseCanvas.width, clauseCanvas.height);
+          }
+          
+          // Clean up
+          document.body.removeChild(clauseContainer);
+        } catch (clauseError) {
+          console.error('Error rendering clause:', clauseError);
         }
       }
-    } else {
-      // For single page documents, add the whole canvas
-      pdf.addImage(
-        canvas,
-        'JPEG',
-        0,
-        0,
-        pdfWidth,
-        height < pdfHeight ? height : pdfHeight
-      );
+      
+      // Save PDF
+      pdf.save(fileName);
+      console.log("PDF generation complete");
+    } catch (canvasError) {
+      console.error('Error creating canvas:', canvasError);
+      throw canvasError;
+    } finally {
+      // Clean up
+      document.body.removeChild(tempContainer);
     }
-    
-    // Save PDF
-    pdf.save(fileName);
-    console.log("PDF generation complete");
     
   } catch (error) {
     console.error('Error generating PDF:', error);

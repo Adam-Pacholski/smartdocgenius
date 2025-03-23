@@ -28,6 +28,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const [pageCount, setPageCount] = useState(1);
   const [pageBreaks, setPageBreaks] = useState<number[]>([]);
   const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
   
   const htmlContent = template.template(formData, config);
   
@@ -71,6 +72,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     const fileName = `${formData.firstName || 'dokument'}_${formData.lastName || ''}_${new Date().toISOString().slice(0, 10)}.pdf`;
     
     setIsExporting(true);
+    setExportError(null);
     
     try {
       console.log("Starting PDF export");
@@ -81,9 +83,11 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       });
     } catch (error) {
       console.error("PDF export error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Nieznany błąd";
+      setExportError(errorMessage);
       toast({
         title: "Błąd eksportu",
-        description: "Nie udało się wygenerować dokumentu PDF. Spróbuj ponownie za chwilę.",
+        description: "Nie udało się wygenerować dokumentu PDF. Szczegóły w konsoli.",
         variant: "destructive",
       });
     } finally {
@@ -126,6 +130,15 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             </AlertDescription>
           </Alert>
         )}
+        
+        {exportError && (
+          <Alert className="mb-4 bg-red-50 border-red-200 text-red-800">
+            <AlertDescription>
+              Wystąpił błąd podczas generowania PDF: {exportError}
+            </AlertDescription>
+          </Alert>
+        )}
+        
         <div className="bg-white rounded-md border overflow-hidden shadow-sm">
           <div className="relative">
             <div 
