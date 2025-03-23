@@ -47,9 +47,11 @@ const Index: React.FC = () => {
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Button variant="outline" size="lg">
-                Dowiedz się więcej
-              </Button>
+              <Link to="/o-mnie">
+                <Button variant="outline" size="lg">
+                  Dowiedz się więcej
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

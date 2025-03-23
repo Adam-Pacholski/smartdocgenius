@@ -18,16 +18,24 @@ const Header: React.FC = () => {
         <nav className="hidden ml-10 md:flex items-center space-x-4 lg:space-x-6">
           <NavigationItem to="/" label="Strona główna" />
           <NavigationItem to="/editor" label="Edytor" />
+          <NavigationItem to="/o-mnie" label="O mnie" />
+          <NavigationItem to="/kontakt" label="Kontakt" />
         </nav>
         <div className="flex-1" />
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" size="sm">
-            O nas
-          </Button>
-          <Button variant="ghost" size="sm">
-            Kontakt
-          </Button>
-          <Button size="sm">Rozpocznij</Button>
+          <Link to="/o-mnie">
+            <Button variant="ghost" size="sm">
+              O mnie
+            </Button>
+          </Link>
+          <Link to="/kontakt">
+            <Button variant="ghost" size="sm">
+              Kontakt
+            </Button>
+          </Link>
+          <Link to="/editor">
+            <Button size="sm">Rozpocznij</Button>
+          </Link>
         </div>
         <button
           className="ml-2 md:hidden"
@@ -43,10 +51,12 @@ const Header: React.FC = () => {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-b">
             <NavigationItem to="/" label="Strona główna" mobile />
             <NavigationItem to="/editor" label="Edytor" mobile />
-            <NavigationItem to="#" label="O nas" mobile />
-            <NavigationItem to="#" label="Kontakt" mobile />
+            <NavigationItem to="/o-mnie" label="O mnie" mobile />
+            <NavigationItem to="/kontakt" label="Kontakt" mobile />
             <div className="pt-2">
-              <Button className="w-full">Rozpocznij</Button>
+              <Link to="/editor">
+                <Button className="w-full">Rozpocznij</Button>
+              </Link>
             </div>
           </div>
         </div>
