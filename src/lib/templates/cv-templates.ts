@@ -1,11 +1,9 @@
 
 import { DocumentTemplate, TemplateField, SECTIONS } from '../types/document-types';
-import { 
-  blueHeaderCvTemplate, 
-  tealSidebarCvTemplate, 
-  minimalistIconsCvTemplate, 
-  whiteWithPhotoCvTemplate 
-} from './template-utils';
+import { blueHeaderCvTemplate } from './blue-header-cv-template';
+import { tealSidebarCvTemplate } from './teal-sidebar-cv-template';
+import { minimalistIconsCvTemplate } from './minimalist-icons-cv-template';
+import { whiteWithPhotoCvTemplate } from './white-with-photo-cv-template';
 
 // Define CV fields with ability to track skills, experience, education, etc.
 const cvFields: TemplateField[] = [
@@ -53,7 +51,7 @@ export const cvTemplates: DocumentTemplate[] = [
   {
     id: 'cv-teal-sidebar',
     name: 'CV z turkusowym paskiem',
-    description: 'Eleganckie CV z turkusowym paskiem bocznym i paskami postępu',
+    description: 'Eleganckie CV z turkusowym paskiem bocznym i paskami postępu umiejętności',
     thumbnail: '/lm-teal-sidebar.png',
     fields: cvFields,
     template: tealSidebarCvTemplate,

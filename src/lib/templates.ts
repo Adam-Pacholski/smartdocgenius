@@ -21,7 +21,7 @@ const documentTypes: DocumentType[] = [
   {
     id: 'other',
     name: 'Inne dokumenty',
-    description: 'Masz pomysł na nowy typ dokumentu? Daj nam znać, a rozważymy dodanie go do naszej oferty!',
+    description: 'Masz pomysł na inny typ dokumentu? Daj nam znać, a rozważymy dodanie go do naszej oferty!',
     icon: 'file-text',
     templates: [],
   }
