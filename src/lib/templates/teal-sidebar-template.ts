@@ -47,12 +47,12 @@ export const tealSidebarTemplate: DocumentTemplate = {
     return `
       <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; position: relative; box-sizing: border-box;">
         <!-- Two-column layout with fixed heights -->
-        <div style="display: flex; min-height: 1123px;">
+        <div style="display: flex; min-height: 1123px; overflow: hidden; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
           <!-- Left Sidebar - must extend to the full height -->
-          <div style="width: 35%; background-color: ${primaryColor}; color: white; padding: 25px 16px; box-sizing: border-box; min-height: 1123px;">
+          <div style="width: 35%; background-color: ${primaryColor}; color: white; padding: 25px 16px; box-sizing: border-box; min-height: 1123px; border-radius: 6px 0 0 6px;">
             ${data.photo ? `
-              <div style="width: 130px; height: 160px; overflow: hidden; margin: 0 auto 20px; display: block; text-align: center;">
-                <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullNameUpper}" />
+              <div style="width: 130px; height: 160px; overflow: hidden; margin: 10px auto 30px; display: block; text-align: center;">
+                <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.2);" alt="${fullNameUpper}" />
               </div>
             ` : ''}
             
@@ -90,7 +90,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
           </div>
           
           <!-- Main Content -->
-          <div style="width: 65%; padding: 25px 25px; box-sizing: border-box; background-color: white; position: relative; display: flex; flex-direction: column; min-height: 1123px;">
+          <div style="width: 65%; padding: 25px 25px; box-sizing: border-box; background-color: white; position: relative; display: flex; flex-direction: column; min-height: 1123px; border-radius: 0 6px 6px 0;">
             <!-- Header -->
             <div style="margin-bottom: 30px;">
               <h1 style="margin: 0; color: ${primaryColor}; font-size: 26px;">${fullNameUpper}</h1>

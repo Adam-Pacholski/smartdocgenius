@@ -43,7 +43,7 @@ export const blueHeaderTemplate: DocumentTemplate = {
     return `
       <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; box-sizing: border-box;">
         <!-- Header -->
-        <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px; margin: 0; width: 100%; box-sizing: border-box;">
+        <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px; margin: 0; width: 100%; box-sizing: border-box; border-radius: 6px 6px 0 0; align-items: center;">
           <div style="flex: 1; padding: 0;">
             <h1 style="margin: 0; font-size: 24px; text-transform: uppercase;">${fullName}</h1>
             <p style="margin: 0; text-transform: uppercase; font-size: 14px;">${position}</p>
@@ -55,7 +55,7 @@ export const blueHeaderTemplate: DocumentTemplate = {
             </div>
           </div>
           ${data.photo ? `
-            <div style="width: 120px; height: 150px; overflow: hidden; margin-left: 20px;">
+            <div style="width: 120px; height: 150px; overflow: hidden; margin-left: 20px; display: flex; align-items: center; justify-content: center;">
               <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullName}" />
             </div>
           ` : ''}
