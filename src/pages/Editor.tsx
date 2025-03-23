@@ -15,15 +15,6 @@ enum EditorStep {
   EditDocument,
 }
 
-// Sekcje formularza
-const SECTIONS = {
-  PERSONAL: 'dane_osobowe',
-  RECIPIENT: 'odbiorca',
-  CONTENT: 'tresc_listu',
-  CLAUSE: 'klauzula',
-  CONFIG: 'konfiguracja'
-};
-
 // Kolejność sekcji
 const SECTION_ORDER = [
   SECTIONS.CONFIG,
