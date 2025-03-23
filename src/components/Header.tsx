@@ -23,16 +23,6 @@ const Header: React.FC = () => {
         </nav>
         <div className="flex-1" />
         <div className="hidden md:flex items-center space-x-4">
-          <Link to="/o-mnie">
-            <Button variant="ghost" size="sm">
-              O mnie
-            </Button>
-          </Link>
-          <Link to="/kontakt">
-            <Button variant="ghost" size="sm">
-              Kontakt
-            </Button>
-          </Link>
           <Link to="/editor">
             <Button size="sm">Rozpocznij</Button>
           </Link>

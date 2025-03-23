@@ -51,13 +51,40 @@ const Contact: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // In a real application, this would send an email to info@ap-development.eu
-      console.log("Sending email to info@ap-development.eu with:", values);
+      // Create email content
+      const adminEmailContent = `
+        Nowa wiadomość od: ${values.name}
+        Email: ${values.email}
+        Temat: ${values.subject}
+        
+        Wiadomość:
+        ${values.message}
+      `;
       
-      // Simulate sending confirmation email to the user
+      const userEmailContent = `
+        Dziękujemy za kontakt z APDocs!
+        
+        Otrzymaliśmy Twoją wiadomość i odpowiemy najszybciej jak to możliwe.
+        
+        Podsumowanie Twojej wiadomości:
+        Temat: ${values.subject}
+        Wiadomość: ${values.message}
+        
+        Z poważaniem,
+        Zespół APDocs
+      `;
+      
+      // Normally we would send this to a server endpoint or use a service like EmailJS
+      // For demonstration, let's log and show what would be sent
+      console.log("Sending email to info@ap-development.eu with:", values);
       console.log("Sending confirmation email to:", values.email);
       
-      // Email sent successfully 
+      // In a production environment, you would use one of these approaches:
+      // 1. Call a server endpoint (requires backend)
+      // 2. Use a service like EmailJS, Formspree, or similar
+      // 3. Set up a Netlify form (if hosting on Netlify)
+      
+      // Simulate successful email sending
       toast({
         title: "Wiadomość wysłana!",
         description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe. Potwierdzenie zostało wysłane na Twój adres email.",
@@ -68,7 +95,7 @@ const Contact: React.FC = () => {
       console.error("Error sending email:", error);
       toast({
         title: "Wystąpił błąd",
-        description: "Nie udało się wysłać wiadomości. Spróbuj ponownie później.",
+        description: "Nie udało się wysłać wiadomości. Spróbuj ponownie później lub skontaktuj się bezpośrednio przez email.",
         variant: "destructive",
       });
     } finally {
@@ -167,6 +194,15 @@ const Contact: React.FC = () => {
                   </Button>
                 </form>
               </Form>
+              
+              <div className="mt-6 text-sm text-muted-foreground border-t pt-4">
+                <p>
+                  <strong>Uwaga:</strong> Aby wysłać wiadomość bezpośrednio, napisz email na adres{' '}
+                  <a href="mailto:info@ap-development.eu" className="text-primary hover:underline">
+                    info@ap-development.eu
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
           
