@@ -15,32 +15,32 @@ export const personalDataFields: TemplateField[] = [
 
 // Pola formularza dla podsumowania zawodowego
 export const summaryFields: TemplateField[] = [
-  { id: 'summary', label: 'Podsumowanie zawodowe', placeholder: 'Krótkie podsumowanie Twoich umiejętności i doświadczenia...', type: 'textarea', required: false, section: SECTIONS.SUMMARY },
+  { id: 'summary', label: 'Podsumowanie zawodowe', placeholder: 'Jestem doświadczonym przedstawicielem handlowym z podejściem silnym, zorientowanym na realizację B2B, B2C. Moje doświadczenie obejmuje długoterminowe relacje z klientami, skuteczne negocjacje oraz realizację ambitnych celów sprzedażowych...', type: 'textarea', required: false, section: SECTIONS.SUMMARY },
 ];
 
 // Pola formularza dla doświadczenia zawodowego
 export const experienceFields: TemplateField[] = [
-  { id: 'experience', label: 'Doświadczenie zawodowe', placeholder: 'Opisz swoje doświadczenie zawodowe...\n\nPrzykład:\n2020-obecnie: Frontend Developer w XYZ\n- Tworzenie aplikacji webowych w React\n- Optymalizacja wydajności stron\n\n2018-2020: Junior Developer w ABC\n- Rozwój interfejsu użytkownika\n- Współpraca z zespołem UX', type: 'textarea', required: false, section: SECTIONS.EXPERIENCE },
+  { id: 'experience', label: 'Doświadczenie zawodowe', placeholder: 'Opisz swoje doświadczenie zawodowe...\n\nPrzykład:\n01.2020 - obecnie: Przedstawiciel Handlowy w XYZ\n- Pozyskiwanie klientów biznesowych\n- Zwiększenie sprzedaży o 20% poprzez budowanie relacji z kluczowymi klientami\n\n06.2018 - 12.2019: Młodszy Przedstawiciel Handlowy w ABC\n- Prowadzenie prezentacji produktowych i szkoleń dla klientów\n- Realizowanie miesięcznych wyników sprzedaży z nadwyżką', type: 'textarea', required: false, section: SECTIONS.EXPERIENCE },
 ];
 
 // Pola formularza dla wykształcenia
 export const educationFields: TemplateField[] = [
-  { id: 'education', label: 'Wykształcenie', placeholder: 'Opisz swoje wykształcenie...\n\nPrzykład:\n2015-2020: Informatyka, Politechnika Warszawska\n- Specjalizacja: Inżynieria Oprogramowania\n- Praca magisterska: "Implementacja algorytmów uczenia maszynowego"', type: 'textarea', required: false, section: SECTIONS.EDUCATION },
+  { id: 'education', label: 'Wykształcenie', placeholder: 'Opisz swoje wykształcenie...\n\nPrzykład:\n09.2015 - 06.2019: Zarządzanie (Uniwersytet Warszawski)\n- Specjalizacja: Sprzedaż i marketing\n- Praca magisterska: "Strategie zwiększania efektywności sprzedaży w sektorze B2B"\n\n10.2012 - 06.2015: Licencjat z Ekonomii / Szkoła Główna Handlowa w Warszawie', type: 'textarea', required: false, section: SECTIONS.EDUCATION },
 ];
 
 // Pola formularza dla umiejętności
 export const skillsFields: TemplateField[] = [
-  { id: 'skills', label: 'Umiejętności', placeholder: 'JavaScript: 4, React: 5, Node.js: 3, HTML/CSS: 5\n\nWpisz umiejętności w formacie "Nazwa: ocena (1-5)", każda w nowej linii', type: 'textarea', required: false, section: SECTIONS.SKILLS },
+  { id: 'skills', label: 'Umiejętności', placeholder: 'Techniki sprzedaży: 5\nNegocjacje biznesowe: 4\nObsługa CRM: 5\nPrezentacje i wystąpienia publiczne: 4\n\nWpisz umiejętności w formacie "Nazwa: ocena (1-5)", każda w nowej linii', type: 'textarea', required: false, section: SECTIONS.SKILLS },
 ];
 
 // Pola formularza dla języków obcych
 export const languagesFields: TemplateField[] = [
-  { id: 'languages', label: 'Języki obce', placeholder: 'Angielski: zaawansowany (C1), Niemiecki: średniozaawansowany (B1)\n\nWpisz języki w formacie "Język: poziom", każdy w nowej linii', type: 'textarea', required: false, section: SECTIONS.ADDITIONAL },
+  { id: 'languages', label: 'Znajomość języków', placeholder: 'Angielski: poziom C1\nNiemiecki: poziom B2\n\nWpisz języki w formacie "Język: poziom", każdy w nowej linii', type: 'textarea', required: false, section: SECTIONS.ADDITIONAL },
 ];
 
 // Pola formularza dla zainteresowań
 export const hobbiesFields: TemplateField[] = [
-  { id: 'hobbies', label: 'Zainteresowania', placeholder: 'Twoje zainteresowania...', type: 'textarea', required: false, section: SECTIONS.ADDITIONAL },
+  { id: 'hobbies', label: 'Zainteresowania', placeholder: 'Nowe technologie, taniec', type: 'textarea', required: false, section: SECTIONS.ADDITIONAL },
 ];
 
 // Pola formularza dla klauzuli RODO

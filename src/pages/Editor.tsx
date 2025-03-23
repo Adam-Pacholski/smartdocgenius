@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
@@ -27,6 +28,18 @@ const SECTION_ORDER = [
   SECTIONS.CLAUSE,
 ];
 
+// Kolejność sekcji dla CV
+const CV_SECTION_ORDER = [
+  SECTIONS.CONFIG,
+  SECTIONS.PERSONAL,
+  SECTIONS.SUMMARY,
+  SECTIONS.EXPERIENCE,
+  SECTIONS.EDUCATION,
+  SECTIONS.SKILLS,
+  SECTIONS.ADDITIONAL,
+  SECTIONS.CLAUSE,
+];
+
 const Editor: React.FC = () => {
   const previewRef = useRef<HTMLDivElement>(null);
   const [currentStep, setCurrentStep] = useState<EditorStep>(EditorStep.SelectType);
@@ -41,6 +54,12 @@ const Editor: React.FC = () => {
   });
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
+  // Determine if we're in CV mode
+  const isCvMode = selectedTypeId === 'cv';
+  
+  // Get the appropriate section order based on document type
+  const activeSectionOrder = isCvMode ? CV_SECTION_ORDER : SECTION_ORDER;
+  
   const handleSelectType = (typeId: string) => {
     setSelectedTypeId(typeId);
     setCurrentStep(EditorStep.SelectTemplate);
@@ -82,7 +101,7 @@ const Editor: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (currentSectionIndex < SECTION_ORDER.length - 1) {
+    if (currentSectionIndex < activeSectionOrder.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
     }
   };
@@ -108,7 +127,7 @@ const Editor: React.FC = () => {
     }
   };
 
-  const currentSection = SECTION_ORDER[currentSectionIndex];
+  const currentSection = activeSectionOrder[currentSectionIndex];
 
   const sectionTitles: Record<string, string> = {
     'dane_osobowe': 'Dane osobowe',
@@ -116,6 +135,11 @@ const Editor: React.FC = () => {
     'tresc_listu': 'Treść listu',
     'klauzula': 'Klauzula',
     'konfiguracja': 'Konfiguracja',
+    'podsumowanie': 'Podsumowanie',
+    'doswiadczenie': 'Doświadczenie',
+    'wyksztalcenie': 'Wykształcenie',
+    'umiejetnosci': 'Umiejętności',
+    'dodatkowe': 'Dodatkowe',
   };
 
   return (
@@ -155,10 +179,10 @@ const Editor: React.FC = () => {
               <div>
                 {currentStep === EditorStep.EditDocument && (
                   <Tabs 
-                    defaultValue={SECTION_ORDER[currentSectionIndex]} 
+                    defaultValue={activeSectionOrder[currentSectionIndex]} 
                     value={currentSection}
                     onValueChange={(value) => {
-                      const newIndex = SECTION_ORDER.findIndex(section => section === value);
+                      const newIndex = activeSectionOrder.findIndex(section => section === value);
                       if (newIndex !== -1) {
                         setCurrentSectionIndex(newIndex);
                       }
@@ -166,7 +190,7 @@ const Editor: React.FC = () => {
                     className="mb-4"
                   >
                     <TabsList className="grid grid-cols-5 w-full">
-                      {SECTION_ORDER.map((section) => (
+                      {activeSectionOrder.map((section) => (
                         <TabsTrigger 
                           key={section}
                           value={section} 
@@ -177,7 +201,7 @@ const Editor: React.FC = () => {
                       ))}
                     </TabsList>
                     
-                    {SECTION_ORDER.map((section) => (
+                    {activeSectionOrder.map((section) => (
                       <TabsContent key={section} value={section}>
                         {section === SECTIONS.CONFIG ? (
                           <TemplateConfiguration 
@@ -192,7 +216,7 @@ const Editor: React.FC = () => {
                             formData={formData}
                             setFormData={setFormData}
                             onBack={handleBack}
-                            onNext={currentSectionIndex < SECTION_ORDER.length - 1 ? handleNext : undefined}
+                            onNext={currentSectionIndex < activeSectionOrder.length - 1 ? handleNext : undefined}
                             currentSection={section}
                             onExport={handleExportPdf}
                           />
