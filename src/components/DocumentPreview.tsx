@@ -155,7 +155,8 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           
           {pageCount > 5 && currentPage < pageCount - 2 && (
             <PaginationItem>
-              <PaginationLink disabled>...</PaginationLink>
+              {/* Fixed: Replaced disabled prop with a CSS class for styling */}
+              <span className="flex h-9 w-9 items-center justify-center opacity-50">...</span>
             </PaginationItem>
           )}
           
