@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -248,55 +247,53 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           </Alert>
         )}
         
-        <div className="bg-white rounded-md border overflow-hidden shadow-sm">
-          <div className="relative flex justify-center">
-            <ScrollArea 
-              className="w-full h-[700px]"
-              scrollHideDelay={0}
-            >
-              <div className="flex justify-center">
-                <div 
-                  ref={actualRef}
-                  className="a4-preview w-[21cm]"
-                  style={{ 
-                    padding: 0,
-                    transform: `scale(${scale})`,
-                    transformOrigin: 'top center',
-                    margin: '0 auto',
-                    maxWidth: '100%',
-                    backgroundColor: '#fff'
-                  }}
-                  dangerouslySetInnerHTML={{ __html: htmlContent }}
-                />
-              </div>
+        <div className="bg-white rounded-md border overflow-hidden shadow-sm relative">
+          <ScrollArea 
+            className="max-w-full h-[700px]"
+            scrollHideDelay={0}
+          >
+            <div className="flex justify-center py-4 px-2">
+              <div 
+                ref={actualRef}
+                className="a4-preview mx-auto"
+                style={{ 
+                  padding: 0,
+                  width: '21cm',
+                  transform: `scale(${scale})`,
+                  transformOrigin: 'top center',
+                  backgroundColor: '#fff',
+                  maxWidth: '100%'
+                }}
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
+              />
               
               {previewLoaded && renderPageBreaks()}
-            </ScrollArea>
-            
-            {pageCount > 1 && (
-              <div className="absolute top-2 right-2 bg-white shadow-md rounded-md px-2 py-1 text-sm flex items-center">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-8 w-8"
-                  disabled={currentPage === 1}
-                  onClick={() => handlePageChange(currentPage - 1)}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span>{currentPage} / {pageCount}</span>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-8 w-8"
-                  disabled={currentPage === pageCount}
-                  onClick={() => handlePageChange(currentPage + 1)}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-          </div>
+            </div>
+          </ScrollArea>
+          
+          {pageCount > 1 && (
+            <div className="absolute top-2 right-2 bg-white shadow-md rounded-md px-2 py-1 text-sm flex items-center">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <span>{currentPage} / {pageCount}</span>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8"
+                disabled={currentPage === pageCount}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
         
         {renderPagination()}
