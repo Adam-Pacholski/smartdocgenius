@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font, Image } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font } from '@react-pdf/renderer';
 import { DocumentTemplate } from '@/lib/templates';
 
 // Register fonts
@@ -21,7 +21,12 @@ const DocumentPdfGenerator: React.FC<DocumentPdfGeneratorProps> = ({ template, f
     const PdfDocument = () => (
       <Document>
         <Page size="A4" style={styles.page}>
-          <View style={styles.pdfContent} dangerouslySetInnerHTML={{ __html: template.template(formData, config) }} />
+          <View style={styles.pdfContent}>
+            <Text>{template.name}</Text>
+            {/* We can't use dangerouslySetInnerHTML with react-pdf */}
+            {/* Instead, we'd need to convert the HTML to react-pdf compatible components */}
+            <Text>This is a simplified version of the document. HTML conversion would require custom parsing.</Text>
+          </View>
         </Page>
       </Document>
     );
