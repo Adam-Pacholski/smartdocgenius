@@ -1,6 +1,21 @@
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { toast } from '@/components/ui/use-toast';
+
+// Function to check if document needs multiple pages
+export const estimatePageCount = (elementRef: HTMLElement): number => {
+  if (!elementRef) return 1;
+  
+  const computedStyle = window.getComputedStyle(elementRef);
+  const elementHeight = parseInt(computedStyle.height);
+  
+  // A4 height in pixels at 96 DPI is approximately 1123px
+  // We use 1000px as a conservative estimate accounting for margins
+  const pageHeightInPixels = 1000;
+  
+  return Math.ceil(elementHeight / pageHeightInPixels);
+};
 
 export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: string = 'document.pdf'): Promise<void> => {
   if (!elementRef) {
@@ -24,6 +39,13 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     
     // Add to document to calculate proper layout
     document.body.appendChild(clone);
+    
+    // Ensure the clause is moved to the bottom section
+    const clauseElement = clone.querySelector('[data-clause]') as HTMLElement;
+    if (clauseElement) {
+      clauseElement.style.position = 'relative';
+      // We'll handle exact positioning in the template
+    }
     
     // Create canvas with higher resolution
     const canvas = await html2canvas(clone, {
@@ -73,10 +95,6 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
       const sourceY = pageCount * (canvas.height * a4Height / imgHeight);
       const sourceHeight = canvas.height * pageHeight / imgHeight;
       
-      // For the first page, we use standard positioning
-      // For subsequent pages, we position at the top of the page
-      
-      // Fix: The addImage method in jsPDF v3 accepts fewer parameters
       // Create a separate canvas for each page slice
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');

@@ -22,8 +22,8 @@ export const blueHeaderTemplate: DocumentTemplate = {
     return `
       <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333;">
         <!-- Header -->
-        <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px 20px 20px 0; margin-left: 0;">
-          <div style="flex: 1;">
+        <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px; margin: 0;">
+          <div style="flex: 1; padding: 0 16px;">
             <h1 style="margin: 0; font-size: 24px; text-transform: uppercase;">${fullName}</h1>
             <p style="margin: 0; text-transform: uppercase; font-size: 14px;">${position}</p>
             <div style="margin-top: 15px; font-size: 13px;">
@@ -34,14 +34,14 @@ export const blueHeaderTemplate: DocumentTemplate = {
             </div>
           </div>
           ${data.photo ? `
-            <div style="width: 120px; height: 150px; overflow: hidden;">
+            <div style="width: 120px; height: 150px; overflow: hidden; margin-right: 20px;">
               <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullName}" />
             </div>
           ` : ''}
         </div>
         
         <!-- Document Body -->
-        <div style="padding: 20px; background-color: #f9f9f9; position: relative; min-height: 800px;">
+        <div style="padding: 20px 30px 90px 30px; background-color: #f9f9f9; position: relative; min-height: 800px;">
           <!-- Date -->
           <p style="margin-bottom: 15px;">${date}</p>
           
@@ -65,7 +65,7 @@ export const blueHeaderTemplate: DocumentTemplate = {
           <p style="margin-top: 5px; font-weight: bold;">${fullName}</p>
           
           <!-- Clause -->
-          <p style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 20px; right: 20px;">
+          <p data-clause style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 30px; right: 30px;">
             ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
           </p>
         </div>
@@ -91,9 +91,9 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
     const fontSize = config?.fontSize || '12px';
     
     return `
-      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; display: flex; flex-direction: column;">
+      <div style="max-width: 21cm; margin: 0; padding: 30px; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; display: flex; flex-direction: column;">
         <!-- Header section -->
-        <div style="display: flex; justify-content: space-between; padding: 20px 20px 20px 0;">
+        <div style="display: flex; justify-content: space-between; padding-bottom: 20px;">
           <div>
             <h1 style="margin: 0; color: ${primaryColor}; font-size: 26px;">${fullName}</h1>
             <p style="margin: 5px 0 0; color: #666; text-transform: uppercase;">${position}</p>
@@ -108,7 +108,7 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
         </div>
         
         <!-- Main content -->
-        <div style="padding: 0 20px 20px 0; position: relative; min-height: 800px;">
+        <div style="padding-bottom: 90px; position: relative; min-height: 800px;">
           <!-- Recipient -->
           <div style="margin-bottom: 20px;">
             ${data.recipientName ? `<p style="margin: 0 0 3px;">${data.recipientName}</p>` : ''}
@@ -129,7 +129,7 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
           <p style="margin-top: 5px;">${data.firstName} ${data.lastName}</p>
           
           <!-- Clause -->
-          <p style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 0; right: 20px;">
+          <p data-clause style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 30px; right: 30px;">
             ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
           </p>
         </div>
@@ -156,8 +156,8 @@ export const tealSidebarTemplate: DocumentTemplate = {
     
     return `
       <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; display: flex; min-height: 100vh;">
-        <!-- Left Sidebar - full height, touch left edge -->
-        <div style="width: 35%; background-color: ${primaryColor}; color: white; padding: 25px 15px 25px 0; box-sizing: border-box; min-height: 100vh; margin: 0;">
+        <!-- Left Sidebar - full height -->
+        <div style="width: 35%; background-color: ${primaryColor}; color: white; padding: 25px 16px; box-sizing: border-box; min-height: 100%; margin: 0;">
           ${data.photo ? `
             <div style="width: 130px; height: 160px; overflow: hidden; margin: 0 auto 20px; display: block; text-align: center;">
               <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullName}" />
@@ -198,7 +198,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
         </div>
         
         <!-- Main Content -->
-        <div style="width: 65%; padding: 25px 15px 25px 25px; box-sizing: border-box; background-color: white; position: relative; min-height: 100vh;">
+        <div style="width: 65%; padding: 25px 25px 90px 25px; box-sizing: border-box; background-color: white; position: relative; min-height: 100%;">
           <!-- Header -->
           <div style="margin-bottom: 30px;">
             <h1 style="margin: 0; color: ${primaryColor}; font-size: 26px;">${fullName}</h1>
@@ -226,7 +226,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
           <p style="margin-top: 5px;">${data.firstName} ${data.lastName}</p>
           
           <!-- Clause -->
-          <p style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 25px; right: 15px;">
+          <p data-clause style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 25px; right: 25px;">
             ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
           </p>
         </div>
@@ -252,9 +252,9 @@ export const minimalistIconsTemplate: DocumentTemplate = {
     const fontSize = config?.fontSize || '12px';
     
     return `
-      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; position: relative; min-height: 100vh;">
+      <div style="max-width: 21cm; margin: 0; padding: 30px; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; position: relative; min-height: 100vh;">
         <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; padding-right: 0; margin-left: 0;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">
           <div>
             <h1 style="margin: 0; color: ${primaryColor}; font-size: 28px;">${fullName}</h1>
             <p style="margin: 5px 0 0; color: #666; text-transform: uppercase;">${position}</p>
@@ -268,7 +268,7 @@ export const minimalistIconsTemplate: DocumentTemplate = {
         </div>
         
         <!-- Contact Info Icons -->
-        <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; margin: 15px 0 15px 0; color: #666; font-size: 13px;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; margin: 15px 0 20px 0; color: #666; font-size: 13px;">
           ${data.email ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">✉</span> ${data.email}</span>` : ''}
           ${data.phone ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">✆</span> ${data.phone}</span>` : ''}
           ${data.birthDate ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">📅</span> ${data.birthDate}</span>` : ''}
@@ -289,7 +289,7 @@ export const minimalistIconsTemplate: DocumentTemplate = {
         <p style="margin-bottom: 15px;">${data.opening || 'Szanowni Państwo,'}</p>
         
         <!-- Content -->
-        <div style="text-align: justify;">
+        <div style="text-align: justify; padding-bottom: 90px;">
           <p style="white-space: pre-line;">${data.body || ''}</p>
         </div>
         
@@ -298,7 +298,7 @@ export const minimalistIconsTemplate: DocumentTemplate = {
         <p style="margin-top: 5px;">${data.firstName} ${data.lastName}</p>
         
         <!-- Clause -->
-        <p style="margin-top: 40px; font-size: 10px; color: #666; border-top: 1px solid #eee; padding-top: 10px; position: absolute; bottom: 20px; left: 0; right: 0;">
+        <p data-clause style="margin-top: 40px; font-size: 10px; color: #666; border-top: 1px solid #eee; padding-top: 10px; position: absolute; bottom: 20px; left: 30px; right: 30px;">
           ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
         </p>
       </div>

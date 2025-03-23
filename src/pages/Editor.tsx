@@ -73,6 +73,10 @@ const Editor: React.FC = () => {
       }
     }
   };
+  
+  const handleBackToTemplates = () => {
+    setCurrentStep(EditorStep.SelectTemplate);
+  };
 
   const handleSectionChange = (sectionIndex: number) => {
     setCurrentSectionIndex(sectionIndex);
@@ -204,6 +208,7 @@ const Editor: React.FC = () => {
                   formData={formData}
                   config={config}
                   previewRef={previewRef}
+                  onBack={handleBackToTemplates}
                 />
               </div>
             </div>
