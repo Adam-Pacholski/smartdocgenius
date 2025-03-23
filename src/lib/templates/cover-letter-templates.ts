@@ -35,7 +35,7 @@ export const blueHeaderTemplate: DocumentTemplate = {
           </div>
           ${data.photo ? `
             <div style="width: 120px; height: 150px; overflow: hidden;">
-              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover;" alt="${fullName}" />
+              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" alt="${fullName}" />
             </div>
           ` : ''}
         </div>
@@ -53,7 +53,7 @@ export const blueHeaderTemplate: DocumentTemplate = {
           </div>
           
           <!-- Greeting -->
-          <p style="margin-bottom: 15px;">Szanowni Państwo,</p>
+          <p style="margin-bottom: 15px;">${data.opening || 'Szanowni Państwo,'}</p>
           
           <!-- Content -->
           <div style="text-align: justify;">
@@ -61,11 +61,11 @@ export const blueHeaderTemplate: DocumentTemplate = {
           </div>
           
           <!-- Closing -->
-          <p style="margin-top: 20px;">Z wyrazami szacunku,</p>
-          <p style="margin-top: 15px; font-weight: bold;">${fullName}</p>
+          <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
+          <p style="margin-top: 5px; font-weight: bold;">${fullName}</p>
           
           <!-- Clause -->
-          <p style="margin-top: 40px; font-size: 10px; color: #666;">
+          <p style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 40px; left: 40px; right: 40px;">
             ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
           </p>
         </div>
@@ -102,13 +102,13 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
           
           ${data.photo ? `
             <div style="width: 150px; height: 170px; border: 1px solid #ddd; overflow: hidden;">
-              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover;" alt="${fullName}" />
+              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" alt="${fullName}" />
             </div>
           ` : ''}
         </div>
         
         <!-- Main content -->
-        <div style="padding: 0 20px 20px 20px;">
+        <div style="padding: 0 20px 20px 20px; position: relative; min-height: 600px;">
           <!-- Recipient -->
           <div style="margin-bottom: 20px;">
             ${data.recipientName ? `<p style="margin: 0 0 3px;">${data.recipientName}</p>` : ''}
@@ -117,7 +117,7 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
           </div>
           
           <!-- Greeting -->
-          <p style="margin-bottom: 15px;">Szanowni Państwo,</p>
+          <p style="margin-bottom: 15px;">${data.opening || 'Szanowni Państwo,'}</p>
           
           <!-- Content -->
           <div style="text-align: justify;">
@@ -125,11 +125,11 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
           </div>
           
           <!-- Closing -->
-          <p style="margin-top: 20px;">Z wyrazami szacunku,</p>
-          <p style="margin-top: 15px;">${data.firstName} ${data.lastName}</p>
+          <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
+          <p style="margin-top: 5px;">${data.firstName} ${data.lastName}</p>
           
           <!-- Clause -->
-          <p style="margin-top: 40px; font-size: 10px; color: #666;">
+          <p style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 20px; right: 20px;">
             ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
           </p>
         </div>
@@ -150,21 +150,21 @@ export const tealSidebarTemplate: DocumentTemplate = {
     const city = data.address?.split(',')?.pop()?.trim() || 'Warszawa';
     const date = `${data.date || currentDate()}, ${city}`;
     
-    const primaryColor = config?.primaryColor || '#1abc9c';
+    const primaryColor = config?.primaryColor || '#1e88e5';
     const fontFamily = config?.fontFamily || 'Arial, sans-serif';
     const fontSize = config?.fontSize || '14px';
     
     return `
-      <div style="max-width: 21cm; margin: 0 auto; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; display: flex;">
-        <!-- Left Sidebar -->
-        <div style="width: 30%; background-color: ${primaryColor}; color: white; padding: 25px; box-sizing: border-box;">
+      <div style="max-width: 21cm; margin: 0 auto; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; display: flex; min-height: 100vh;">
+        <!-- Left Sidebar - full height, wider -->
+        <div style="width: 35%; background-color: ${primaryColor}; color: white; padding: 25px; box-sizing: border-box;">
           ${data.photo ? `
-            <div style="width: 130px; height: 160px; overflow: hidden; margin: 0 auto 20px;">
-              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover;" alt="${fullName}" />
+            <div style="width: 130px; height: 160px; overflow: hidden; margin: 0 auto 20px; display: block; text-align: center;">
+              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" alt="${fullName}" />
             </div>
           ` : ''}
           
-          <h2 style="margin: 0 0 20px; text-align: left; font-size: 16px; text-transform: uppercase;">DANE OSOBOWE</h2>
+          <h2 style="margin: 0 0 20px; text-align: center; font-size: 16px; text-transform: uppercase;">DANE OSOBOWE</h2>
           
           <div style="margin-bottom: 30px; font-size: 13px;">
             ${data.email ? `
@@ -198,7 +198,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
         </div>
         
         <!-- Main Content -->
-        <div style="width: 70%; padding: 25px; box-sizing: border-box; background-color: white;">
+        <div style="width: 65%; padding: 25px; box-sizing: border-box; background-color: white; position: relative; min-height: 100vh;">
           <!-- Header -->
           <div style="margin-bottom: 30px;">
             <h1 style="margin: 0; color: ${primaryColor}; font-size: 26px;">${fullName}</h1>
@@ -214,7 +214,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
           </div>
           
           <!-- Greeting -->
-          <p style="margin-bottom: 15px;">Szanowni Państwo,</p>
+          <p style="margin-bottom: 15px;">${data.opening || 'Szanowni Państwo,'}</p>
           
           <!-- Letter Content -->
           <div style="text-align: justify;">
@@ -222,11 +222,11 @@ export const tealSidebarTemplate: DocumentTemplate = {
           </div>
           
           <!-- Closing -->
-          <p style="margin-top: 20px;">Z wyrazami szacunku,</p>
-          <p style="margin-top: 15px;">${data.firstName} ${data.lastName}</p>
+          <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
+          <p style="margin-top: 5px;">${data.firstName} ${data.lastName}</p>
           
           <!-- Clause -->
-          <p style="margin-top: 40px; font-size: 10px; color: #666;">
+          <p style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 25px; right: 25px;">
             ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
           </p>
         </div>
@@ -252,7 +252,7 @@ export const minimalistIconsTemplate: DocumentTemplate = {
     const fontSize = config?.fontSize || '14px';
     
     return `
-      <div style="max-width: 21cm; margin: 0 auto; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333;">
+      <div style="max-width: 21cm; margin: 0 auto; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; position: relative; min-height: 100vh;">
         <!-- Header -->
         <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
           <div>
@@ -261,8 +261,8 @@ export const minimalistIconsTemplate: DocumentTemplate = {
           </div>
           
           ${data.photo ? `
-            <div style="width: 120px; height: 150px; overflow: hidden; border-radius: 5px;">
-              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover;" alt="${fullName}" />
+            <div style="width: 120px; height: 150px; overflow: hidden;">
+              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" alt="${fullName}" />
             </div>
           ` : ''}
         </div>
@@ -286,7 +286,7 @@ export const minimalistIconsTemplate: DocumentTemplate = {
         </div>
         
         <!-- Greeting -->
-        <p style="margin-bottom: 15px;">Szanowni Państwo,</p>
+        <p style="margin-bottom: 15px;">${data.opening || 'Szanowni Państwo,'}</p>
         
         <!-- Content -->
         <div style="text-align: justify;">
@@ -294,11 +294,11 @@ export const minimalistIconsTemplate: DocumentTemplate = {
         </div>
         
         <!-- Closing -->
-        <p style="margin-top: 20px;">Z wyrazami szacunku,</p>
-        <p style="margin-top: 15px;">${data.firstName} ${data.lastName}</p>
+        <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
+        <p style="margin-top: 5px;">${data.firstName} ${data.lastName}</p>
         
         <!-- Clause -->
-        <p style="margin-top: 40px; font-size: 10px; color: #666; border-top: 1px solid #eee; padding-top: 10px;">
+        <p style="margin-top: 40px; font-size: 10px; color: #666; border-top: 1px solid #eee; padding-top: 10px; position: absolute; bottom: 20px; left: 20px; right: 20px;">
           ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
         </p>
       </div>

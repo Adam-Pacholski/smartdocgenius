@@ -1,11 +1,11 @@
-
 export interface TemplateField {
   id: string;
   label: string;
   placeholder: string;
   type: 'text' | 'textarea' | 'date' | 'email' | 'tel' | 'photo';
   required?: boolean;
-  section?: string;
+  section: string;
+  defaultValue?: string;
 }
 
 export interface DocumentTemplate {
