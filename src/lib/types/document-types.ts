@@ -58,13 +58,16 @@ export const formatEducation = (educationJson: string | undefined): string => {
   if (!educationJson) return '';
 
   try {
-    const educationItems = parseSafeJson(educationJson, []);
+    const educationItems = parseSafeJson<Array<{id: string, data: any}>>(educationJson, []);
+    if (!Array.isArray(educationItems)) return '';
+    
     let html = '';
 
     for (const item of educationItems) {
+      if (!item || !item.data) continue;
+      
       const { data } = item;
-      if (!data) continue;
-
+      
       const school = data.school || '';
       const startDate = data.educationStartDate || '';
       const endDate = data.currentEducation === 'true' ? 'obecnie' : (data.educationEndDate || '');
@@ -93,13 +96,16 @@ export const formatExperience = (experienceJson: string | undefined): string => 
   if (!experienceJson) return '';
 
   try {
-    const experienceItems = parseSafeJson(experienceJson, []);
+    const experienceItems = parseSafeJson<Array<{id: string, data: any}>>(experienceJson, []);
+    if (!Array.isArray(experienceItems)) return '';
+    
     let html = '';
 
     for (const item of experienceItems) {
+      if (!item || !item.data) continue;
+      
       const { data } = item;
-      if (!data) continue;
-
+      
       const jobTitle = data.jobTitle || '';
       const company = data.company || '';
       const location = data.location ? `, ${data.location}` : '';
@@ -131,13 +137,16 @@ export const formatSkills = (skillsJson: string | undefined, primaryColor: strin
   if (!skillsJson) return '';
 
   try {
-    const skillItems = parseSafeJson(skillsJson, []);
+    const skillItems = parseSafeJson<Array<{id: string, data: any}>>(skillsJson, []);
+    if (!Array.isArray(skillItems)) return '';
+    
     let html = '';
 
     for (const item of skillItems) {
+      if (!item || !item.data || !item.data.skillName) continue;
+      
       const { data } = item;
-      if (!data || !data.skillName) continue;
-
+      
       const skillName = data.skillName;
       const skillLevel = parseInt(data.skillLevel || '3');
       const hideLevel = data.hideSkillLevel === 'true';
@@ -189,38 +198,130 @@ export const formatSectionContent = (content: string | undefined): string => {
 export const formatLanguages = (languagesText: string | undefined): string => {
   if (!languagesText) return '';
   
-  const languageLines = languagesText.split('\n').filter(line => line.trim());
-  let html = '';
-  
-  for (const line of languageLines) {
-    html += `<div style="margin-bottom: 4px;">${line}</div>`;
+  try {
+    // Próbujemy najpierw zinterpretować jako JSON
+    const languageItems = parseSafeJson<Array<{id: string, data: any}>>(languagesText, null);
+    
+    if (Array.isArray(languageItems)) {
+      let html = '';
+      
+      for (const item of languageItems) {
+        if (!item || !item.data) continue;
+        
+        const { data } = item;
+        const language = data.language || '';
+        const level = data.level || '';
+        
+        html += `<div style="margin-bottom: 8px; display: flex; justify-content: space-between;">
+          <span>${language}</span>
+          <span>${level}</span>
+        </div>`;
+      }
+      
+      return html;
+    }
+    
+    // Jeśli to nie jest JSON, traktujemy jako zwykły tekst
+    const languageLines = languagesText.split('\n').filter(line => line.trim());
+    let html = '';
+    
+    for (const line of languageLines) {
+      html += `<div style="margin-bottom: 4px;">${line}</div>`;
+    }
+    
+    return html;
+  } catch (e) {
+    // Fallback dla zwykłego tekstu
+    const languageLines = languagesText.split('\n').filter(line => line.trim());
+    let html = '';
+    
+    for (const line of languageLines) {
+      html += `<div style="margin-bottom: 4px;">${line}</div>`;
+    }
+    
+    return html;
   }
-  
-  return html;
 };
 
 // Helper for formatting hobbies as tags
 export const formatHobbies = (hobbiesText: string | undefined, primaryColor: string = '#3498db'): string => {
   if (!hobbiesText) return '';
   
-  const hobbies = hobbiesText.split(',').map(hobby => hobby.trim()).filter(hobby => hobby);
-  let html = '<div style="display: flex; flex-wrap: wrap; gap: 8px;">';
-  
-  for (const hobby of hobbies) {
-    html += `
-      <span style="
-        padding: 3px 10px;
-        background-color: ${primaryColor}20;
-        color: ${primaryColor};
-        border-radius: 30px;
-        font-size: 12px;
-        white-space: nowrap;
-      ">
-        ${hobby}
-      </span>
-    `;
+  try {
+    // Próbujemy najpierw zinterpretować jako JSON
+    const hobbyItems = parseSafeJson<Array<{id: string, data: any}>>(hobbiesText, null);
+    
+    if (Array.isArray(hobbyItems)) {
+      let html = '<div style="display: flex; flex-wrap: wrap; gap: 8px;">';
+      
+      for (const item of hobbyItems) {
+        if (!item || !item.data) continue;
+        
+        const { data } = item;
+        const hobby = data.hobby || '';
+        
+        if (hobby) {
+          html += `
+            <span style="
+              padding: 3px 10px;
+              background-color: ${primaryColor}20;
+              color: ${primaryColor};
+              border-radius: 30px;
+              font-size: 12px;
+              white-space: nowrap;
+            ">
+              ${hobby}
+            </span>
+          `;
+        }
+      }
+      
+      html += '</div>';
+      return html;
+    }
+    
+    // Jeśli to nie jest JSON, traktujemy jako zwykły tekst z przecinkami
+    const hobbies = hobbiesText.split(',').map(hobby => hobby.trim()).filter(hobby => hobby);
+    let html = '<div style="display: flex; flex-wrap: wrap; gap: 8px;">';
+    
+    for (const hobby of hobbies) {
+      html += `
+        <span style="
+          padding: 3px 10px;
+          background-color: ${primaryColor}20;
+          color: ${primaryColor};
+          border-radius: 30px;
+          font-size: 12px;
+          white-space: nowrap;
+        ">
+          ${hobby}
+        </span>
+      `;
+    }
+    
+    html += '</div>';
+    return html;
+  } catch (e) {
+    // Fallback dla zwykłego tekstu
+    const hobbies = hobbiesText.split(',').map(hobby => hobby.trim()).filter(hobby => hobby);
+    let html = '<div style="display: flex; flex-wrap: wrap; gap: 8px;">';
+    
+    for (const hobby of hobbies) {
+      html += `
+        <span style="
+          padding: 3px 10px;
+          background-color: ${primaryColor}20;
+          color: ${primaryColor};
+          border-radius: 30px;
+          font-size: 12px;
+          white-space: nowrap;
+        ">
+          ${hobby}
+        </span>
+      `;
+    }
+    
+    html += '</div>';
+    return html;
   }
-  
-  html += '</div>';
-  return html;
 };

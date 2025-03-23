@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,7 +39,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [previewLoaded, setPreviewLoaded] = useState(false);
-  const [scale, setScale] = useState(0.9);
+  const [scale, setScale] = useState(0.85);
 
   const htmlContent = template.template(formData, config);
   
@@ -58,10 +59,10 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           const containerHeight = previewContainer.clientHeight;
           const contentHeight = actualRef.current.scrollHeight;
           if (contentHeight > containerHeight) {
-            const newScale = Math.max(0.7, Math.min(0.9, containerHeight / contentHeight));
+            const newScale = Math.max(0.7, Math.min(0.85, containerHeight / contentHeight));
             setScale(newScale);
           } else {
-            setScale(0.9);
+            setScale(0.85);
           }
         }
       }
@@ -248,24 +249,26 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         )}
         
         <div className="bg-white rounded-md border overflow-hidden shadow-sm">
-          <div className="relative">
+          <div className="relative flex justify-center">
             <ScrollArea 
               className="w-full h-[700px]"
               scrollHideDelay={0}
             >
-              <div 
-                ref={actualRef}
-                className="a4-preview w-[21cm]"
-                style={{ 
-                  padding: 0,
-                  transform: `scale(${scale})`,
-                  transformOrigin: 'top center',
-                  margin: '0 auto',
-                  maxWidth: '100%',
-                  backgroundColor: '#fff'
-                }}
-                dangerouslySetInnerHTML={{ __html: htmlContent }}
-              />
+              <div className="flex justify-center">
+                <div 
+                  ref={actualRef}
+                  className="a4-preview w-[21cm]"
+                  style={{ 
+                    padding: 0,
+                    transform: `scale(${scale})`,
+                    transformOrigin: 'top center',
+                    margin: '0 auto',
+                    maxWidth: '100%',
+                    backgroundColor: '#fff'
+                  }}
+                  dangerouslySetInnerHTML={{ __html: htmlContent }}
+                />
+              </div>
               
               {previewLoaded && renderPageBreaks()}
             </ScrollArea>
