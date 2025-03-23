@@ -41,10 +41,10 @@ export const blueHeaderTemplate: DocumentTemplate = {
     } = prepareTemplateData(data, config);
     
     return `
-      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333;">
+      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; box-sizing: border-box;">
         <!-- Header -->
-        <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px; margin: 0;">
-          <div style="flex: 1; padding: 0 16px;">
+        <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px 20px 20px 20px; margin: 0; width: 100%; box-sizing: border-box;">
+          <div style="flex: 1; padding: 0 0;">
             <h1 style="margin: 0; font-size: 24px; text-transform: uppercase;">${fullName}</h1>
             <p style="margin: 0; text-transform: uppercase; font-size: 14px;">${position}</p>
             <div style="margin-top: 15px; font-size: 13px;">
@@ -55,14 +55,14 @@ export const blueHeaderTemplate: DocumentTemplate = {
             </div>
           </div>
           ${data.photo ? `
-            <div style="width: 120px; height: 150px; overflow: hidden; margin-right: 20px;">
+            <div style="width: 120px; height: 150px; overflow: hidden; margin-left: 20px;">
               <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullName}" />
             </div>
           ` : ''}
         </div>
         
         <!-- Document Body -->
-        <div style="padding: 20px 30px 80px 30px; background-color: #f9f9f9; position: relative; min-height: 800px;">
+        <div style="padding: 20px 30px; background-color: #ffffff; position: relative; min-height: 800px; box-sizing: border-box;">
           <!-- Date -->
           <p style="margin-bottom: 15px;">${date}</p>
           
@@ -81,8 +81,12 @@ export const blueHeaderTemplate: DocumentTemplate = {
           <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
           <p style="margin-top: 5px; font-weight: bold;">${fullName}</p>
           
-          <!-- Clause -->
-          ${getClauseSection(data)}
+          <!-- Clause - Fixed positioning to avoid overlap -->
+          <div style="margin-top: 60px; padding-top: 40px;">
+            <p data-clause style="font-size: 10px; color: #666; text-align: justify;">
+              ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
+            </p>
+          </div>
         </div>
       </div>
     `;
