@@ -7,7 +7,9 @@ import TemplateSelector from '@/components/TemplateSelector';
 import DocumentEditor from '@/components/DocumentEditor';
 import DocumentPreview from '@/components/DocumentPreview';
 import TemplateConfiguration from '@/components/TemplateConfiguration';
-import documentTypes, { DocumentTemplate, SECTIONS } from '@/lib/templates';
+import documentTypes, { DocumentTemplate } from '@/lib/templates';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { SECTIONS } from '@/lib/types/document-types';
 
 enum EditorStep {
   SelectType,
