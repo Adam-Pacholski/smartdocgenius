@@ -6,6 +6,7 @@ import DocumentTypeSelector from '@/components/DocumentTypeSelector';
 import TemplateSelector from '@/components/TemplateSelector';
 import DocumentEditor from '@/components/DocumentEditor';
 import DocumentPreview from '@/components/DocumentPreview';
+import TemplateConfiguration from '@/components/TemplateConfiguration';
 import documentTypes, { DocumentTemplate } from '@/lib/templates';
 
 enum EditorStep {
@@ -14,11 +15,36 @@ enum EditorStep {
   EditDocument,
 }
 
+// Sekcje formularza
+const SECTIONS = {
+  PERSONAL: 'dane_osobowe',
+  RECIPIENT: 'odbiorca',
+  CONTENT: 'tresc_listu',
+  CLAUSE: 'klauzula',
+  CONFIG: 'konfiguracja'
+};
+
+// Kolejność sekcji
+const SECTION_ORDER = [
+  SECTIONS.CONFIG,
+  SECTIONS.PERSONAL,
+  SECTIONS.RECIPIENT,
+  SECTIONS.CONTENT,
+  SECTIONS.CLAUSE,
+];
+
 const Editor: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<EditorStep>(EditorStep.SelectType);
   const [selectedTypeId, setSelectedTypeId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>({});
+  const [config, setConfig] = useState<Record<string, any>>({
+    documentName: 'List motywacyjny',
+    primaryColor: '#3498db',
+    fontFamily: 'Arial, sans-serif',
+    fontSize: '14px',
+  });
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
   const handleSelectType = (typeId: string) => {
     setSelectedTypeId(typeId);
@@ -35,6 +61,8 @@ const Editor: React.FC = () => {
     });
     setFormData(initialData);
     
+    // Reset to first section
+    setCurrentSectionIndex(0);
     setCurrentStep(EditorStep.EditDocument);
   };
 
@@ -42,7 +70,17 @@ const Editor: React.FC = () => {
     if (currentStep === EditorStep.SelectTemplate) {
       setCurrentStep(EditorStep.SelectType);
     } else if (currentStep === EditorStep.EditDocument) {
-      setCurrentStep(EditorStep.SelectTemplate);
+      if (currentSectionIndex > 0) {
+        setCurrentSectionIndex(currentSectionIndex - 1);
+      } else {
+        setCurrentStep(EditorStep.SelectTemplate);
+      }
+    }
+  };
+
+  const handleNext = () => {
+    if (currentSectionIndex < SECTION_ORDER.length - 1) {
+      setCurrentSectionIndex(currentSectionIndex + 1);
     }
   };
 
@@ -75,6 +113,8 @@ const Editor: React.FC = () => {
       description: "Dokument został wygenerowany i pobrany.",
     });
   };
+
+  const currentSection = SECTION_ORDER[currentSectionIndex];
 
   return (
     <Layout className="pb-12">
@@ -111,18 +151,30 @@ const Editor: React.FC = () => {
           {currentStep === EditorStep.EditDocument && selectedTemplate && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
               <div>
-                <DocumentEditor
-                  template={selectedTemplate}
-                  formData={formData}
-                  setFormData={setFormData}
-                  onBack={handleBack}
-                  onExport={handleExport}
-                />
+                {currentSection === SECTIONS.CONFIG ? (
+                  <TemplateConfiguration 
+                    config={config}
+                    setConfig={setConfig}
+                    onBack={handleBack}
+                    onNext={handleNext}
+                  />
+                ) : (
+                  <DocumentEditor
+                    template={selectedTemplate}
+                    formData={formData}
+                    setFormData={setFormData}
+                    onBack={handleBack}
+                    onExport={handleExport}
+                    onNext={currentSectionIndex < SECTION_ORDER.length - 1 ? handleNext : undefined}
+                    currentSection={currentSection}
+                  />
+                )}
               </div>
               <div>
                 <DocumentPreview
                   template={selectedTemplate}
                   formData={formData}
+                  config={config}
                 />
               </div>
             </div>

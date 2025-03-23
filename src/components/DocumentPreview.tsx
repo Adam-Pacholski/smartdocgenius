@@ -6,12 +6,13 @@ import { DocumentTemplate } from '@/lib/templates';
 interface DocumentPreviewProps {
   template: DocumentTemplate;
   formData: Record<string, string>;
+  config?: Record<string, any>;
 }
 
-const DocumentPreview: React.FC<DocumentPreviewProps> = ({ template, formData }) => {
+const DocumentPreview: React.FC<DocumentPreviewProps> = ({ template, formData, config }) => {
   const previewRef = useRef<HTMLDivElement>(null);
   
-  const htmlContent = template.template(formData);
+  const htmlContent = template.template(formData, config);
   
   return (
     <Card className="shadow-subtle h-full">
@@ -22,7 +23,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ template, formData })
         <div className="bg-white rounded-md border overflow-hidden shadow-sm">
           <div 
             ref={previewRef}
-            className="w-full h-[800px] overflow-auto"
+            className="w-full h-[800px] overflow-auto p-6"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         </div>
