@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,12 +44,14 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const sanitizeFormData = () => {
     const sanitized = { ...formData };
     
+    // Process any JSON strings in the form data
     Object.keys(sanitized).forEach(key => {
       if (typeof sanitized[key] === 'string' && 
           (sanitized[key].startsWith('[{') || sanitized[key].startsWith('{"'))) {
         try {
+          // For JSON arrays, we'll parse them to be used by the template functions
           const parsed = JSON.parse(sanitized[key]);
-          sanitized[key] = JSON.stringify(parsed);
+          sanitized[key] = sanitized[key]; // Keep the JSON string as is for template functions that expect it
         } catch (e) {
           console.error(`Failed to parse JSON for ${key}:`, e);
         }
@@ -72,7 +75,8 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         setPageCount(Math.max(1, count));
         setPreviewLoaded(true);
         
-        const previewContainer = actualRef.current.parentElement;
+        // Calculate scale to fit the content within the container
+        const previewContainer = actualRef.current.parentElement?.parentElement;
         if (previewContainer) {
           const containerHeight = previewContainer.clientHeight;
           const contentHeight = actualRef.current.scrollHeight;
@@ -266,9 +270,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           </Alert>
         )}
         
-        <div className="bg-white rounded-md border overflow-hidden shadow-sm relative">
+        <div className="bg-white rounded-md border overflow-hidden shadow-sm relative flex justify-center">
           <ScrollArea 
-            className="max-w-full h-[700px]"
+            className="max-w-full h-[700px] w-full flex justify-center"
             scrollHideDelay={0}
           >
             <div className="flex justify-center py-4 px-2">
