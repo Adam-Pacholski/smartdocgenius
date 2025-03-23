@@ -75,20 +75,36 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
       
       // For the first page, we use standard positioning
       // For subsequent pages, we position at the top of the page
+      
+      // Fix: The addImage method in jsPDF v3 accepts fewer parameters
+      // Create a separate canvas for each page slice
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = sourceHeight;
+      
+      if (tempCtx) {
+        tempCtx.drawImage(
+          canvas, 
+          0, // sx
+          sourceY, // sy
+          canvas.width, // sWidth
+          sourceHeight, // sHeight
+          0, // dx
+          0, // dy
+          tempCanvas.width, // dWidth
+          tempCanvas.height // dHeight
+        );
+      }
+      
+      // Add the sliced image to the PDF
       pdf.addImage(
-        canvas,
+        tempCanvas.toDataURL('image/jpeg', 0.95), // Use data URL instead of canvas
         'JPEG', 
         0, // x position - no margin
         0, // y position - no margin
         a4Width, // width
-        pageHeight, // height for this page slice
-        undefined, // alias
-        'FAST', // compression
-        0, // rotation
-        sourceY, // source x - always 0 for vertical slicing
-        0, // source y - based on which page we're on
-        canvas.width, // source width - full width
-        sourceHeight // source height - calculated for this slice
+        pageHeight // height for this page slice
       );
       
       remainingHeight -= a4Height;
