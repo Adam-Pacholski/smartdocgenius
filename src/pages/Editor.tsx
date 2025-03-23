@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
@@ -7,7 +6,7 @@ import TemplateSelector from '@/components/TemplateSelector';
 import DocumentEditor from '@/components/DocumentEditor';
 import DocumentPreview from '@/components/DocumentPreview';
 import TemplateConfiguration from '@/components/TemplateConfiguration';
-import documentTypes, { DocumentTemplate } from '@/lib/templates';
+import documentTypes, { DocumentTemplate, SECTIONS } from '@/lib/templates';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 enum EditorStep {
