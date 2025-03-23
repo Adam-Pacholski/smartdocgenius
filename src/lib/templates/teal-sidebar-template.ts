@@ -23,7 +23,7 @@
 
 import { DocumentTemplate } from '../types/document-types';
 import { allCoverLetterFields } from '../form-fields/cover-letter-fields';
-import { prepareTemplateData } from './template-utils';
+import { prepareTemplateData, getA4Container } from './template-utils';
 
 export const tealSidebarTemplate: DocumentTemplate = {
   id: 'teal-sidebar',

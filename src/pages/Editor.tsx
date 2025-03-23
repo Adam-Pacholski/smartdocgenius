@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
@@ -28,18 +27,6 @@ const SECTION_ORDER = [
   SECTIONS.CLAUSE,
 ];
 
-// Kolejność sekcji dla CV
-const CV_SECTION_ORDER = [
-  SECTIONS.CONFIG,
-  SECTIONS.PERSONAL,
-  SECTIONS.SUMMARY,
-  SECTIONS.EXPERIENCE,
-  SECTIONS.EDUCATION,
-  SECTIONS.SKILLS,
-  SECTIONS.ADDITIONAL,
-  SECTIONS.CLAUSE,
-];
-
 const Editor: React.FC = () => {
   const previewRef = useRef<HTMLDivElement>(null);
   const [currentStep, setCurrentStep] = useState<EditorStep>(EditorStep.SelectType);
@@ -54,12 +41,6 @@ const Editor: React.FC = () => {
   });
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
-  // Determine if we're in CV mode
-  const isCvMode = selectedTypeId === 'cv';
-  
-  // Get the appropriate section order based on document type
-  const activeSectionOrder = isCvMode ? CV_SECTION_ORDER : SECTION_ORDER;
-  
   const handleSelectType = (typeId: string) => {
     setSelectedTypeId(typeId);
     setCurrentStep(EditorStep.SelectTemplate);
@@ -68,10 +49,11 @@ const Editor: React.FC = () => {
   const handleSelectTemplate = (template: DocumentTemplate) => {
     setSelectedTemplate(template);
     
-    // Initialize form data with default values from the template fields
-    const initialData: Record<string, string> = {};
+    const initialData: Record<string, string> = { ...sampleCoverLetterData };
     template.fields.forEach(field => {
-      initialData[field.id] = field.defaultValue || '';
+      if (!initialData[field.id]) {
+        initialData[field.id] = field.defaultValue || '';
+      }
     });
     setFormData(initialData);
     
@@ -100,7 +82,7 @@ const Editor: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (currentSectionIndex < activeSectionOrder.length - 1) {
+    if (currentSectionIndex < SECTION_ORDER.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
     }
   };
@@ -126,7 +108,7 @@ const Editor: React.FC = () => {
     }
   };
 
-  const currentSection = activeSectionOrder[currentSectionIndex];
+  const currentSection = SECTION_ORDER[currentSectionIndex];
 
   const sectionTitles: Record<string, string> = {
     'dane_osobowe': 'Dane osobowe',
@@ -134,11 +116,6 @@ const Editor: React.FC = () => {
     'tresc_listu': 'Treść listu',
     'klauzula': 'Klauzula',
     'konfiguracja': 'Konfiguracja',
-    'podsumowanie': 'Podsumowanie',
-    'doswiadczenie': 'Doświadczenie',
-    'wyksztalcenie': 'Wykształcenie',
-    'umiejetnosci': 'Umiejętności',
-    'dodatkowe': 'Dodatkowe',
   };
 
   return (
@@ -178,33 +155,29 @@ const Editor: React.FC = () => {
               <div>
                 {currentStep === EditorStep.EditDocument && (
                   <Tabs 
-                    defaultValue={activeSectionOrder[currentSectionIndex]} 
+                    defaultValue={SECTION_ORDER[currentSectionIndex]} 
                     value={currentSection}
                     onValueChange={(value) => {
-                      const newIndex = activeSectionOrder.findIndex(section => section === value);
+                      const newIndex = SECTION_ORDER.findIndex(section => section === value);
                       if (newIndex !== -1) {
                         setCurrentSectionIndex(newIndex);
                       }
                     }}
                     className="mb-4"
                   >
-                    <TabsList className="mb-6 grid overflow-auto bg-muted w-full" 
-                             style={{ 
-                               gridTemplateColumns: `repeat(${activeSectionOrder.length}, auto)`,
-                               maxWidth: '100%'
-                             }}>
-                      {activeSectionOrder.map((section) => (
+                    <TabsList className="grid grid-cols-5 w-full">
+                      {SECTION_ORDER.map((section) => (
                         <TabsTrigger 
                           key={section}
                           value={section} 
-                          className="text-xs whitespace-nowrap px-2 py-1.5"
+                          className="text-xs sm:text-sm"
                         >
                           {sectionTitles[section]}
                         </TabsTrigger>
                       ))}
                     </TabsList>
                     
-                    {activeSectionOrder.map((section) => (
+                    {SECTION_ORDER.map((section) => (
                       <TabsContent key={section} value={section}>
                         {section === SECTIONS.CONFIG ? (
                           <TemplateConfiguration 
@@ -219,7 +192,7 @@ const Editor: React.FC = () => {
                             formData={formData}
                             setFormData={setFormData}
                             onBack={handleBack}
-                            onNext={currentSectionIndex < activeSectionOrder.length - 1 ? handleNext : undefined}
+                            onNext={currentSectionIndex < SECTION_ORDER.length - 1 ? handleNext : undefined}
                             currentSection={section}
                             onExport={handleExportPdf}
                           />

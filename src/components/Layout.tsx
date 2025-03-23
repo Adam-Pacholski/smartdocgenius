@@ -20,7 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
       <footer className="py-6 border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} APDocs. Wszystkie prawa zastrzeżone.
+            © {new Date().getFullYear()} SmartDocs. Wszystkie prawa zastrzeżone.
           </p>
         </div>
       </footer>
