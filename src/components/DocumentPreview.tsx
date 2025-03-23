@@ -26,6 +26,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const internalRef = React.useRef<HTMLDivElement>(null);
   const actualRef = previewRef || internalRef;
   const [pageCount, setPageCount] = useState(1);
+  const [pageBreaks, setPageBreaks] = useState<number[]>([]);
   
   const htmlContent = template.template(formData, config);
   
@@ -35,6 +36,21 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       if (actualRef.current) {
         const count = estimatePageCount(actualRef.current);
         setPageCount(count);
+        
+        // Calculate page break positions for visualization
+        if (count > 1) {
+          const computedStyle = window.getComputedStyle(actualRef.current);
+          const elementHeight = parseInt(computedStyle.height);
+          const pageHeight = elementHeight / count;
+          
+          const breaks = [];
+          for (let i = 1; i < count; i++) {
+            breaks.push(pageHeight * i);
+          }
+          setPageBreaks(breaks);
+        } else {
+          setPageBreaks([]);
+        }
       }
     }, 500);
     
@@ -96,12 +112,30 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           </Alert>
         )}
         <div className="bg-white rounded-md border overflow-hidden shadow-sm">
-          <div 
-            ref={actualRef}
-            className="w-full h-[800px] overflow-auto"
-            style={{ padding: 0 }}
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-          />
+          <div className="relative">
+            <div 
+              ref={actualRef}
+              className="w-full h-[800px] overflow-auto"
+              style={{ padding: 0 }}
+              dangerouslySetInnerHTML={{ __html: htmlContent }}
+            />
+            
+            {/* Visual page break indicators */}
+            {pageBreaks.map((breakPoint, index) => (
+              <div 
+                key={index}
+                className="absolute left-0 right-0 border-b-2 border-red-400 border-dashed pointer-events-none"
+                style={{ 
+                  top: `${breakPoint}px`,
+                  zIndex: 10
+                }}
+              >
+                <div className="absolute right-0 bg-red-100 text-red-800 px-2 py-0.5 text-xs rounded-tl-md">
+                  Podział strony
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </CardContent>
     </Card>

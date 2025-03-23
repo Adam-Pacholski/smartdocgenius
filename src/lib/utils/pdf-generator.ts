@@ -40,11 +40,13 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     // Add to document to calculate proper layout
     document.body.appendChild(clone);
     
-    // Ensure the clause is moved to the bottom section
+    // Extract the clause element to add it on the last page only
     const clauseElement = clone.querySelector('[data-clause]') as HTMLElement;
+    let clauseHeight = 0;
     if (clauseElement) {
-      clauseElement.style.position = 'relative';
-      // We'll handle exact positioning in the template
+      const clauseStyle = window.getComputedStyle(clauseElement);
+      clauseHeight = parseInt(clauseStyle.height);
+      clauseElement.style.display = 'none'; // Hide from main content
     }
     
     // Create canvas with higher resolution
@@ -53,13 +55,6 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
       useCORS: true, // Allow loading cross-origin images
       logging: false,
       windowWidth: elementWidth,
-      onclone: (doc) => {
-        // Further processing can be done here if needed
-        const clonedElement = doc.body.querySelector('#cloned-element') as HTMLElement;
-        if (clonedElement) {
-          clonedElement.style.height = 'auto';
-        }
-      }
     });
     
     // Remove clone from document
@@ -76,57 +71,74 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     // Create PDF instance - portrait, mm, A4
     const pdf = new jsPDF('p', 'mm', 'a4');
     
-    let position = 0;
-    let remainingHeight = imgHeight;
-    let pageCount = 0;
+    // Determine total pages needed
+    const pageBottomMargin = 20; // 20mm margin at bottom of page
+    const effectivePageHeight = a4Height - pageBottomMargin;
+    const totalPages = Math.ceil(imgHeight / effectivePageHeight);
     
-    // Add pages as needed to fit content
-    while (remainingHeight > 0) {
+    for (let pageNum = 0; pageNum < totalPages; pageNum++) {
       // Add a new page if this isn't the first page
-      if (pageCount > 0) {
+      if (pageNum > 0) {
         pdf.addPage();
       }
       
-      // Calculate how much of the image to render on this page
-      const pageHeight = Math.min(a4Height, remainingHeight);
-      
-      // Calculate source coordinates for slicing the canvas
-      // These are in canvas pixels
-      const sourceY = pageCount * (canvas.height * a4Height / imgHeight);
-      const sourceHeight = canvas.height * pageHeight / imgHeight;
-      
-      // Create a separate canvas for each page slice
-      const tempCanvas = document.createElement('canvas');
-      const tempCtx = tempCanvas.getContext('2d');
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = sourceHeight;
-      
-      if (tempCtx) {
-        tempCtx.drawImage(
-          canvas, 
-          0, // sx
-          sourceY, // sy
-          canvas.width, // sWidth
-          sourceHeight, // sHeight
-          0, // dx
-          0, // dy
-          tempCanvas.width, // dWidth
-          tempCanvas.height // dHeight
-        );
-      }
-      
-      // Add the sliced image to the PDF
-      pdf.addImage(
-        tempCanvas.toDataURL('image/jpeg', 0.95), // Use data URL instead of canvas
-        'JPEG', 
-        0, // x position - no margin
-        0, // y position - no margin
-        a4Width, // width
-        pageHeight // height for this page slice
+      // Calculate source and destination dimensions
+      const sourceY = pageNum * (canvas.height * effectivePageHeight / imgHeight);
+      const sourceHeight = Math.min(
+        canvas.height - sourceY,
+        canvas.height * effectivePageHeight / imgHeight
       );
       
-      remainingHeight -= a4Height;
-      pageCount++;
+      // Create a temporary canvas for the current page slice
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = sourceHeight;
+      const tempCtx = tempCanvas.getContext('2d');
+      
+      if (tempCtx) {
+        // Draw the slice of the original canvas
+        tempCtx.drawImage(
+          canvas,
+          0, sourceY, canvas.width, sourceHeight,
+          0, 0, tempCanvas.width, tempCanvas.height
+        );
+        
+        // Add the image to the PDF
+        pdf.addImage(
+          tempCanvas.toDataURL('image/jpeg', 0.95),
+          'JPEG',
+          0, 0, 
+          imgWidth, 
+          (sourceHeight * imgWidth) / canvas.width
+        );
+      }
+    }
+    
+    // Add the clause to the last page if it exists
+    if (clauseElement) {
+      // Reset the display property to make it visible again
+      clauseElement.style.display = 'block';
+      
+      // Create a separate canvas just for the clause
+      const clauseCanvas = await html2canvas(clauseElement, {
+        scale: 2,
+        useCORS: true,
+        logging: false
+      });
+      
+      // Add the clause to the bottom of the last page
+      const clauseWidth = a4Width;
+      const clauseImgHeight = (clauseCanvas.height * clauseWidth) / clauseCanvas.width;
+      
+      pdf.setPage(totalPages); // Go to last page
+      pdf.addImage(
+        clauseCanvas.toDataURL('image/jpeg', 0.95),
+        'JPEG',
+        0, // x position
+        a4Height - clauseImgHeight - 10, // y position (10mm from bottom)
+        clauseWidth,
+        clauseImgHeight
+      );
     }
     
     // Save the PDF
