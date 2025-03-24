@@ -44,6 +44,11 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
             onClick={() => onSelectTemplate(template)}
           >
             <div className="aspect-[4/5] bg-muted relative">
+              <img 
+                src={template.thumbnail} 
+                alt={template.name}
+                className="w-full h-full object-cover"
+              />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 flex items-center justify-center text-white text-lg font-medium">
                 {template.name}
               </div>

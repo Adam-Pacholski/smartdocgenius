@@ -7,10 +7,10 @@ import { professionalCVTemplate } from './professional-cv-template';
 import { getCVFieldsForTemplate } from '../../form-fields/cv-fields';
 
 // CV template thumbnails
-const cv_basic = '/cv-basic.png';
-const cv_modern = '/cv-modern.png';
-const cv_creative = '/cv-creative.png';
-const cv_professional = '/cv-professional.png';
+const cv_basic = '/cv-basic.jpg';
+const cv_modern = '/cv-modern.jpg';
+const cv_creative = '/cv-creative.jpg';
+const cv_professional = '/cv-professional.jpg';
 
 export const cvTemplates: DocumentTemplate[] = [
   {
