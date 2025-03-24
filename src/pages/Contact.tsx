@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -51,49 +50,16 @@ const Contact: React.FC = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-
-    fetch('https://saper.adampacholski.eu/mailer/contact.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams(values as any).toString()
-    })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Błąd przy wysyłaniu wiadomości');
-          }
-          return response.text();
-        })
-        .then(data => {
-          setIsSubmitting(false);
-          setIsSubmitted(true);
-          toast({
-            title: "Wiadomość wysłana!",
-            description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
-          });
-          form.reset();
-        })
-        .catch(error => {
-          setIsSubmitting(false);
-          toast({
-            title: "Błąd",
-            description: "Wystąpił problem przy wysyłaniu wiadomości.",
-          });
-        });
-
-      setSubmitError(null);
+    setSubmitError(null);
     
     try {
       // Send form data to PHP mailer
-      const formData = new FormData();
-      Object.entries(values).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-      
       const response = await fetch('/mailer.php', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(values as any).toString()
       });
       
       if (!response.ok) {
@@ -120,25 +86,6 @@ const Contact: React.FC = () => {
       setIsSubmitting(false);
     }
   }
-
-
-  // function onSubmit(values: z.infer<typeof formSchema>) {
-  //   setIsSubmitting(true);
-  //
-  //   // Form will be handled by Netlify automatically
-  //   // This is just for UX feedback
-  //   setTimeout(() => {
-  //     setIsSubmitting(false);
-  //     setIsSubmitted(true);
-  //
-  //     toast({
-  //       title: "Wiadomość wysłana!",
-  //       description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
-  //     });
-  //
-  //     form.reset();
-  //   }, 1000);
-  // }
 
   return (
     <Layout>
@@ -171,9 +118,7 @@ const Contact: React.FC = () => {
                   <form 
                     onSubmit={form.handleSubmit(onSubmit)} 
                     className="space-y-6"
-                    name="contact"
                     method="POST"
-
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <FormField
