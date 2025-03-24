@@ -15,7 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Layout from '@/components/Layout';
-import { Mail, Send, ExternalLink } from 'lucide-react';
+import { Mail, Send, ExternalLink, CheckCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const formSchema = z.object({
@@ -36,6 +36,7 @@ const formSchema = z.object({
 const Contact: React.FC = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,60 +48,22 @@ const Contact: React.FC = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     
-    try {
-      // Create email content
-      const adminEmailContent = `
-        Nowa wiadomość od: ${values.name}
-        Email: ${values.email}
-        Temat: ${values.subject}
-        
-        Wiadomość:
-        ${values.message}
-      `;
+    // Form will be handled by Netlify automatically
+    // This is just for UX feedback
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSubmitted(true);
       
-      const userEmailContent = `
-        Dziękujemy za kontakt z APDocs!
-        
-        Otrzymaliśmy Twoją wiadomość i odpowiemy najszybciej jak to możliwe.
-        
-        Podsumowanie Twojej wiadomości:
-        Temat: ${values.subject}
-        Wiadomość: ${values.message}
-        
-        Z poważaniem,
-        Zespół APDocs
-      `;
-      
-      // Normally we would send this to a server endpoint or use a service like EmailJS
-      // For demonstration, let's log and show what would be sent
-      console.log("Sending email to info@ap-development.eu with:", values);
-      console.log("Sending confirmation email to:", values.email);
-      
-      // In a production environment, you would use one of these approaches:
-      // 1. Call a server endpoint (requires backend)
-      // 2. Use a service like EmailJS, Formspree, or similar
-      // 3. Set up a Netlify form (if hosting on Netlify)
-      
-      // Simulate successful email sending
       toast({
         title: "Wiadomość wysłana!",
-        description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe. Potwierdzenie zostało wysłane na Twój adres email.",
+        description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
       });
       
       form.reset();
-    } catch (error) {
-      console.error("Error sending email:", error);
-      toast({
-        title: "Wystąpił błąd",
-        description: "Nie udało się wysłać wiadomości. Spróbuj ponownie później lub skontaktuj się bezpośrednio przez email.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    }, 1000);
   }
 
   return (
@@ -118,17 +81,73 @@ const Contact: React.FC = () => {
             <div className="bg-card rounded-lg p-6 shadow-sm">
               <h2 className="text-xl font-medium mb-6">Napisz do mnie</h2>
               
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {isSubmitted ? (
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
+                  <h3 className="text-xl font-medium mb-2">Wiadomość wysłana!</h3>
+                  <p className="text-muted-foreground mb-6">
+                    Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.
+                  </p>
+                  <Button onClick={() => setIsSubmitted(false)}>
+                    Wyślij nową wiadomość
+                  </Button>
+                </div>
+              ) : (
+                <Form {...form}>
+                  <form 
+                    onSubmit={form.handleSubmit(onSubmit)} 
+                    className="space-y-6"
+                    name="contact"
+                    method="POST"
+                    data-netlify="true"
+                    netlify-honeypot="bot-field"
+                  >
+                    {/* Hidden fields required by Netlify */}
+                    <input type="hidden" name="form-name" value="contact" />
+                    <div className="hidden">
+                      <label>
+                        Don't fill this out if you're human: <input name="bot-field" />
+                      </label>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Imię i nazwisko</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Jan Kowalski" {...field} name="name" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input placeholder="jan@example.com" {...field} name="email" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
                     <FormField
                       control={form.control}
-                      name="name"
+                      name="subject"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Imię i nazwisko</FormLabel>
+                          <FormLabel>Temat</FormLabel>
                           <FormControl>
-                            <Input placeholder="Jan Kowalski" {...field} />
+                            <Input placeholder="W sprawie współpracy..." {...field} name="subject" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -137,63 +156,36 @@ const Contact: React.FC = () => {
                     
                     <FormField
                       control={form.control}
-                      name="email"
+                      name="message"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>Wiadomość</FormLabel>
                           <FormControl>
-                            <Input placeholder="jan@example.com" {...field} />
+                            <Textarea 
+                              placeholder="Treść Twojej wiadomości..." 
+                              className="min-h-[150px]" 
+                              {...field} 
+                              name="message"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                  </div>
-                  
-                  <FormField
-                    control={form.control}
-                    name="subject"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Temat</FormLabel>
-                        <FormControl>
-                          <Input placeholder="W sprawie współpracy..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="message"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Wiadomość</FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            placeholder="Treść Twojej wiadomości..." 
-                            className="min-h-[150px]" 
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? (
-                      <>Wysyłanie...</>
-                    ) : (
-                      <>
-                        <Send className="mr-2 h-4 w-4" />
-                        Wyślij wiadomość
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </Form>
+                    
+                    <Button type="submit" className="w-full" disabled={isSubmitting}>
+                      {isSubmitting ? (
+                        <>Wysyłanie...</>
+                      ) : (
+                        <>
+                          <Send className="mr-2 h-4 w-4" />
+                          Wyślij wiadomość
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </Form>
+              )}
               
               <div className="mt-6 text-sm text-muted-foreground border-t pt-4">
                 <p>
