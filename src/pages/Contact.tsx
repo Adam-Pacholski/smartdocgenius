@@ -50,21 +50,56 @@ const Contact: React.FC = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    
-    // Form will be handled by Netlify automatically
-    // This is just for UX feedback
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      
-      toast({
-        title: "Wiadomość wysłana!",
-        description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
-      });
-      
-      form.reset();
-    }, 1000);
+
+    fetch('https://saper.adampacholski.eu/mailer/contact.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams(values as any).toString()
+    })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Błąd przy wysyłaniu wiadomości');
+          }
+          return response.text();
+        })
+        .then(data => {
+          setIsSubmitting(false);
+          setIsSubmitted(true);
+          toast({
+            title: "Wiadomość wysłana!",
+            description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
+          });
+          form.reset();
+        })
+        .catch(error => {
+          setIsSubmitting(false);
+          toast({
+            title: "Błąd",
+            description: "Wystąpił problem przy wysyłaniu wiadomości.",
+          });
+        });
   }
+
+
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   setIsSubmitting(true);
+  //
+  //   // Form will be handled by Netlify automatically
+  //   // This is just for UX feedback
+  //   setTimeout(() => {
+  //     setIsSubmitting(false);
+  //     setIsSubmitted(true);
+  //
+  //     toast({
+  //       title: "Wiadomość wysłana!",
+  //       description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
+  //     });
+  //
+  //     form.reset();
+  //   }, 1000);
+  // }
 
   return (
     <Layout>
@@ -99,9 +134,6 @@ const Contact: React.FC = () => {
                     className="space-y-6"
                     name="contact"
                     method="POST"
-                    data-netlify="true"
-                    netlify
-                    netlify-honeypot="bot-field"
                   >
                     {/* Hidden fields required by Netlify */}
                     <input type="hidden" name="form-name" value="contact" />
