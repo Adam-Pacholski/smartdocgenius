@@ -100,6 +100,7 @@ const Contact: React.FC = () => {
                     name="contact"
                     method="POST"
                     data-netlify="true"
+                    netlify
                     netlify-honeypot="bot-field"
                   >
                     {/* Hidden fields required by Netlify */}
