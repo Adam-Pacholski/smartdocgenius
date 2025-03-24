@@ -51,7 +51,38 @@ const Contact: React.FC = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    setSubmitError(null);
+
+    fetch('https://saper.adampacholski.eu/mailer/contact.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams(values as any).toString()
+    })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Błąd przy wysyłaniu wiadomości');
+          }
+          return response.text();
+        })
+        .then(data => {
+          setIsSubmitting(false);
+          setIsSubmitted(true);
+          toast({
+            title: "Wiadomość wysłana!",
+            description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
+          });
+          form.reset();
+        })
+        .catch(error => {
+          setIsSubmitting(false);
+          toast({
+            title: "Błąd",
+            description: "Wystąpił problem przy wysyłaniu wiadomości.",
+          });
+        });
+
+      setSubmitError(null);
     
     try {
       // Send form data to PHP mailer
@@ -90,6 +121,25 @@ const Contact: React.FC = () => {
     }
   }
 
+
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   setIsSubmitting(true);
+  //
+  //   // Form will be handled by Netlify automatically
+  //   // This is just for UX feedback
+  //   setTimeout(() => {
+  //     setIsSubmitting(false);
+  //     setIsSubmitted(true);
+  //
+  //     toast({
+  //       title: "Wiadomość wysłana!",
+  //       description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
+  //     });
+  //
+  //     form.reset();
+  //   }, 1000);
+  // }
+
   return (
     <Layout>
       <div className="max-w-3xl mx-auto">
@@ -121,6 +171,9 @@ const Contact: React.FC = () => {
                   <form 
                     onSubmit={form.handleSubmit(onSubmit)} 
                     className="space-y-6"
+                    name="contact"
+                    method="POST"
+
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <FormField
