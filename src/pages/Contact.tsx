@@ -15,7 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Layout from '@/components/Layout';
-import { Mail, Send, ExternalLink, CheckCircle } from 'lucide-react';
+import { Mail, Send, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const formSchema = z.object({
@@ -37,6 +37,7 @@ const Contact: React.FC = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,7 +49,7 @@ const Contact: React.FC = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
 
     fetch('https://saper.adampacholski.eu/mailer/contact.php', {
@@ -80,6 +81,44 @@ const Contact: React.FC = () => {
             description: "Wystąpił problem przy wysyłaniu wiadomości.",
           });
         });
+
+      setSubmitError(null);
+    
+    try {
+      // Send form data to PHP mailer
+      const formData = new FormData();
+      Object.entries(values).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      
+      const response = await fetch('/mailer.php', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error('Błąd podczas wysyłania wiadomości');
+      }
+      
+      setIsSubmitted(true);
+      form.reset();
+      
+      toast({
+        title: "Wiadomość wysłana!",
+        description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
+      });
+    } catch (error) {
+      console.error('Błąd wysyłania formularza:', error);
+      setSubmitError(error instanceof Error ? error.message : 'Wystąpił nieznany błąd');
+      
+      toast({
+        variant: "destructive",
+        title: "Błąd wysyłania",
+        description: "Nie udało się wysłać wiadomości. Spróbuj ponownie później.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
 
@@ -134,15 +173,8 @@ const Contact: React.FC = () => {
                     className="space-y-6"
                     name="contact"
                     method="POST"
+
                   >
-                    {/* Hidden fields required by Netlify */}
-                    <input type="hidden" name="form-name" value="contact" />
-                    <div className="hidden">
-                      <label>
-                        Don't fill this out if you're human: <input name="bot-field" />
-                      </label>
-                    </div>
-                    
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -151,7 +183,7 @@ const Contact: React.FC = () => {
                           <FormItem>
                             <FormLabel>Imię i nazwisko</FormLabel>
                             <FormControl>
-                              <Input placeholder="Jan Kowalski" {...field} name="name" />
+                              <Input placeholder="Jan Kowalski" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -165,7 +197,7 @@ const Contact: React.FC = () => {
                           <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                              <Input placeholder="jan@example.com" {...field} name="email" />
+                              <Input placeholder="jan@example.com" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -180,7 +212,7 @@ const Contact: React.FC = () => {
                         <FormItem>
                           <FormLabel>Temat</FormLabel>
                           <FormControl>
-                            <Input placeholder="W sprawie współpracy..." {...field} name="subject" />
+                            <Input placeholder="W sprawie współpracy..." {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -197,14 +229,20 @@ const Contact: React.FC = () => {
                             <Textarea 
                               placeholder="Treść Twojej wiadomości..." 
                               className="min-h-[150px]" 
-                              {...field} 
-                              name="message"
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                    
+                    {submitError && (
+                      <div className="bg-destructive/10 text-destructive p-3 rounded-md flex items-start">
+                        <AlertCircle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+                        <p className="text-sm">{submitError}</p>
+                      </div>
+                    )}
                     
                     <Button type="submit" className="w-full" disabled={isSubmitting}>
                       {isSubmitting ? (
