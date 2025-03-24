@@ -62,7 +62,7 @@ const Contact: React.FC = () => {
     console.log("SERVICE_ID:", process.env.REACT_APP_EMAILJS_SERVICE_ID);
     console.log("TEMPLATE_ID:", process.env.REACT_APP_EMAILJS_TEMPLATE_ID);
     console.log("TEMPLATE_ID_CONFIRM:", process.env.REACT_APP_EMAILJS_TEMPLATE_ID_CONFIRM);
-
+    console.log("test")
     // Wysyłka maila do właściciela
     emailjs
         .send(
