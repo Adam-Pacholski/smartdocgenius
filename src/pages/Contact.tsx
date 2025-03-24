@@ -51,11 +51,22 @@ const Contact: React.FC = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
 
-    const templateParams = {
+    // Parametry dla wiadomości do właściciela – dodajemy "to_email"
+    const templateParamsOwner = {
       from_name: values.name,
       from_email: values.email,
       subject: values.subject,
       message: values.message,
+      to_email: "info@ap-development.eu", // adres, na który chcesz otrzymywać wiadomości
+    };
+
+    // Parametry dla wiadomości potwierdzającej dla użytkownika – tutaj "to_email" ustawiamy na adres użytkownika
+    const templateParamsUser = {
+      from_name: values.name,
+      from_email: values.email,
+      subject: values.subject,
+      message: values.message,
+      to_email: values.email,
     };
 
     console.log("USER_ID:", process.env.REACT_APP_EMAILJS_USER_ID);
@@ -66,19 +77,19 @@ const Contact: React.FC = () => {
     // Wysyłka maila do właściciela
     emailjs
         .send(
-            process.env.REACT_APP_EMAILJS_SERVICE_ID!,
-            process.env.REACT_APP_EMAILJS_TEMPLATE_ID!,
-            templateParams,
-            process.env.REACT_APP_EMAILJS_USER_ID
+            import.meta.env.VITE_EMAILJS_SERVICE_ID,
+            import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+            templateParamsOwner,
+            import.meta.env.VITE_EMAILJS_USER_ID
         )
         .then((resultOwner) => {
           console.log("Wiadomość do właściciela wysłana:", resultOwner);
           // Po wysłaniu do właściciela wysyłamy wiadomość potwierdzającą do użytkownika
           return emailjs.send(
-              process.env.REACT_APP_EMAILJS_SERVICE_ID!,
-              process.env.REACT_APP_EMAILJS_TEMPLATE_ID_CONFIRM!,
-              templateParams,
-              process.env.REACT_APP_EMAILJS_USER_ID
+              import.meta.env.VITE_EMAILJS_SERVICE_ID,
+              import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CONFIRM,
+              templateParamsUser,
+              import.meta.env.VITE_EMAILJS_USER_ID
           );
         })
         .then((resultConfirm) => {
