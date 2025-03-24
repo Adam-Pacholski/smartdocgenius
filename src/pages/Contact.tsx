@@ -51,7 +51,6 @@ const Contact: React.FC = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
 
-    // Przygotowanie parametrów dla EmailJS
     const templateParams = {
       from_name: values.name,
       from_email: values.email,
@@ -59,7 +58,7 @@ const Contact: React.FC = () => {
       message: values.message,
     };
 
-    // Wysyłka maila do właściciela (używamy szablonu skonfigurowanego w EmailJS)
+    // Wysyłka maila do właściciela
     emailjs
         .send(
             process.env.REACT_APP_EMAILJS_SERVICE_ID!,
@@ -67,43 +66,34 @@ const Contact: React.FC = () => {
             templateParams,
             process.env.REACT_APP_EMAILJS_USER_ID
         )
-        .then(
-            () => {
-              // Po wysłaniu wiadomości do właściciela wysyłamy maila potwierdzającego do użytkownika
-              emailjs
-                  .send(
-                      process.env.REACT_APP_EMAILJS_SERVICE_ID!,
-                      process.env.REACT_APP_EMAILJS_TEMPLATE_ID_CONFIRM!,
-                      templateParams,
-                      process.env.REACT_APP_EMAILJS_USER_ID
-                  )
-                  .then(
-                      () => {
-                        setIsSubmitting(false);
-                        setIsSubmitted(true);
-                        toast({
-                          title: "Wiadomość wysłana!",
-                          description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
-                        });
-                        form.reset();
-                      },
-                      () => {
-                        setIsSubmitting(false);
-                        toast({
-                          title: "Błąd",
-                          description: "Wystąpił problem przy wysyłaniu potwierdzenia.",
-                        });
-                      }
-                  );
-            },
-            () => {
-              setIsSubmitting(false);
-              toast({
-                title: "Błąd",
-                description: "Wystąpił problem przy wysyłaniu wiadomości.",
-              });
-            }
-        );
+        .then((resultOwner) => {
+          console.log("Wiadomość do właściciela wysłana:", resultOwner);
+          // Po wysłaniu do właściciela wysyłamy wiadomość potwierdzającą do użytkownika
+          return emailjs.send(
+              process.env.REACT_APP_EMAILJS_SERVICE_ID!,
+              process.env.REACT_APP_EMAILJS_TEMPLATE_ID_CONFIRM!,
+              templateParams,
+              process.env.REACT_APP_EMAILJS_USER_ID
+          );
+        })
+        .then((resultConfirm) => {
+          console.log("Wiadomość potwierdzająca wysłana:", resultConfirm);
+          setIsSubmitting(false);
+          setIsSubmitted(true);
+          toast({
+            title: "Wiadomość wysłana!",
+            description: "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.",
+          });
+          form.reset();
+        })
+        .catch((error) => {
+          console.error("Błąd wysyłki wiadomości:", error);
+          setIsSubmitting(false);
+          toast({
+            title: "Błąd",
+            description: "Wystąpił problem przy wysyłaniu wiadomości.",
+          });
+        });
   }
 
   return (
