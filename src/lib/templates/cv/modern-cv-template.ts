@@ -1,114 +1,95 @@
 
-// Modern CV template
-export const modernCVTemplate = (data: Record<string, string>, config?: Record<string, any>): string => {
-  const { primaryColor = '#3498db', fontFamily = 'Arial, sans-serif', fontSize = '12px' } = config || {};
+import { formatExperienceSection, formatEducationSection, formatSkillsSection, formatLanguagesSection, formatInterestsSection } from '../template-utils';
 
+export const modernCVTemplate = (data: Record<string, string>, config: Record<string, any> = {}) => {
+  // Default config values
+  const primaryColor = config.primaryColor || '#3498db';
+  const fontFamily = config.fontFamily || 'Arial, sans-serif';
+  const fontSize = config.fontSize || '12px';
+  
+  // Format data
+  const firstName = data.firstName || '';
+  const lastName = data.lastName || '';
+  const fullName = `${firstName} ${lastName}`.trim();
+  const position = data.position || '';
+  
   return `
-    <div style="font-family: ${fontFamily}; font-size: ${fontSize}; color: #333; line-height: 1.6; max-width: 210mm; margin: 0 auto; background-color: #fff;">
-      <!-- Header with colored background -->
-      <header style="background-color: ${primaryColor}; color: white; padding: 30px; display: flex; align-items: center; justify-content: space-between;">
-        <div>
-          <h1 style="margin: 0; font-size: 32px; font-weight: 300;">
-            ${data.firstName || ''} ${data.lastName || ''}
-          </h1>
-          <p style="margin: 5px 0; font-size: 18px; opacity: 0.9;">${data.position || ''}</p>
-        </div>
-        ${data.photo ? `
-          <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 3px solid white;">
-            <img src="${data.photo}" alt="Profile photo" style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
-        ` : ''}
-      </header>
-      
-      <!-- Contact info bar -->
-      <div style="background-color: #f5f5f5; padding: 10px 30px; display: flex; flex-wrap: wrap; justify-content: space-between; font-size: 14px;">
-        ${data.email ? `<div style="margin: 5px 0;"><strong>Email:</strong> ${data.email}</div>` : ''}
-        ${data.phone ? `<div style="margin: 5px 0;"><strong>Telefon:</strong> ${data.phone}</div>` : ''}
-        ${data.address ? `<div style="margin: 5px 0;"><strong>Adres:</strong> ${data.address}</div>` : ''}
+    <div style="font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; max-width: 21cm; margin: 0 auto; padding: 0;">
+      <!-- Header Section with Background Color -->
+      <div style="background-color: ${primaryColor}; color: white; padding: 40px; text-align: center;">
+        <h1 style="margin: 0; font-size: 32px; text-transform: uppercase;">${fullName}</h1>
+        <p style="margin: 10px 0 0; font-size: 18px;">${position}</p>
       </div>
       
-      <!-- Main content with padding -->
-      <main style="padding: 20px 30px;">
-        <!-- Summary section -->
-        ${data.summary ? `
-        <section style="margin-bottom: 25px;">
-          <h2 style="color: ${primaryColor}; font-size: 22px; font-weight: 400; margin-bottom: 15px; position: relative; padding-bottom: 10px;">
-            Podsumowanie zawodowe
-            <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
-          </h2>
-          <p style="margin-top: 0;">${data.summary.replace(/\n/g, '<br>')}</p>
-        </section>
-        ` : ''}
-        
-        <!-- Two column layout for the rest -->
-        <div style="display: flex; flex-wrap: wrap; margin: 0 -15px;">
-          <!-- Left column -->
-          <div style="flex: 1 1 60%; padding: 0 15px; min-width: 300px;">
-            <!-- Experience section -->
-            ${data.experience ? `
-            <section style="margin-bottom: 25px;">
-              <h2 style="color: ${primaryColor}; font-size: 22px; font-weight: 400; margin-bottom: 15px; position: relative; padding-bottom: 10px;">
-                Doświadczenie zawodowe
-                <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
-              </h2>
-              <div>${data.experience.replace(/\n/g, '<br>')}</div>
-            </section>
-            ` : ''}
-            
-            <!-- Education section -->
-            ${data.education ? `
-            <section style="margin-bottom: 25px;">
-              <h2 style="color: ${primaryColor}; font-size: 22px; font-weight: 400; margin-bottom: 15px; position: relative; padding-bottom: 10px;">
-                Wykształcenie
-                <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
-              </h2>
-              <div>${data.education.replace(/\n/g, '<br>')}</div>
-            </section>
-            ` : ''}
-          </div>
+      <!-- Two Column Layout -->
+      <div style="display: flex;">
+        <!-- Left Sidebar -->
+        <div style="flex: 1; background-color: #f5f5f5; padding: 30px;">
+          ${data.photo ? `
+            <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: 0 auto 20px;">
+              <img src="${data.photo}" alt="${fullName}" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+          ` : ''}
           
-          <!-- Right column -->
-          <div style="flex: 1 1 40%; padding: 0 15px; min-width: 250px;">
-            <!-- Skills section -->
-            ${data.skills ? `
-            <section style="margin-bottom: 25px;">
-              <h2 style="color: ${primaryColor}; font-size: 22px; font-weight: 400; margin-bottom: 15px; position: relative; padding-bottom: 10px;">
-                Umiejętności
-                <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
-              </h2>
-              <div>${data.skills.replace(/\n/g, '<br>')}</div>
+          <!-- Contact Information -->
+          <section style="margin-bottom: 30px;">
+            <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Kontakt</h2>
+            ${data.email ? `<p style="margin: 5px 0;"><strong>Email:</strong> ${data.email}</p>` : ''}
+            ${data.phone ? `<p style="margin: 5px 0;"><strong>Telefon:</strong> ${data.phone}</p>` : ''}
+            ${data.address ? `<p style="margin: 5px 0;"><strong>Adres:</strong> ${data.address}</p>` : ''}
+          </section>
+          
+          <!-- Skills Section -->
+          ${data.umiejetnosci ? `
+            <section style="margin-bottom: 30px;">
+              <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Umiejętności</h2>
+              ${formatSkillsSection(data.umiejetnosci)}
             </section>
-            ` : ''}
-            
-            <!-- Languages section -->
-            ${data.languages ? `
-            <section style="margin-bottom: 25px;">
-              <h2 style="color: ${primaryColor}; font-size: 22px; font-weight: 400; margin-bottom: 15px; position: relative; padding-bottom: 10px;">
-                Języki obce
-                <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
-              </h2>
-              <div>${data.languages.replace(/\n/g, '<br>')}</div>
+          ` : ''}
+          
+          <!-- Languages Section -->
+          ${data.jezyki ? `
+            <section style="margin-bottom: 30px;">
+              <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Języki obce</h2>
+              ${formatLanguagesSection(data.jezyki)}
             </section>
-            ` : ''}
-            
-            <!-- Interests section -->
-            ${data.interests ? `
-            <section style="margin-bottom: 25px;">
-              <h2 style="color: ${primaryColor}; font-size: 22px; font-weight: 400; margin-bottom: 15px; position: relative; padding-bottom: 10px;">
-                Zainteresowania
-                <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
-              </h2>
-              <div>${data.interests.replace(/\n/g, '<br>')}</div>
+          ` : ''}
+          
+          <!-- Interests Section -->
+          ${data.zainteresowania ? `
+            <section>
+              <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Zainteresowania</h2>
+              ${formatInterestsSection(data.zainteresowania)}
             </section>
-            ` : ''}
-          </div>
+          ` : ''}
         </div>
-      </main>
+        
+        <!-- Right Content Area -->
+        <div style="flex: 2; padding: 30px;">
+          <!-- Experience Section -->
+          ${data.doswiadczenie ? `
+            <section style="margin-bottom: 30px;">
+              <h2 style="font-size: 22px; color: ${primaryColor}; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 20px;">Doświadczenie zawodowe</h2>
+              ${formatExperienceSection(data.doswiadczenie)}
+            </section>
+          ` : ''}
+          
+          <!-- Education Section -->
+          ${data.edukacja ? `
+            <section>
+              <h2 style="font-size: 22px; color: ${primaryColor}; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 20px;">Wykształcenie</h2>
+              ${formatEducationSection(data.edukacja)}
+            </section>
+          ` : ''}
+        </div>
+      </div>
       
-      <!-- Footer with clause -->
-      <footer style="margin-top: 30px; padding: 20px 30px; font-size: 10px; color: #777; border-top: 1px solid #eee;">
-        ${data.clause || ''}
-      </footer>
+      <!-- Footer with Clause -->
+      ${data.clause ? `
+        <footer style="padding: 20px 30px; border-top: 1px solid #eee; font-size: 10px; color: #777; background-color: #f9f9f9;">
+          ${data.clause}
+        </footer>
+      ` : ''}
     </div>
   `;
 };

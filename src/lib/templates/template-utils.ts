@@ -1,37 +1,27 @@
 
-/**
- * Utility functions and constants for document templates
- */
-import { currentDate } from '../utils/document-utils';
-
-// A4 document constants
-export const A4_HEIGHT_PX = 1123; // A4 height in pixels at 96 DPI
+import { DocumentTemplate } from '../types/document-types';
+import { format } from 'date-fns';
 
 /**
- * Prepares common data needed across templates
+ * Prepares common template data and styling from form data and configuration
  */
 export const prepareTemplateData = (data: Record<string, string>, config: Record<string, any> = {}) => {
   const firstName = data.firstName || '';
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
-  const fullNameUpper = fullName.toUpperCase();
-  const position = data.position || 'PRZEDSTAWICIEL HANDLOWY';
-  const city = data.address?.split(',')?.pop()?.trim() || 'Warszawa';
-  const date = `${data.date || currentDate()}, ${city}`;
+  const position = data.position || '';
+  const currentDate = data.date ? data.date : format(new Date(), 'dd.MM.yyyy');
   
-  // Style configuration with defaults
-  const primaryColor = config?.primaryColor || '#2c3e50';
-  const fontFamily = config?.fontFamily || 'Arial, sans-serif';
-  const fontSize = config?.fontSize || '12px';
+  const primaryColor = config.primaryColor || '#3498db';
+  const fontFamily = config.fontFamily || 'Arial, sans-serif';
+  const fontSize = config.fontSize || '12px';
   
   return {
     firstName,
     lastName,
     fullName,
-    fullNameUpper,
     position,
-    city,
-    date,
+    date: currentDate,
     primaryColor,
     fontFamily,
     fontSize
@@ -39,41 +29,242 @@ export const prepareTemplateData = (data: Record<string, string>, config: Record
 };
 
 /**
- * Creates common base styles for document templates
+ * Gets recipient section HTML for cover letter
  */
-export const getBaseStyles = (fontFamily: string, fontSize: string) => `
-  max-width: 21cm; 
-  margin: 0; 
-  padding: 0; 
-  font-family: ${fontFamily}; 
-  font-size: ${fontSize}; 
-  line-height: 1.5; 
-  color: #333;
-`;
+export const getRecipientSection = (data: Record<string, string>) => {
+  if (!data.recipientName && !data.recipientCompany && !data.recipientAddress) {
+    return '';
+  }
+  
+  return `
+    <div style="margin-bottom: 25px;">
+      ${data.recipientName ? `<p style="margin: 0;">${data.recipientName}</p>` : ''}
+      ${data.recipientPosition ? `<p style="margin: 0;">${data.recipientPosition}</p>` : ''}
+      ${data.recipientCompany ? `<p style="margin: 0;">${data.recipientCompany}</p>` : ''}
+      ${data.recipientAddress ? `<p style="margin: 0;">${data.recipientAddress}</p>` : ''}
+    </div>
+  `;
+};
 
 /**
- * Creates common full-height A4 container
+ * Gets clause section HTML for cover letter
  */
-export const getA4Container = () => `
-  min-height: ${A4_HEIGHT_PX}px;
-`;
+export const getClauseSection = (data: Record<string, string>) => {
+  if (!data.clause) {
+    return '';
+  }
+  
+  return `
+    <div style="margin-top: 30px; font-size: 9px; color: #666;">
+      <p style="margin: 0;">${data.clause}</p>
+    </div>
+  `;
+};
 
 /**
- * Generates the recipient section HTML
+ * Format the experience section for CV from string data
  */
-export const getRecipientSection = (data: Record<string, string>) => `
-  <div style="margin-bottom: 20px;">
-    ${data.recipientName ? `<p style="margin: 0 0 3px;">${data.recipientName}</p>` : ''}
-    ${data.recipientCompany ? `<p style="margin: 0 0 3px;">${data.recipientCompany}</p>` : ''}
-    ${data.recipientAddress ? `<p style="margin: 0 0 3px;">${data.recipientAddress}</p>` : ''}
-  </div>
-`;
+export const formatExperienceSection = (experienceData: string) => {
+  if (!experienceData) return '';
+  
+  try {
+    const entries = parseMultiEntryData(experienceData);
+    let html = '';
+    
+    entries.forEach(entry => {
+      html += `
+        <div style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <strong>${entry.company || ''}</strong>
+            <span>${entry.period || ''}</span>
+          </div>
+          <div style="font-style: italic; margin-bottom: 5px;">${entry.position || ''}</div>
+          ${entry.details ? `<ul style="margin: 5px 0; padding-left: 20px;">
+            ${entry.details.split('\n').filter(line => line.trim().startsWith('-')).map(line => 
+              `<li>${line.replace(/^-\s*/, '')}</li>`
+            ).join('')}
+          </ul>` : ''}
+        </div>
+      `;
+    });
+    
+    return html;
+  } catch (e) {
+    console.error("Error parsing experience data:", e);
+    return '<p>Error displaying experience data</p>';
+  }
+};
 
 /**
- * Generates the standard clause section HTML
+ * Format the education section for CV from string data
  */
-export const getClauseSection = (data: Record<string, string>) => `
-  <p data-clause style="margin-top: 40px; font-size: 10px; color: #666; position: absolute; bottom: 20px; left: 30px; right: 30px; text-align: justify;">
-    ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
-  </p>
-`;
+export const formatEducationSection = (educationData: string) => {
+  if (!educationData) return '';
+  
+  try {
+    const entries = parseMultiEntryData(educationData);
+    let html = '';
+    
+    entries.forEach(entry => {
+      html += `
+        <div style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <strong>${entry.school || ''}</strong>
+            <span>${entry.period || ''}</span>
+          </div>
+          <div style="font-style: italic; margin-bottom: 5px;">${entry.degree || ''}</div>
+          ${entry.details ? `<ul style="margin: 5px 0; padding-left: 20px;">
+            ${entry.details.split('\n').filter(line => line.trim().startsWith('-')).map(line => 
+              `<li>${line.replace(/^-\s*/, '')}</li>`
+            ).join('')}
+          </ul>` : ''}
+        </div>
+      `;
+    });
+    
+    return html;
+  } catch (e) {
+    console.error("Error parsing education data:", e);
+    return '<p>Error displaying education data</p>';
+  }
+};
+
+/**
+ * Format the skills section for CV from string data
+ */
+export const formatSkillsSection = (skillsData: string) => {
+  if (!skillsData) return '';
+  
+  try {
+    const lines = skillsData.split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => line.replace(/^-\s*/, '').trim());
+    
+    return `
+      <ul style="padding-left: 20px; margin: 10px 0;">
+        ${lines.map(skill => `<li>${skill}</li>`).join('')}
+      </ul>
+    `;
+  } catch (e) {
+    console.error("Error parsing skills data:", e);
+    return '<p>Error displaying skills data</p>';
+  }
+};
+
+/**
+ * Format the languages section for CV from string data
+ */
+export const formatLanguagesSection = (languagesData: string) => {
+  if (!languagesData) return '';
+  
+  try {
+    const lines = languagesData.split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => {
+        const parts = line.replace(/^-\s*/, '').split('-').map(part => part.trim());
+        return {
+          language: parts[0] || '',
+          level: parts.length > 1 ? parts[1] : ''
+        };
+      });
+    
+    let html = '<ul style="padding-left: 20px; margin: 10px 0;">';
+    
+    lines.forEach(item => {
+      html += `<li><strong>${item.language}</strong>${item.level ? ` - ${item.level}` : ''}</li>`;
+    });
+    
+    html += '</ul>';
+    return html;
+  } catch (e) {
+    console.error("Error parsing languages data:", e);
+    return '<p>Error displaying languages data</p>';
+  }
+};
+
+/**
+ * Format the interests section for CV from string data
+ */
+export const formatInterestsSection = (interestsData: string) => {
+  if (!interestsData) return '';
+  
+  try {
+    const lines = interestsData.split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => line.replace(/^-\s*/, '').trim());
+    
+    return `
+      <ul style="padding-left: 20px; margin: 10px 0;">
+        ${lines.map(interest => `<li>${interest}</li>`).join('')}
+      </ul>
+    `;
+  } catch (e) {
+    console.error("Error parsing interests data:", e);
+    return '<p>Error displaying interests data</p>';
+  }
+};
+
+/**
+ * Parse multi-entry data from string format
+ */
+export function parseMultiEntryData(data: string): Array<Record<string, string>> {
+  if (!data || data.trim() === '') return [];
+  
+  const lines = data.split('\n').filter(line => line.trim() !== '');
+  const entries = [];
+  let currentEntry: Record<string, string> = {};
+  let currentLines: string[] = [];
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    
+    // New entry starts with pipe-separated values
+    if (line.includes('|') && !line.startsWith('-')) {
+      // Save previous entry if exists
+      if (Object.keys(currentEntry).length > 0) {
+        if (currentLines.length > 0) {
+          currentEntry.details = currentLines.join('\n');
+        }
+        entries.push(currentEntry);
+        currentEntry = {};
+        currentLines = [];
+      }
+      
+      // Parse header line with pipe separators
+      const parts = line.split('|').map(part => part.trim());
+      
+      if (line.includes('company') || (parts.length >= 3 && !line.includes('school'))) {
+        currentEntry.company = parts[0] || '';
+        currentEntry.position = parts[1] || '';
+        currentEntry.period = parts[2] || '';
+      } else if (line.includes('school') || parts.length >= 3) {
+        currentEntry.school = parts[0] || '';
+        currentEntry.degree = parts[1] || '';
+        currentEntry.period = parts[2] || '';
+      }
+    } 
+    // Detail lines
+    else if (line.startsWith('-')) {
+      currentLines.push(line);
+    }
+    // Empty line marks the end of an entry
+    else if (line.trim() === '' && Object.keys(currentEntry).length > 0) {
+      if (currentLines.length > 0) {
+        currentEntry.details = currentLines.join('\n');
+      }
+      entries.push(currentEntry);
+      currentEntry = {};
+      currentLines = [];
+    }
+  }
+  
+  // Add the last entry
+  if (Object.keys(currentEntry).length > 0) {
+    if (currentLines.length > 0) {
+      currentEntry.details = currentLines.join('\n');
+    }
+    entries.push(currentEntry);
+  }
+  
+  return entries;
+}

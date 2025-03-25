@@ -21,7 +21,7 @@
 
 import { DocumentTemplate } from '../types/document-types';
 import { allCoverLetterFields } from '../form-fields/cover-letter-fields';
-import { prepareTemplateData, getRecipientSection, getClauseSection } from './template-utils';
+import { prepareTemplateData, getRecipientSection } from './template-utils';
 
 export const blueHeaderTemplate: DocumentTemplate = {
   id: 'blue-header',
@@ -84,7 +84,7 @@ export const blueHeaderTemplate: DocumentTemplate = {
           <!-- Clause - Fixed positioning to avoid overlap -->
           <div style="margin-top: 60px; padding-top: 40px;">
             <p data-clause style="font-size: 10px; color: #666; text-align: justify;">
-              ${data.clause || 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.'}
+              ${data.clause || ''}
             </p>
           </div>
         </div>
