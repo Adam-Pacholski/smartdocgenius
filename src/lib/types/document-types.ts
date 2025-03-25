@@ -1,4 +1,3 @@
-
 export interface TemplateField {
   id: string;
   label: string;
@@ -25,6 +24,7 @@ export interface DocumentType {
   icon: string;
   templates: DocumentTemplate[];
   comingSoon?: boolean;
+  displayComingSoon?: boolean; // Added this property to fix type errors
 }
 
 // Sekcje formularza
