@@ -149,20 +149,6 @@ const Editor: React.FC = () => {
     'zainteresowania': 'Zainteresowania'
   };
 
-  // Ensure default clause text if it's emptied
-  useEffect(() => {
-    if (formData.clause === '' && selectedTemplate) {
-      // Find the clause field to get its default value
-      const clauseField = selectedTemplate.fields.find(field => field.id === 'clause');
-      if (clauseField && clauseField.defaultValue) {
-        setFormData(prev => ({
-          ...prev,
-          clause: clauseField.defaultValue
-        }));
-      }
-    }
-  }, [formData.clause, selectedTemplate]);
-
   return (
     <Layout className="pb-12">
       <div className="space-y-6">
@@ -210,7 +196,7 @@ const Editor: React.FC = () => {
                     }}
                     className="mb-4"
                   >
-                    <TabsList className="grid grid-cols-1 md:grid-cols-4 w-full overflow-x-auto">
+                    <TabsList className="flex flex-wrap md:grid md:grid-cols-4 w-full overflow-visible mb-1">
                       {sectionOrder.map((section) => (
                         <TabsTrigger 
                           key={section}

@@ -583,7 +583,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                   <Textarea
                     id={field.id}
                     placeholder={field.placeholder}
-                    value={formData[field.id] || field.defaultValue || ''}
+                    value={formData[field.id] || ''}
                     onChange={(e) => handleChange(field.id, e.target.value)}
                     required={field.required}
                     className="min-h-[200px] font-mono text-sm"
@@ -592,7 +592,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                   <Input
                     id={field.id}
                     type="date"
-                    value={formData[field.id] || field.defaultValue || ''}
+                    value={formData[field.id] || ''}
                     onChange={(e) => handleChange(field.id, e.target.value)}
                     required={field.required}
                   />
@@ -601,7 +601,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     id={field.id}
                     type="email"
                     placeholder={field.placeholder}
-                    value={formData[field.id] || field.defaultValue || ''}
+                    value={formData[field.id] || ''}
                     onChange={(e) => handleChange(field.id, e.target.value)}
                     required={field.required}
                   />
@@ -610,7 +610,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     id={field.id}
                     type="tel"
                     placeholder={field.placeholder}
-                    value={formData[field.id] || field.defaultValue || ''}
+                    value={formData[field.id] || ''}
                     onChange={(e) => handleChange(field.id, e.target.value)}
                     required={field.required}
                   />
@@ -619,7 +619,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     id={field.id}
                     type="text"
                     placeholder={field.placeholder}
-                    value={formData[field.id] || field.defaultValue || ''}
+                    value={formData[field.id] || ''}
                     onChange={(e) => handleChange(field.id, e.target.value)}
                     required={field.required}
                   />
@@ -629,7 +629,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
           )}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between pt-4">
+      <CardFooter className="flex flex-wrap gap-2 justify-between pt-4">
         <Button variant="outline" onClick={onBack} className="flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" />
           Wróć
