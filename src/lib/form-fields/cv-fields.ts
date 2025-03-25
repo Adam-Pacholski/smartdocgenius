@@ -70,7 +70,7 @@ export const cvBaseFields: TemplateField[] = [
   
   // Experience fields
   {
-    id: 'experience',
+    id: 'doswiadczenie',
     label: 'Doświadczenie zawodowe',
     placeholder: 'Opisz swoje doświadczenie zawodowe',
     type: 'textarea',
@@ -87,7 +87,7 @@ Nazwa firmy | Stanowisko | Okres zatrudnienia
   
   // Education fields
   {
-    id: 'education',
+    id: 'edukacja',
     label: 'Wykształcenie',
     placeholder: 'Opisz swoje wykształcenie',
     type: 'textarea',
@@ -102,20 +102,20 @@ Nazwa szkoły | Profil | Okres
 
   // Skills fields
   {
-    id: 'skills',
+    id: 'umiejetnosci',
     label: 'Umiejętności',
     placeholder: 'Wpisz swoje umiejętności',
     type: 'textarea',
     required: false,
     section: SECTIONS.SKILLS,
-    defaultValue: `- Umiejętność 1
-- Umiejętność 2
-- Umiejętność 3`,
+    defaultValue: `- Umiejętność 1 | 4
+- Umiejętność 2 | 3
+- Umiejętność 3 | 5`,
   },
   
   // Languages fields
   {
-    id: 'languages',
+    id: 'jezyki',
     label: 'Języki obce',
     placeholder: 'Wpisz znane języki',
     type: 'textarea',
@@ -127,7 +127,7 @@ Nazwa szkoły | Profil | Okres
   
   // Interests fields
   {
-    id: 'interests',
+    id: 'zainteresowania',
     label: 'Zainteresowania',
     placeholder: 'Twoje zainteresowania',
     type: 'textarea',

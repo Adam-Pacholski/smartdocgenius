@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +14,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { CSS } from '@dnd-kit/utilities';
+import { parseMultiEntryData } from '@/lib/templates/template-utils';
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -72,12 +72,22 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
   currentSection,
 }) => {
   const [multiEntries, setMultiEntries] = useState<Record<string, Array<Record<string, string | number>>>>({
-    doswiadczenie: parseExistingEntries('doswiadczenie'),
-    edukacja: parseExistingEntries('edukacja'),
-    umiejetnosci: parseExistingEntries('umiejetnosci'),
-    jezyki: parseExistingEntries('jezyki'),
-    zainteresowania: parseExistingEntries('zainteresowania'),
+    doswiadczenie: [],
+    edukacja: [],
+    umiejetnosci: [],
+    jezyki: [],
+    zainteresowania: [],
   });
+
+  useEffect(() => {
+    setMultiEntries({
+      doswiadczenie: parseExistingEntries('doswiadczenie'),
+      edukacja: parseExistingEntries('edukacja'),
+      umiejetnosci: parseExistingSkills(),
+      jezyki: parseExistingLanguages(),
+      zainteresowania: parseExistingInterests(),
+    });
+  }, [formData]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -102,7 +112,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         const [movedItem] = items.splice(oldIndex, 1);
         items.splice(newIndex, 0, movedItem);
         
-        // Update formData with the new sorted entries
         const formattedString = formatEntriesToString(section, items);
         handleChange(section, formattedString);
         
@@ -114,7 +123,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   }
 
-  // Parse existing entries from formData string into array of objects
   function parseExistingEntries(fieldName: string): Array<Record<string, string | number>> {
     if (!formData[fieldName]) return [];
     
@@ -127,66 +135,42 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         
-        // New entry starts
         if (line.includes('|') && !line.startsWith('-')) {
-          // Save previous entry if exists
           if (Object.keys(currentEntry).length > 0 || currentLines.length > 0) {
             if (currentLines.length > 0) {
               currentEntry.details = currentLines.join('\n');
             }
-            entries.push(currentEntry);
+            entries.push({...currentEntry});
             currentEntry = {};
             currentLines = [];
           }
           
-          // Parse header line with pipe separators
           const parts = line.split('|').map(part => part.trim());
           
           if (fieldName === 'doswiadczenie') {
             currentEntry.company = parts[0] || '';
             currentEntry.position = parts[1] || '';
-            currentEntry.period = parts[2] || '';
+            if (parts.length >= 3) {
+              currentEntry.period = parts[2] || '';
+            }
           } else if (fieldName === 'edukacja') {
             currentEntry.school = parts[0] || '';
             currentEntry.degree = parts[1] || '';
-            currentEntry.period = parts[2] || '';
+            if (parts.length >= 3) {
+              currentEntry.period = parts[2] || '';
+            }
           }
         } 
-        // Detail lines
-        else if (line.startsWith('-')) {
+        else if (line.trim().length > 0) {
           currentLines.push(line);
-        }
-        // Simple entries (skills, languages, interests) without pipe separation
-        else if (fieldName === 'umiejetnosci' && !line.includes('|') && !line.startsWith('-')) {
-          currentEntry = { 
-            skill: line.replace(/^-\s*/, ''),
-            proficiency: 3 // Default proficiency level (1-5)
-          };
-          entries.push(currentEntry);
-          currentEntry = {};
-        } else if (fieldName === 'jezyki' && !line.includes('|') && !line.startsWith('-')) {
-          const parts = line.replace(/^-\s*/, '').split('-').map(part => part.trim());
-          currentEntry = {
-            language: parts[0] || '',
-            level: parts[1] || ''
-          };
-          entries.push(currentEntry);
-          currentEntry = {};
-        } else if (fieldName === 'zainteresowania' && !line.includes('|') && !line.startsWith('-')) {
-          currentEntry = { 
-            interest: line.replace(/^-\s*/, '')
-          };
-          entries.push(currentEntry);
-          currentEntry = {};
         }
       }
       
-      // Add the last entry
       if (Object.keys(currentEntry).length > 0 || currentLines.length > 0) {
         if (currentLines.length > 0) {
           currentEntry.details = currentLines.join('\n');
         }
-        entries.push(currentEntry);
+        entries.push({...currentEntry});
       }
       
       return entries;
@@ -196,7 +180,65 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   }
 
-  // Format entries back into string for formData
+  function parseExistingSkills(): Array<Record<string, string | number>> {
+    if (!formData.umiejetnosci) return [];
+    
+    try {
+      return formData.umiejetnosci.split('\n')
+        .filter(line => line.trim() !== '')
+        .map(line => {
+          if (line.includes('|')) {
+            const parts = line.replace(/^-\s*/, '').split('|').map(part => part.trim());
+            return {
+              skill: parts[0],
+              proficiency: parseInt(parts[1]) || 3
+            };
+          }
+          return {
+            skill: line.replace(/^-\s*/, '').trim(),
+            proficiency: 3
+          };
+        });
+    } catch (e) {
+      console.error("Error parsing skills:", e);
+      return [];
+    }
+  }
+
+  function parseExistingLanguages(): Array<Record<string, string | number>> {
+    if (!formData.jezyki) return [];
+    
+    try {
+      return formData.jezyki.split('\n')
+        .filter(line => line.trim() !== '')
+        .map(line => {
+          const parts = line.replace(/^-\s*/, '').split('-').map(part => part.trim());
+          return {
+            language: parts[0],
+            level: parts.length > 1 ? parts[1] : ''
+          };
+        });
+    } catch (e) {
+      console.error("Error parsing languages:", e);
+      return [];
+    }
+  }
+
+  function parseExistingInterests(): Array<Record<string, string | number>> {
+    if (!formData.zainteresowania) return [];
+    
+    try {
+      return formData.zainteresowania.split('\n')
+        .filter(line => line.trim() !== '')
+        .map(line => ({
+          interest: line.replace(/^-\s*/, '').trim()
+        }));
+    } catch (e) {
+      console.error("Error parsing interests:", e);
+      return [];
+    }
+  }
+
   function formatEntriesToString(fieldName: string, entries: Array<Record<string, string | number>>): string {
     let result = '';
     
@@ -244,7 +286,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setMultiEntries(prev => {
       const newEntries = [...prev[section], {}];
       
-      // Update formData with formatted string
       const formattedString = formatEntriesToString(section, newEntries);
       handleChange(section, formattedString);
       
@@ -259,7 +300,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setMultiEntries(prev => {
       const newEntries = prev[section].filter((_, i) => i !== index);
       
-      // Update formData with formatted string
       const formattedString = formatEntriesToString(section, newEntries);
       handleChange(section, formattedString);
       
@@ -278,7 +318,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       }
       newEntries[index][field] = value;
       
-      // Update formData with formatted string
       const formattedString = formatEntriesToString(section, newEntries);
       handleChange(section, formattedString);
       
@@ -288,11 +327,9 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       };
     });
   };
-  
-  // Filtruj pola formularza według sekcji
+
   const sectionFields = template.fields.filter(field => field.section === currentSection);
-  
-  // Mapowanie sekcji na tytuły
+
   const sectionTitles: Record<string, string> = {
     'dane_osobowe': 'Dane osobowe',
     'odbiorca': 'Odbiorca',
@@ -306,7 +343,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     'zainteresowania': 'Zainteresowania'
   };
 
-  // Sekcja opis dla różnych typów sekcji
   const sectionDescriptions: Record<string, string> = {
     'dane_osobowe': 'Wprowadź swoje dane osobowe',
     'odbiorca': 'Wprowadź dane odbiorcy',
@@ -320,7 +356,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     'zainteresowania': 'Opisz swoje zainteresowania i hobby'
   };
 
-  // Renderowanie specjalnego formularza dla sekcji CV
   const renderCVSectionForm = () => {
     switch (currentSection) {
       case 'doswiadczenie':
@@ -543,7 +578,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         </div>
                         <Slider
                           id={`proficiency-${index}`}
-                          defaultValue={[entry.proficiency as number || 3]}
+                          value={[entry.proficiency as number || 3]}
                           min={1}
                           max={5}
                           step={1}
@@ -753,11 +788,9 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             </div>
           )}
 
-          {/* Render CV specific forms for relevant sections */}
           {['doswiadczenie', 'edukacja', 'umiejetnosci', 'jezyki', 'zainteresowania'].includes(currentSection) ? (
             renderCVSectionForm()
           ) : (
-            // Render regular fields for other sections
             sectionFields.filter(field => field.type !== 'photo').map((field) => (
               <div key={field.id} className="space-y-2">
                 <Label htmlFor={field.id}>
