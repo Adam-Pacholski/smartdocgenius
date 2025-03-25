@@ -9,6 +9,7 @@ export const prepareTemplateData = (data: Record<string, string>, config: Record
   const firstName = data.firstName || '';
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
+  const fullNameUpper = fullName.toUpperCase(); // Added fullNameUpper property
   const position = data.position || '';
   const currentDate = data.date ? data.date : format(new Date(), 'dd.MM.yyyy');
   
@@ -20,6 +21,7 @@ export const prepareTemplateData = (data: Record<string, string>, config: Record
     firstName,
     lastName,
     fullName,
+    fullNameUpper, // Return the new property
     position,
     date: currentDate,
     primaryColor,
