@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, FileText, Sparkles, CheckCircle } from 'lucide-react';
 import Layout from '@/components/Layout';
+import RoadmapSection from '@/components/RoadmapSection';
 
 const features = [
   {
@@ -87,6 +87,9 @@ const Index: React.FC = () => {
           </div>
         </div>
       </section>
+      
+      {/* Roadmap section */}
+      <RoadmapSection />
       
       {/* CTA section */}
       <section className="py-12 md:py-24">
