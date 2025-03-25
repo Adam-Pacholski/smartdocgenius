@@ -40,6 +40,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const [exportError, setExportError] = useState<string | null>(null);
   const [previewLoaded, setPreviewLoaded] = useState(false);
   const [scale, setScale] = useState(1);
+  const [containerWidth, setContainerWidth] = useState(0);
   
   const htmlContent = template.template(formData, config);
   
@@ -56,23 +57,62 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         setPageCount(Math.max(1, count));
         setPreviewLoaded(true);
         
-        // Calculate scale to fit the preview container if needed
+        // Calculate scale to fit the preview container
         const previewContainer = actualRef.current.parentElement;
-        if (previewContainer && count === 1) {
-          const containerHeight = previewContainer.clientHeight;
+        if (previewContainer) {
+          const containerWidth = previewContainer.clientWidth;
+          setContainerWidth(containerWidth);
+          
+          // A4 width is 21cm ≈ 794px at 96dpi
+          const contentWidth = 794;
           const contentHeight = actualRef.current.scrollHeight;
-          if (contentHeight > containerHeight) {
-            const newScale = Math.min(0.95, containerHeight / contentHeight);
-            setScale(newScale);
-          } else {
-            setScale(1);
+          
+          // Calculate scale to fit width
+          const widthScale = (containerWidth - 40) / contentWidth; // Subtract padding
+          
+          // Calculate scale to fit height if needed (for single page docs)
+          let heightScale = 1;
+          if (count === 1) {
+            const containerHeight = previewContainer.clientHeight;
+            heightScale = containerHeight / contentHeight;
           }
+          
+          // Use the smaller scale to ensure document fits both dimensions
+          const newScale = Math.min(widthScale, heightScale, 1);
+          setScale(newScale);
         }
       }
     }, 500);
     
     return () => clearTimeout(timer);
   }, [htmlContent, actualRef]);
+  
+  // Add resize listener to update scaling when window resizes
+  useEffect(() => {
+    const handleResize = () => {
+      if (actualRef.current) {
+        const previewContainer = actualRef.current.parentElement;
+        if (previewContainer) {
+          const newContainerWidth = previewContainer.clientWidth;
+          
+          // Only recalculate if the width changed significantly
+          if (Math.abs(newContainerWidth - containerWidth) > 20) {
+            setContainerWidth(newContainerWidth);
+            
+            // A4 width is 21cm ≈ 794px at 96dpi
+            const contentWidth = 794;
+            
+            // Calculate scale to fit width
+            const newScale = Math.min((newContainerWidth - 40) / contentWidth, 1);
+            setScale(newScale);
+          }
+        }
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [actualRef, containerWidth]);
   
   const handleExportPdf = async () => {
     if (!actualRef.current) {
@@ -263,19 +303,23 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
               className="w-full h-[800px]"
               scrollHideDelay={0}
             >
-              <div 
-                ref={actualRef}
-                className="a4-preview w-[21cm]"
-                style={{ 
-                  padding: 0,
-                  transform: `scale(${scale})`,
-                  transformOrigin: 'top center',
-                  margin: '0 auto',
-                  maxWidth: '100%',
-                  backgroundColor: '#fff'
-                }}
-                dangerouslySetInnerHTML={{ __html: htmlContent }}
-              />
+              <div className="flex justify-center px-4 py-4">
+                <div 
+                  ref={actualRef}
+                  className="a4-preview"
+                  style={{ 
+                    padding: 0,
+                    transform: `scale(${scale})`,
+                    transformOrigin: 'top center',
+                    width: '21cm', // A4 width
+                    maxWidth: '100%',
+                    backgroundColor: '#fff',
+                    margin: '0 auto',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}
+                  dangerouslySetInnerHTML={{ __html: htmlContent }}
+                />
+              </div>
               
               {/* Page break indicators */}
               {previewLoaded && renderPageBreaks()}
