@@ -7,9 +7,9 @@ import { toast } from '@/components/ui/use-toast';
 const A4_WIDTH_MM = 210;
 const A4_HEIGHT_MM = 297;
 
-// A4 dimensions in pixels at 96 DPI (approximate)
-const A4_WIDTH_PX = 794;
-export const A4_HEIGHT_PX = 1123;
+// A4 dimensions in pixels at 300 DPI for better quality
+const A4_WIDTH_PX = 2480;
+export const A4_HEIGHT_PX = 3508;
 
 // Function to check if document needs multiple pages
 export const estimatePageCount = (elementRef: HTMLElement): number => {
@@ -18,8 +18,8 @@ export const estimatePageCount = (elementRef: HTMLElement): number => {
   // Get the actual height of the content
   const contentHeight = elementRef.scrollHeight;
   
-  // Calculate how many A4 pages this would require
-  return Math.max(1, Math.ceil(contentHeight / A4_HEIGHT_PX));
+  // Calculate how many A4 pages this would require (using display height for preview)
+  return Math.max(1, Math.ceil(contentHeight / 1123)); // Use display height for estimation
 };
 
 // Main PDF generation function
@@ -37,7 +37,7 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     
     // Get the full content height to determine number of pages
     const contentHeight = elementRef.scrollHeight;
-    const pageCount = Math.max(1, Math.ceil(contentHeight / A4_HEIGHT_PX));
+    const pageCount = Math.max(1, Math.ceil(contentHeight / 1123)); // Use display height for estimation
     
     console.log(`Document will span ${pageCount} pages. Total height: ${contentHeight}px`);
     
@@ -46,14 +46,15 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     tempContainer.style.position = 'fixed';
     tempContainer.style.top = '0';
     tempContainer.style.left = '-9999px';
-    tempContainer.style.width = `${A4_WIDTH_PX}px`;
+    tempContainer.style.width = `${794}px`; // A4 width at 96 DPI for display
     
     // Create a deep clone of the element
     const clone = elementRef.cloneNode(true) as HTMLElement;
-    clone.style.width = `${A4_WIDTH_PX}px`;
+    clone.style.width = `${794}px`; // A4 width at 96 DPI for display
     clone.style.height = 'auto';
     clone.style.position = 'relative';
     clone.style.background = 'white';
+    clone.style.transform = 'none'; // Remove any scaling that might be applied
     
     tempContainer.appendChild(clone);
     document.body.appendChild(tempContainer);
@@ -64,20 +65,20 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
         console.log(`Processing page ${i + 1} of ${pageCount}`);
         
         // Calculate the portion of the document to capture for this page
-        const yStart = i * A4_HEIGHT_PX;
+        const yStart = i * 1123; // Use display height for capturing
         
         // Generate canvas for this page section
         const canvas = await html2canvas(clone, {
-          scale: 2, // Higher scale for better quality
+          scale: 3, // Higher scale for better quality
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
-          windowWidth: A4_WIDTH_PX,
-          windowHeight: A4_HEIGHT_PX,
+          windowWidth: 794, // A4 width at 96 DPI for display
+          windowHeight: 1123, // A4 height at 96 DPI for display
           x: 0,
           y: yStart,
           scrollY: -yStart,
-          height: A4_HEIGHT_PX
+          height: 1123 // A4 height at 96 DPI for display
         });
         
         // Add a new page for each page after the first
@@ -86,7 +87,7 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
         }
         
         // Add the canvas as an image to the PDF
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
         pdf.addImage(imgData, 'JPEG', 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM, '', 'FAST');
         
       } catch (pageError) {
@@ -121,12 +122,12 @@ export const splitContentIntoPages = (elementRef: HTMLElement): HTMLElement[] =>
   const tempDiv = document.createElement('div');
   tempDiv.style.position = 'absolute';
   tempDiv.style.left = '-9999px';
-  tempDiv.style.width = `${A4_WIDTH_PX}px`;
+  tempDiv.style.width = `${794}px`; // A4 width at 96 DPI for display
   tempDiv.appendChild(clone);
   document.body.appendChild(tempDiv);
   
   const totalHeight = clone.scrollHeight;
-  const pageCount = Math.ceil(totalHeight / A4_HEIGHT_PX);
+  const pageCount = Math.ceil(totalHeight / 1123); // Use display height
   
   const pages: HTMLElement[] = [];
   
@@ -134,12 +135,12 @@ export const splitContentIntoPages = (elementRef: HTMLElement): HTMLElement[] =>
     const pageDiv = document.createElement('div');
     pageDiv.style.position = 'relative';
     pageDiv.style.width = '100%';
-    pageDiv.style.height = `${A4_HEIGHT_PX}px`;
+    pageDiv.style.height = `${1123}px`; // Use display height
     pageDiv.style.overflow = 'hidden';
     
     const contentClone = clone.cloneNode(true) as HTMLElement;
     contentClone.style.position = 'absolute';
-    contentClone.style.top = `-${i * A4_HEIGHT_PX}px`;
+    contentClone.style.top = `-${i * 1123}px`; // Use display height
     contentClone.style.width = '100%';
     
     pageDiv.appendChild(contentClone);

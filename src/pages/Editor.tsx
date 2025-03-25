@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
 import DocumentTypeSelector from '@/components/DocumentTypeSelector';
@@ -10,7 +10,6 @@ import TemplateConfiguration from '@/components/TemplateConfiguration';
 import documentTypes, { DocumentTemplate } from '@/lib/templates';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { SECTIONS } from '@/lib/types/document-types';
-import { sampleCoverLetterData } from '@/lib/utils/sample-data';
 import { generatePdfFromHtml } from '@/lib/utils/pdf-generator';
 
 enum EditorStep {
@@ -44,9 +43,9 @@ const Editor: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<EditorStep>(EditorStep.SelectType);
   const [selectedTypeId, setSelectedTypeId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
-  const [formData, setFormData] = useState<Record<string, string>>(sampleCoverLetterData);
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const [config, setConfig] = useState<Record<string, any>>({
-    documentName: 'List motywacyjny',
+    documentName: 'Dokument',
     primaryColor: '#3498db',
     fontFamily: 'Arial, sans-serif',
     fontSize: '12px',
@@ -69,11 +68,10 @@ const Editor: React.FC = () => {
   const handleSelectTemplate = (template: DocumentTemplate) => {
     setSelectedTemplate(template);
     
-    const initialData: Record<string, string> = { ...sampleCoverLetterData };
+    // Initialize empty form data with field IDs from the template
+    const initialData: Record<string, string> = {};
     template.fields.forEach(field => {
-      if (!initialData[field.id]) {
-        initialData[field.id] = field.defaultValue || '';
-      }
+      initialData[field.id] = field.defaultValue || '';
     });
     setFormData(initialData);
     
@@ -150,6 +148,20 @@ const Editor: React.FC = () => {
     'jezyki': 'Języki obce',
     'zainteresowania': 'Zainteresowania'
   };
+
+  // Ensure default clause text if it's emptied
+  useEffect(() => {
+    if (formData.clause === '' && selectedTemplate) {
+      // Find the clause field to get its default value
+      const clauseField = selectedTemplate.fields.find(field => field.id === 'clause');
+      if (clauseField && clauseField.defaultValue) {
+        setFormData(prev => ({
+          ...prev,
+          clause: clauseField.defaultValue
+        }));
+      }
+    }
+  }, [formData.clause, selectedTemplate]);
 
   return (
     <Layout className="pb-12">

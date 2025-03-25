@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileDown, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -34,15 +34,33 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 }) => {
   const internalRef = React.useRef<HTMLDivElement>(null);
   const actualRef = previewRef || internalRef;
+  const containerRef = React.useRef<HTMLDivElement>(null);
   const [pageCount, setPageCount] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [previewLoaded, setPreviewLoaded] = useState(false);
   const [scale, setScale] = useState(1);
-  const [containerWidth, setContainerWidth] = useState(0);
   
+  // Generate HTML content once from the template and form data
   const htmlContent = template.template(formData, config);
+  
+  // Handle resize to update scale when container size changes
+  const updateScale = useCallback(() => {
+    if (containerRef.current && actualRef.current) {
+      const containerWidth = containerRef.current.clientWidth;
+      
+      // A4 width is 21cm ≈ 794px at 96dpi
+      const contentWidth = 794;
+      
+      // Calculate scale to fit container width with some padding
+      const maxWidth = Math.max(300, containerWidth - 40);
+      const newScale = maxWidth / contentWidth;
+      
+      setScale(newScale);
+      console.log(`Setting scale to ${newScale} (container width: ${containerWidth}px)`);
+    }
+  }, [actualRef]);
   
   // Update page count and reset to page 1 when content changes
   useEffect(() => {
@@ -56,57 +74,18 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         console.log(`Estimated page count: ${count}, content height: ${actualRef.current.scrollHeight}px`);
         setPageCount(Math.max(1, count));
         setPreviewLoaded(true);
-        
-        // Calculate scale to fit the preview container
-        const previewContainer = actualRef.current.parentElement?.parentElement?.parentElement;
-        if (previewContainer) {
-          const containerWidth = previewContainer.clientWidth - 48; // Account for padding
-          setContainerWidth(containerWidth);
-          
-          // A4 width is 21cm ≈ 794px at 96dpi
-          const contentWidth = 794;
-          
-          // Calculate scale to fit width
-          const widthScale = containerWidth / contentWidth;
-          
-          // Use the appropriate scale to ensure document fits the container
-          const newScale = Math.min(widthScale, 1);
-          setScale(newScale);
-          console.log(`Setting scale to ${newScale} (container width: ${containerWidth}px)`);
-        }
+        updateScale();
       }
-    }, 500);
+    }, 250);
     
     return () => clearTimeout(timer);
-  }, [htmlContent, actualRef]);
+  }, [htmlContent, actualRef, updateScale]);
   
   // Add resize listener to update scaling when window resizes
   useEffect(() => {
-    const handleResize = () => {
-      if (actualRef.current) {
-        const previewContainer = actualRef.current.parentElement?.parentElement?.parentElement;
-        if (previewContainer) {
-          const newContainerWidth = previewContainer.clientWidth - 48; // Account for padding
-          
-          // Only recalculate if the width changed significantly
-          if (Math.abs(newContainerWidth - containerWidth) > 20) {
-            setContainerWidth(newContainerWidth);
-            
-            // A4 width is 21cm ≈ 794px at 96dpi
-            const contentWidth = 794;
-            
-            // Calculate scale to fit width
-            const newScale = Math.min(newContainerWidth / contentWidth, 1);
-            setScale(newScale);
-            console.log(`Resizing - new scale: ${newScale} (container width: ${newContainerWidth}px)`);
-          }
-        }
-      }
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [actualRef, containerWidth]);
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, [updateScale]);
   
   const handleExportPdf = async () => {
     if (!actualRef.current) {
@@ -150,7 +129,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       
       if (actualRef.current) {
         // Scroll to the appropriate position in the preview
-        const scrollPosition = (page - 1) * 1123; // A4 height in pixels
+        const scrollPosition = (page - 1) * 1123; // A4 height in pixels for display
         actualRef.current.scrollTop = scrollPosition;
       }
     }
@@ -289,23 +268,25 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           </Alert>
         )}
         
-        <div className="bg-white rounded-md border overflow-hidden shadow-sm">
+        <div 
+          ref={containerRef} 
+          className="bg-gray-100 rounded-md border overflow-hidden shadow-sm p-4 flex justify-center"
+        >
           <div className="relative">
             <ScrollArea 
               className="w-full h-[800px]"
               scrollHideDelay={0}
             >
-              <div className="flex justify-center px-4 py-4">
+              <div className="flex justify-center">
                 <div 
                   ref={actualRef}
-                  className="a4-preview bg-white"
+                  className="a4-preview bg-white shadow-md"
                   style={{ 
                     transformOrigin: 'top center',
-                    width: '21cm', // A4 width
-                    minHeight: '29.7cm', // A4 height
-                    margin: '0 auto',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    width: '794px', // A4 width at 96 DPI
+                    minHeight: '1123px', // A4 height at 96 DPI
                     transform: `scale(${scale})`,
+                    margin: `0 0 ${(scale - 1) * -600}px 0`, // Adjust bottom margin to prevent scroll issues
                     padding: 0,
                     maxWidth: '100%'
                   }}
