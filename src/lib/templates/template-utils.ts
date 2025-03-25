@@ -132,7 +132,7 @@ export const formatEducationSection = (educationData: string) => {
 };
 
 /**
- * Format the skills section for CV from string data
+ * Format the skills section for CV from string data with proficiency bar
  */
 export const formatSkillsSection = (skillsData: string) => {
   if (!skillsData) return '';
@@ -140,13 +140,42 @@ export const formatSkillsSection = (skillsData: string) => {
   try {
     const lines = skillsData.split('\n')
       .filter(line => line.trim() !== '')
-      .map(line => line.replace(/^-\s*/, '').trim());
+      .map(line => {
+        // Check if line contains proficiency level
+        if (line.includes('|')) {
+          const parts = line.replace(/^-\s*/, '').split('|').map(part => part.trim());
+          return {
+            skill: parts[0] || '',
+            proficiency: parseInt(parts[1]) || 3
+          };
+        } else {
+          return {
+            skill: line.replace(/^-\s*/, '').trim(),
+            proficiency: 3 // Default level
+          };
+        }
+      });
     
-    return `
-      <ul style="padding-left: 20px; margin: 10px 0;">
-        ${lines.map(skill => `<li>${skill}</li>`).join('')}
-      </ul>
-    `;
+    let html = '<div>';
+    
+    lines.forEach(item => {
+      const percentage = (item.proficiency / 5) * 100;
+      
+      html += `
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <div style="font-weight: 500;">${item.skill}</div>
+            <div>${item.proficiency}/5</div>
+          </div>
+          <div style="height: 6px; width: 100%; background-color: #f0f0f0; border-radius: 3px; overflow: hidden;">
+            <div style="height: 100%; width: ${percentage}%; background-color: #8B5CF6;"></div>
+          </div>
+        </div>
+      `;
+    });
+    
+    html += '</div>';
+    return html;
   } catch (e) {
     console.error("Error parsing skills data:", e);
     return '<p>Error displaying skills data</p>';
@@ -235,7 +264,7 @@ export function parseMultiEntryData(data: string): Array<Record<string, string>>
       // Parse header line with pipe separators
       const parts = line.split('|').map(part => part.trim());
       
-      if (line.includes('company') || (parts.length >= 3 && !line.includes('school'))) {
+      if (line.includes('company') || (!line.includes('school') && parts.length >= 3)) {
         currentEntry.company = parts[0] || '';
         currentEntry.position = parts[1] || '';
         currentEntry.period = parts[2] || '';
