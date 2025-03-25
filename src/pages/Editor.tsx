@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
@@ -18,12 +19,23 @@ enum EditorStep {
   EditDocument,
 }
 
-// Kolejność sekcji
-const SECTION_ORDER = [
+// Define section orders by document type
+const COVER_LETTER_SECTION_ORDER = [
   SECTIONS.CONFIG,
   SECTIONS.PERSONAL,
   SECTIONS.RECIPIENT,
   SECTIONS.CONTENT,
+  SECTIONS.CLAUSE,
+];
+
+const CV_SECTION_ORDER = [
+  SECTIONS.CONFIG,
+  SECTIONS.PERSONAL,
+  SECTIONS.EXPERIENCE,
+  SECTIONS.EDUCATION,
+  SECTIONS.SKILLS,
+  SECTIONS.LANGUAGES,
+  SECTIONS.INTERESTS,
   SECTIONS.CLAUSE,
 ];
 
@@ -40,6 +52,14 @@ const Editor: React.FC = () => {
     fontSize: '12px',
   });
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+
+  // Get the appropriate section order based on the document type
+  const getSectionOrder = () => {
+    if (selectedTypeId === 'cv') {
+      return CV_SECTION_ORDER;
+    }
+    return COVER_LETTER_SECTION_ORDER;
+  };
 
   const handleSelectType = (typeId: string) => {
     setSelectedTypeId(typeId);
@@ -59,6 +79,12 @@ const Editor: React.FC = () => {
     
     setCurrentSectionIndex(0);
     setCurrentStep(EditorStep.EditDocument);
+    
+    // Update the config with appropriate document name
+    setConfig(prev => ({
+      ...prev,
+      documentName: selectedTypeId === 'cv' ? 'CV' : 'List motywacyjny'
+    }));
   };
 
   const handleBack = () => {
@@ -82,7 +108,8 @@ const Editor: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (currentSectionIndex < SECTION_ORDER.length - 1) {
+    const sectionOrder = getSectionOrder();
+    if (currentSectionIndex < sectionOrder.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
     }
   };
@@ -108,7 +135,8 @@ const Editor: React.FC = () => {
     }
   };
 
-  const currentSection = SECTION_ORDER[currentSectionIndex];
+  const sectionOrder = getSectionOrder();
+  const currentSection = sectionOrder[currentSectionIndex];
 
   const sectionTitles: Record<string, string> = {
     'dane_osobowe': 'Dane osobowe',
@@ -116,6 +144,11 @@ const Editor: React.FC = () => {
     'tresc_listu': 'Treść listu',
     'klauzula': 'Klauzula',
     'konfiguracja': 'Konfiguracja',
+    'doswiadczenie': 'Doświadczenie',
+    'edukacja': 'Wykształcenie',
+    'umiejetnosci': 'Umiejętności',
+    'jezyki': 'Języki obce',
+    'zainteresowania': 'Zainteresowania'
   };
 
   return (
@@ -155,29 +188,29 @@ const Editor: React.FC = () => {
               <div>
                 {currentStep === EditorStep.EditDocument && (
                   <Tabs 
-                    defaultValue={SECTION_ORDER[currentSectionIndex]} 
+                    defaultValue={sectionOrder[currentSectionIndex]} 
                     value={currentSection}
                     onValueChange={(value) => {
-                      const newIndex = SECTION_ORDER.findIndex(section => section === value);
+                      const newIndex = sectionOrder.findIndex(section => section === value);
                       if (newIndex !== -1) {
                         setCurrentSectionIndex(newIndex);
                       }
                     }}
                     className="mb-4"
                   >
-                    <TabsList className="grid grid-cols-5 w-full">
-                      {SECTION_ORDER.map((section) => (
+                    <TabsList className="grid grid-cols-1 md:grid-cols-4 w-full overflow-x-auto">
+                      {sectionOrder.map((section) => (
                         <TabsTrigger 
                           key={section}
                           value={section} 
-                          className="text-xs sm:text-sm"
+                          className="text-xs sm:text-sm whitespace-nowrap"
                         >
                           {sectionTitles[section]}
                         </TabsTrigger>
                       ))}
                     </TabsList>
                     
-                    {SECTION_ORDER.map((section) => (
+                    {sectionOrder.map((section) => (
                       <TabsContent key={section} value={section}>
                         {section === SECTIONS.CONFIG ? (
                           <TemplateConfiguration 
@@ -192,7 +225,7 @@ const Editor: React.FC = () => {
                             formData={formData}
                             setFormData={setFormData}
                             onBack={handleBack}
-                            onNext={currentSectionIndex < SECTION_ORDER.length - 1 ? handleNext : undefined}
+                            onNext={currentSectionIndex < sectionOrder.length - 1 ? handleNext : undefined}
                             currentSection={section}
                             onExport={handleExportPdf}
                           />

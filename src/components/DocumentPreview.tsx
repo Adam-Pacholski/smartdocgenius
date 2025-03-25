@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -58,28 +57,21 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         setPreviewLoaded(true);
         
         // Calculate scale to fit the preview container
-        const previewContainer = actualRef.current.parentElement;
+        const previewContainer = actualRef.current.parentElement?.parentElement?.parentElement;
         if (previewContainer) {
-          const containerWidth = previewContainer.clientWidth;
+          const containerWidth = previewContainer.clientWidth - 40; // Account for padding
           setContainerWidth(containerWidth);
           
           // A4 width is 21cm ≈ 794px at 96dpi
           const contentWidth = 794;
-          const contentHeight = actualRef.current.scrollHeight;
           
           // Calculate scale to fit width
-          const widthScale = (containerWidth - 40) / contentWidth; // Subtract padding
+          const widthScale = containerWidth / contentWidth;
           
-          // Calculate scale to fit height if needed (for single page docs)
-          let heightScale = 1;
-          if (count === 1) {
-            const containerHeight = previewContainer.clientHeight;
-            heightScale = containerHeight / contentHeight;
-          }
-          
-          // Use the smaller scale to ensure document fits both dimensions
-          const newScale = Math.min(widthScale, heightScale, 1);
+          // Use the appropriate scale to ensure document fits the container
+          const newScale = Math.min(widthScale, 1);
           setScale(newScale);
+          console.log(`Setting scale to ${newScale} (container width: ${containerWidth}px)`);
         }
       }
     }, 500);
@@ -91,9 +83,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   useEffect(() => {
     const handleResize = () => {
       if (actualRef.current) {
-        const previewContainer = actualRef.current.parentElement;
+        const previewContainer = actualRef.current.parentElement?.parentElement?.parentElement;
         if (previewContainer) {
-          const newContainerWidth = previewContainer.clientWidth;
+          const newContainerWidth = previewContainer.clientWidth - 40; // Account for padding
           
           // Only recalculate if the width changed significantly
           if (Math.abs(newContainerWidth - containerWidth) > 20) {
@@ -103,8 +95,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             const contentWidth = 794;
             
             // Calculate scale to fit width
-            const newScale = Math.min((newContainerWidth - 40) / contentWidth, 1);
+            const newScale = Math.min(newContainerWidth / contentWidth, 1);
             setScale(newScale);
+            console.log(`Resizing - new scale: ${newScale} (container width: ${newContainerWidth}px)`);
           }
         }
       }
@@ -162,7 +155,6 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     }
   };
   
-  // Render page break indicators with improved visibility
   const renderPageBreaks = () => {
     if (pageCount <= 1) return null;
     
@@ -179,7 +171,6 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     ));
   };
   
-  // Render pagination controls with improved navigation
   const renderPagination = () => {
     if (pageCount <= 1) return null;
     

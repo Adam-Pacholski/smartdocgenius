@@ -52,6 +52,45 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     'tresc_listu': 'Treść listu',
     'klauzula': 'Klauzula',
     'konfiguracja': 'Konfiguracja',
+    'doswiadczenie': 'Doświadczenie zawodowe',
+    'edukacja': 'Wykształcenie',
+    'umiejetnosci': 'Umiejętności',
+    'jezyki': 'Języki obce',
+    'zainteresowania': 'Zainteresowania'
+  };
+
+  // Sekcja opis dla różnych typów sekcji
+  const sectionDescriptions: Record<string, string> = {
+    'dane_osobowe': 'Wprowadź swoje dane osobowe',
+    'odbiorca': 'Wprowadź dane odbiorcy',
+    'tresc_listu': 'Napisz treść swojego listu motywacyjnego',
+    'klauzula': 'Dodaj klauzulę o przetwarzaniu danych osobowych',
+    'konfiguracja': 'Dostosuj wygląd dokumentu',
+    'doswiadczenie': 'Dodaj informacje o swoim doświadczeniu zawodowym',
+    'edukacja': 'Uzupełnij dane o swoim wykształceniu',
+    'umiejetnosci': 'Wymień swoje umiejętności',
+    'jezyki': 'Podaj znane Ci języki obce i poziom ich znajomości',
+    'zainteresowania': 'Opisz swoje zainteresowania i hobby'
+  };
+
+  const formatHelpers: Record<string, string> = {
+    'doswiadczenie': `Format: 
+Nazwa firmy | Stanowisko | Okres zatrudnienia
+- Osiągnięcie 1
+- Osiągnięcie 2
+    `,
+    'edukacja': `Format:
+Nazwa uczelni | Kierunek | Okres
+- Dodatkowe informacje`,
+    'umiejetnosci': `Format:
+- Umiejętność 1
+- Umiejętność 2`,
+    'jezyki': `Format:
+- Język angielski - poziom B2
+- Język niemiecki - poziom A2`,
+    'zainteresowania': `Format:
+- Zainteresowanie 1
+- Zainteresowanie 2`
   };
 
   return (
@@ -69,11 +108,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         </div>
         <CardTitle>{sectionTitles[currentSection] || 'Edycja dokumentu'}</CardTitle>
         <CardDescription>
-          {currentSection === 'dane_osobowe' && 'Wprowadź swoje dane osobowe'}
-          {currentSection === 'odbiorca' && 'Wprowadź dane odbiorcy'}
-          {currentSection === 'tresc_listu' && 'Napisz treść swojego listu motywacyjnego'}
-          {currentSection === 'klauzula' && 'Dodaj klauzulę o przetwarzaniu danych osobowych'}
-          {currentSection === 'konfiguracja' && 'Dostosuj wygląd dokumentu'}
+          {sectionDescriptions[currentSection] || ''}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -110,6 +145,15 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             </div>
           )}
 
+          {formatHelpers[currentSection] && (
+            <div className="bg-slate-50 p-3 rounded-md text-sm text-slate-600 mb-4">
+              <p className="font-semibold mb-1">Wskazówka:</p>
+              <pre className="whitespace-pre-wrap text-xs">
+                {formatHelpers[currentSection]}
+              </pre>
+            </div>
+          )}
+
           {sectionFields.filter(field => field.type !== 'photo').map((field) => (
             <div key={field.id} className="space-y-2">
               <Label htmlFor={field.id}>
@@ -123,7 +167,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                   value={formData[field.id] || field.defaultValue || ''}
                   onChange={(e) => handleChange(field.id, e.target.value)}
                   required={field.required}
-                  className="min-h-[120px]"
+                  className="min-h-[200px] font-mono text-sm"
                 />
               ) : field.type === 'date' ? (
                 <Input
