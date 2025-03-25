@@ -17,7 +17,8 @@ const documentTypes: DocumentType[] = [
     description: 'Profesjonalne CV, które wyróżni Cię na tle innych kandydatów',
     icon: 'user',
     templates: cvTemplates,
-    comingSoon: true
+    // Removing comingSoon flag to allow template selection
+    displayComingSoon: true // Use this flag to display the "Coming soon" label in UI but still allow selection
   },
 ];
 

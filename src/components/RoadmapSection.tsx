@@ -7,7 +7,6 @@ import {
   AccordionTrigger 
 } from '@/components/ui/accordion';
 import { 
-  Calendar, 
   LayoutTemplate, 
   Languages, 
   Share2, 
@@ -18,7 +17,6 @@ interface RoadmapItem {
   title: string;
   description: string;
   icon: React.ReactNode;
-  timeline: string;
 }
 
 const roadmapItems: RoadmapItem[] = [
@@ -26,25 +24,21 @@ const roadmapItems: RoadmapItem[] = [
     title: 'Więcej szablonów dokumentów',
     description: 'Dodanie nowych profesjonalnych szablonów CV, listów motywacyjnych i innych dokumentów biznesowych.',
     icon: <LayoutTemplate className="h-5 w-5 text-primary" />,
-    timeline: 'Planowane',
   },
   {
     title: 'Wsparcie wielu języków',
     description: 'Tłumaczenie interfejsu i szablonów na popularne języki w celu poszerzenia dostępności.',
     icon: <Languages className="h-5 w-5 text-primary" />,
-    timeline: 'Planowane',
   },
   {
     title: 'Współpraca i udostępnianie',
     description: 'Możliwość udostępniania dokumentów i współpracy z innymi użytkownikami w czasie rzeczywistym.',
     icon: <Share2 className="h-5 w-5 text-primary" />,
-    timeline: 'Planowane',
   },
   {
     title: 'Wersja profesjonalna',
     description: 'Subskrypcja oferująca zaawansowane funkcje, przechowywanie w chmurze i wsparcie priorytetowe.',
     icon: <CloudCog className="h-5 w-5 text-primary" />,
-    timeline: 'Planowane',
   },
 ];
 
@@ -54,14 +48,13 @@ const RoadmapSection: React.FC = () => {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center text-center space-y-4 mb-10">
           <div className="inline-block rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">
-            <Calendar className="h-4 w-4 inline-block mr-1" />
             Plany rozwoju
           </div>
           <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
             Co planujemy w przyszłości?
           </h2>
           <p className="max-w-[650px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            APDocs stale się rozwija. Oto co przygotowujemy dla Ciebie w najbliższym czasie.
+            APDocs stale się rozwija. Oto co przygotowujemy dla Ciebie.
           </p>
         </div>
         
@@ -76,7 +69,6 @@ const RoadmapSection: React.FC = () => {
                     </div>
                     <div className="text-left">
                       <h3 className="text-lg font-medium">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground">{item.timeline}</p>
                     </div>
                   </div>
                 </AccordionTrigger>

@@ -49,7 +49,7 @@ const DocumentTypeSelector: React.FC<DocumentTypeSelectorProps> = ({
               <div>
                 <CardTitle className="text-lg">
                   {type.name}
-                  {type.comingSoon && (
+                  {type.displayComingSoon && (
                     <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">
                       Wkrótce
                     </span>
@@ -60,7 +60,7 @@ const DocumentTypeSelector: React.FC<DocumentTypeSelectorProps> = ({
               <div className="bg-primary/10 p-2 rounded-full">
                 {type.icon === 'file-text' && <FileText className="h-5 w-5 text-primary" />}
                 {type.icon === 'user' && <User className="h-5 w-5 text-primary" />}
-                {type.comingSoon && (
+                {type.displayComingSoon && (
                   <div className="absolute top-2 right-2">
                     <Clock className="h-4 w-4 text-yellow-600" />
                   </div>
