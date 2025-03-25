@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -59,7 +60,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         // Calculate scale to fit the preview container
         const previewContainer = actualRef.current.parentElement?.parentElement?.parentElement;
         if (previewContainer) {
-          const containerWidth = previewContainer.clientWidth - 40; // Account for padding
+          const containerWidth = previewContainer.clientWidth - 48; // Account for padding
           setContainerWidth(containerWidth);
           
           // A4 width is 21cm ≈ 794px at 96dpi
@@ -85,7 +86,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       if (actualRef.current) {
         const previewContainer = actualRef.current.parentElement?.parentElement?.parentElement;
         if (previewContainer) {
-          const newContainerWidth = previewContainer.clientWidth - 40; // Account for padding
+          const newContainerWidth = previewContainer.clientWidth - 48; // Account for padding
           
           // Only recalculate if the width changed significantly
           if (Math.abs(newContainerWidth - containerWidth) > 20) {
@@ -297,16 +298,16 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
               <div className="flex justify-center px-4 py-4">
                 <div 
                   ref={actualRef}
-                  className="a4-preview"
+                  className="a4-preview bg-white"
                   style={{ 
-                    padding: 0,
-                    transform: `scale(${scale})`,
                     transformOrigin: 'top center',
                     width: '21cm', // A4 width
-                    maxWidth: '100%',
-                    backgroundColor: '#fff',
+                    minHeight: '29.7cm', // A4 height
                     margin: '0 auto',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    transform: `scale(${scale})`,
+                    padding: 0,
+                    maxWidth: '100%'
                   }}
                   dangerouslySetInnerHTML={{ __html: htmlContent }}
                 />
