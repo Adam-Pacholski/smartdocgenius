@@ -8,9 +8,7 @@ import {
 } from '@/components/ui/accordion';
 import { 
   Calendar, 
-  Sparkles, 
   LayoutTemplate, 
-  FileCheck, 
   Languages, 
   Share2, 
   CloudCog
@@ -28,37 +26,25 @@ const roadmapItems: RoadmapItem[] = [
     title: 'Więcej szablonów dokumentów',
     description: 'Dodanie nowych profesjonalnych szablonów CV, listów motywacyjnych i innych dokumentów biznesowych.',
     icon: <LayoutTemplate className="h-5 w-5 text-primary" />,
-    timeline: 'Q2 2024',
-  },
-  {
-    title: 'Zaawansowany edytor tekstu',
-    description: 'Rozbudowany edytor WYSIWYG z formatowaniem tekstu, tabelami i opcjami układu.',
-    icon: <FileCheck className="h-5 w-5 text-primary" />,
-    timeline: 'Q3 2024',
-  },
-  {
-    title: 'Integracja z AI',
-    description: 'Asystent AI, który pomoże tworzyć lepsze teksty i sugerować ulepszenia dokumentów.',
-    icon: <Sparkles className="h-5 w-5 text-primary" />,
-    timeline: 'Q3 2024',
+    timeline: 'Planowane',
   },
   {
     title: 'Wsparcie wielu języków',
     description: 'Tłumaczenie interfejsu i szablonów na popularne języki w celu poszerzenia dostępności.',
     icon: <Languages className="h-5 w-5 text-primary" />,
-    timeline: 'Q4 2024',
+    timeline: 'Planowane',
   },
   {
     title: 'Współpraca i udostępnianie',
     description: 'Możliwość udostępniania dokumentów i współpracy z innymi użytkownikami w czasie rzeczywistym.',
     icon: <Share2 className="h-5 w-5 text-primary" />,
-    timeline: 'Q1 2025',
+    timeline: 'Planowane',
   },
   {
     title: 'Wersja profesjonalna',
     description: 'Subskrypcja oferująca zaawansowane funkcje, przechowywanie w chmurze i wsparcie priorytetowe.',
     icon: <CloudCog className="h-5 w-5 text-primary" />,
-    timeline: 'Q2 2025',
+    timeline: 'Planowane',
   },
 ];
 

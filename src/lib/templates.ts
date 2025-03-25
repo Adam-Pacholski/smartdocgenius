@@ -14,7 +14,7 @@ const documentTypes: DocumentType[] = [
   {
     id: 'cv',
     name: 'CV / Życiorys',
-    description: 'Profesjonalne CV, które wyróżni Cię na tle innych kandydatów - dostępne wkrótce!',
+    description: 'Profesjonalne CV, które wyróżni Cię na tle innych kandydatów',
     icon: 'user',
     templates: cvTemplates,
     comingSoon: true

@@ -25,3 +25,56 @@ export const sampleCoverLetterData = {
   // Klauzula
   clause: "Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko zgodnie z art. 6 ust. 1 lit. a Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o ochronie danych)."
 };
+
+export const sampleCVData = {
+  // Personal data
+  firstName: "Jan",
+  lastName: "Kowalski",
+  position: "Frontend Developer",
+  email: "jan.kowalski@example.com",
+  phone: "+48 123 456 789",
+  address: "Warszawa, mazowieckie",
+  photo: "",
+  summary: "Doświadczony Frontend Developer z 5-letnim stażem w tworzeniu nowoczesnych aplikacji webowych. Specjalizuję się w React, TypeScript i nowoczesnych frameworkach CSS. Poszukuję nowych wyzwań w dynamicznym zespole programistycznym.",
+  
+  // Experience
+  experience: `XYZ Tech | Senior Frontend Developer | 2020 - obecnie
+- Prowadzenie zespołu 3 deweloperów frontend
+- Wdrożenie architektury opartej na mikro-frontendach
+- Optymalizacja wydajności aplikacji o 40%
+
+ABC Software | Frontend Developer | 2018 - 2020
+- Implementacja interfejsu użytkownika dla aplikacji e-commerce
+- Integracja z systemami płatności online
+- Współpraca przy projektowaniu UX/UI`,
+  
+  // Education
+  education: `Politechnika Warszawska | Informatyka | 2014 - 2018
+- Specjalizacja: Inżynieria Oprogramowania
+- Praca dyplomowa: "Optymalizacja wydajności aplikacji JavaScript"
+
+Technikum Informatyczne | Programista | 2010 - 2014
+- Profil programistyczny`,
+  
+  // Skills
+  skills: `- JavaScript/TypeScript
+- React, Redux, Next.js
+- HTML5, CSS3, Sass, Tailwind CSS
+- Git, CI/CD, Docker
+- Testowanie (Jest, React Testing Library)
+- Optymalizacja wydajności
+- Responsive Web Design`,
+  
+  // Languages
+  languages: `- Język angielski - poziom C1
+- Język niemiecki - poziom B1`,
+  
+  // Interests
+  interests: `- Nowe technologie web
+- Open source
+- Piesze wędrówki
+- Fotografia cyfrowa`,
+  
+  // Clause
+  clause: "Wyrażam zgodę na przetwarzanie moich danych osobowych dla potrzeb niezbędnych do realizacji procesu rekrutacji (zgodnie z ustawą z dnia 10 maja 2018 roku o ochronie danych osobowych (Dz. Ustaw z 2018, poz. 1000) oraz zgodnie z Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (RODO))."
+};
