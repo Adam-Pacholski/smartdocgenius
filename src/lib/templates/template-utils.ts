@@ -82,7 +82,7 @@ export const formatExperienceSection = (experienceData: string) => {
           </div>
           <div style="font-style: italic; margin-bottom: 5px;">${entry.position || ''}</div>
           ${entry.details ? `<ul style="margin: 5px 0; padding-left: 20px;">
-            ${entry.details.split('\n').filter(line => line.trim().startsWith('-')).map(line => 
+            ${entry.details.split('\n').filter(line => line.trim().length > 0).map(line => 
               `<li>${line.replace(/^-\s*/, '')}</li>`
             ).join('')}
           </ul>` : ''}
@@ -116,7 +116,7 @@ export const formatEducationSection = (educationData: string) => {
           </div>
           <div style="font-style: italic; margin-bottom: 5px;">${entry.degree || ''}</div>
           ${entry.details ? `<ul style="margin: 5px 0; padding-left: 20px;">
-            ${entry.details.split('\n').filter(line => line.trim().startsWith('-')).map(line => 
+            ${entry.details.split('\n').filter(line => line.trim().length > 0).map(line => 
               `<li>${line.replace(/^-\s*/, '')}</li>`
             ).join('')}
           </ul>` : ''}
@@ -244,7 +244,7 @@ export function parseMultiEntryData(data: string): Array<Record<string, string>>
   const lines = data.split('\n').filter(line => line.trim() !== '');
   const entries = [];
   let currentEntry: Record<string, string> = {};
-  let currentLines: string[] = [];
+  let currentDetails: string[] = [];
   
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -253,48 +253,43 @@ export function parseMultiEntryData(data: string): Array<Record<string, string>>
     if (line.includes('|') && !line.startsWith('-')) {
       // Save previous entry if exists
       if (Object.keys(currentEntry).length > 0) {
-        if (currentLines.length > 0) {
-          currentEntry.details = currentLines.join('\n');
+        if (currentDetails.length > 0) {
+          currentEntry.details = currentDetails.join('\n');
         }
-        entries.push(currentEntry);
+        entries.push({...currentEntry});
         currentEntry = {};
-        currentLines = [];
+        currentDetails = [];
       }
       
       // Parse header line with pipe separators
       const parts = line.split('|').map(part => part.trim());
       
-      if (line.includes('company') || (!line.includes('school') && parts.length >= 3)) {
+      if (parts.length >= 2 && !line.includes('school')) {
         currentEntry.company = parts[0] || '';
         currentEntry.position = parts[1] || '';
-        currentEntry.period = parts[2] || '';
-      } else if (line.includes('school') || parts.length >= 3) {
+        if (parts.length >= 3) {
+          currentEntry.period = parts[2] || '';
+        }
+      } else if (parts.length >= 2) {
         currentEntry.school = parts[0] || '';
         currentEntry.degree = parts[1] || '';
-        currentEntry.period = parts[2] || '';
+        if (parts.length >= 3) {
+          currentEntry.period = parts[2] || '';
+        }
       }
     } 
     // Detail lines
-    else if (line.startsWith('-')) {
-      currentLines.push(line);
-    }
-    // Empty line marks the end of an entry
-    else if (line.trim() === '' && Object.keys(currentEntry).length > 0) {
-      if (currentLines.length > 0) {
-        currentEntry.details = currentLines.join('\n');
-      }
-      entries.push(currentEntry);
-      currentEntry = {};
-      currentLines = [];
+    else if (line.trim().startsWith('-') || line.trim().length > 0) {
+      currentDetails.push(line);
     }
   }
   
   // Add the last entry
   if (Object.keys(currentEntry).length > 0) {
-    if (currentLines.length > 0) {
-      currentEntry.details = currentLines.join('\n');
+    if (currentDetails.length > 0) {
+      currentEntry.details = currentDetails.join('\n');
     }
-    entries.push(currentEntry);
+    entries.push({...currentEntry});
   }
   
   return entries;
