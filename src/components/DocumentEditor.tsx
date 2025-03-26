@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -369,7 +368,10 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       if (!newEntries[index]) {
         newEntries[index] = {};
       }
-      newEntries[index][field] = value;
+      
+      let typedValue: string | number | boolean = value;
+      
+      newEntries[index][field] = typedValue;
       
       const formattedString = formatEntriesToString(section, newEntries);
       handleChange(section, formattedString);
@@ -541,7 +543,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                               <Switch
                                 id={`is-current-${index}`}
                                 checked={!!entry.isCurrent}
-                                onCheckedChange={(checked) => {
+                                onCheckedChange={(checked: boolean) => {
                                   updateEntry('doswiadczenie', index, 'isCurrent', checked);
                                 }}
                               />
@@ -659,7 +661,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                               <Switch
                                 id={`edu-is-current-${index}`}
                                 checked={!!entry.isCurrent}
-                                onCheckedChange={(checked) => {
+                                onCheckedChange={(checked: boolean) => {
                                   updateEntry('edukacja', index, 'isCurrent', checked);
                                 }}
                               />
