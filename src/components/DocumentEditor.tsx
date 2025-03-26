@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -365,7 +364,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     });
   };
 
-  // Update the updateEntry function to accept boolean values
   const updateEntry = (section: string, index: number, field: string, value: string | number | boolean) => {
     setMultiEntries(prev => {
       const newEntries = [...prev[section]];
@@ -941,7 +939,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         );
         
       default:
-        // For other sections, render regular inputs
         return (
           <div className="space-y-4">
             {sectionFields.map((field) => {
@@ -1235,3 +1232,4 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 };
 
 export default DocumentEditor;
+
