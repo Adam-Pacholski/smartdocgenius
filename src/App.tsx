@@ -11,27 +11,30 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import CookieConsent from "./components/CookieConsent";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/editor" element={<Editor />} />
-          <Route path="/o-mnie" element={<About />} />
-          <Route path="/kontakt" element={<Contact />} />
-          <Route path="/polityka-prywatnosci" element={<PrivacyPolicy />} />
-          <Route path="/inny-dokument" element={<Navigate to="/kontakt" />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <CookieConsent />
-      </BrowserRouter>
-    </TooltipProvider>
+    <ThemeProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/editor" element={<Editor />} />
+            <Route path="/o-mnie" element={<About />} />
+            <Route path="/kontakt" element={<Contact />} />
+            <Route path="/polityka-prywatnosci" element={<PrivacyPolicy />} />
+            <Route path="/inny-dokument" element={<Navigate to="/kontakt" />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <CookieConsent />
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

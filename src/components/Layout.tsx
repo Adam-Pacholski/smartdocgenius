@@ -4,6 +4,7 @@ import Header from './Header';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
+import ThemeToggle from './ThemeToggle';
 
 interface LayoutProps {
   children: ReactNode;
@@ -25,7 +26,9 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
             <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} APDocs. Wszystkie prawa zastrzeżone.
             </p>
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
+              <ThemeToggle variant="switch" />
+              <Separator orientation="vertical" className="h-4 mx-1 hidden md:block" />
               <Link to="/polityka-prywatnosci" className="text-sm text-muted-foreground hover:text-foreground">
                 Polityka prywatności i cookies
               </Link>

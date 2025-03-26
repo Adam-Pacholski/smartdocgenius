@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FileText, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import NavigationItem from './navigation/NavigationItem';
+import ThemeToggle from './ThemeToggle';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -23,6 +24,7 @@ const Header: React.FC = () => {
         </nav>
         <div className="flex-1" />
         <div className="hidden md:flex items-center space-x-4">
+          <ThemeToggle />
           <Link to="/editor">
             <Button size="sm">Rozpocznij</Button>
           </Link>
@@ -43,9 +45,10 @@ const Header: React.FC = () => {
             <NavigationItem to="/editor" label="Edytor" mobile />
             <NavigationItem to="/o-mnie" label="O mnie" mobile />
             <NavigationItem to="/kontakt" label="Kontakt" mobile />
-            <div className="pt-2">
+            <div className="flex items-center justify-between pt-2 pb-1">
+              <ThemeToggle />
               <Link to="/editor">
-                <Button className="w-full">Rozpocznij</Button>
+                <Button>Rozpocznij</Button>
               </Link>
             </div>
           </div>
