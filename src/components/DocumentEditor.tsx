@@ -156,11 +156,9 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             currentEntry.company = parts[0] || '';
             currentEntry.position = parts[1] || '';
             
-            // Check if period contains "do teraz" to determine if it's current
             const periodText = parts[2] || '';
             currentEntry.isCurrent = periodText.includes('do teraz');
             
-            // Extract dates from period
             if (periodText) {
               const dateParts = periodText.split('-').map(d => d.trim());
               currentEntry.startDate = dateParts[0] || '';
@@ -175,11 +173,9 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             currentEntry.school = parts[0] || '';
             currentEntry.degree = parts[1] || '';
             
-            // Check if period contains "do teraz" to determine if it's current
             const periodText = parts[2] || '';
             currentEntry.isCurrent = periodText.includes('do teraz');
             
-            // Extract dates from period
             if (periodText) {
               const dateParts = periodText.split('-').map(d => d.trim());
               currentEntry.startDate = dateParts[0] || '';
@@ -276,7 +272,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     
     entries.forEach(entry => {
       if (fieldName === 'doswiadczenie') {
-        // Format period based on whether it's current or not
         let period = '';
         if (entry.startDate) {
           const start = entry.startDate.toString();
@@ -428,7 +423,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
     useEffect(() => {
       if (value) {
-        // Try to parse value as a date
         const parts = value.split('.');
         if (parts.length === 3) {
           const day = parseInt(parts[0]);
@@ -546,7 +540,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                                 id={`is-current-${index}`}
                                 checked={!!entry.isCurrent}
                                 onCheckedChange={(checked) => {
-                                  updateEntry('doswiadczenie', index, 'isCurrent', Boolean(checked));
+                                  updateEntry('doswiadczenie', index, 'isCurrent', checked === true);
                                 }}
                               />
                               <Label htmlFor={`is-current-${index}`} className="text-sm cursor-pointer">
@@ -664,7 +658,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                                 id={`edu-is-current-${index}`}
                                 checked={!!entry.isCurrent}
                                 onCheckedChange={(checked) => {
-                                  updateEntry('edukacja', index, 'isCurrent', Boolean(checked));
+                                  updateEntry('edukacja', index, 'isCurrent', checked === true);
                                 }}
                               />
                               <Label htmlFor={`edu-is-current-${index}`} className="text-sm cursor-pointer">
