@@ -56,18 +56,25 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     clone.style.background = 'white';
     clone.style.transform = 'none'; // Remove any scaling that might be applied
     
-    // Add padding to the bottom of the document to ensure content doesn't touch the edge
-    const allDivs = clone.querySelectorAll('div');
-    allDivs.forEach(div => {
-      // Add bottom padding to main content containers
-      if (div.style.padding && !div.style.padding.includes('0px')) {
-        const currentPadding = div.style.padding.split(' ');
-        if (currentPadding.length === 4) { // If padding is specified as top right bottom left
-          currentPadding[2] = '40px'; // Increase bottom padding
-          div.style.padding = currentPadding.join(' ');
-        } else if (currentPadding.length === 1) { // If padding is specified as a single value
-          div.style.paddingBottom = '40px';
+    // Ensure adequate spacing for content sections and the clause at the bottom
+    const contentDivs = clone.querySelectorAll('div[style*="flex:"]');
+    contentDivs.forEach(div => {
+      if (div instanceof HTMLElement) {
+        // Check if this is a content column
+        if (div.style.flex && !div.style.paddingBottom) {
+          div.style.paddingBottom = '70px';
         }
+      }
+    });
+    
+    // Ensure the clause has enough spacing
+    const footers = clone.querySelectorAll('footer');
+    footers.forEach(footer => {
+      if (footer instanceof HTMLElement) {
+        if (!footer.style.paddingBottom || parseInt(footer.style.paddingBottom) < 60) {
+          footer.style.paddingBottom = '60px';
+        }
+        footer.style.clear = 'both'; // Ensure footer doesn't overlap with content
       }
     });
     
@@ -100,9 +107,18 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
             containers.forEach(container => {
               if (container instanceof HTMLElement) {
                 // Ensure adequate bottom padding
-                if (!container.style.paddingBottom || parseInt(container.style.paddingBottom) < 40) {
-                  container.style.paddingBottom = '40px';
+                if (!container.style.paddingBottom || parseInt(container.style.paddingBottom) < 60) {
+                  container.style.paddingBottom = '60px';
                 }
+              }
+            });
+            
+            // Special handling for clause sections to ensure they're fully visible
+            const clauseElements = element.querySelectorAll('[data-clause], footer');
+            clauseElements.forEach(clause => {
+              if (clause instanceof HTMLElement) {
+                clause.style.marginBottom = '70px';
+                clause.style.paddingBottom = '70px';
               }
             });
           }

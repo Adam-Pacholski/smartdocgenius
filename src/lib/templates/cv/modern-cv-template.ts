@@ -27,7 +27,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
       <!-- Two Column Layout -->
       <div style="display: flex;">
         <!-- Left Sidebar -->
-        <div style="flex: 1; background-color: #f5f5f5; padding: 30px 30px 50px 30px;">
+        <div style="flex: 1; background-color: #f5f5f5; padding: 30px 30px 70px 30px;">
           ${data.photo ? `
             <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: 0 auto 20px;">
               <img src="${data.photo}" alt="${fullName}" style="width: 100%; height: 100%; object-fit: cover;" />
@@ -69,7 +69,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
         </div>
         
         <!-- Right Content Area -->
-        <div style="flex: 2; padding: 30px 30px 50px 30px;">
+        <div style="flex: 2; padding: 30px 30px 70px 30px;">
           <!-- Experience Section -->
           ${data.doswiadczenie ? `
             <section style="margin-bottom: 30px;">
@@ -90,7 +90,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
       
       <!-- Footer with Clause -->
       ${data.clause ? `
-        <footer style="padding: 20px 30px 40px; border-top: 1px solid #eee; font-size: 10px; color: #777; background-color: #f9f9f9;">
+        <footer style="padding: 20px 30px 60px; border-top: 1px solid #eee; font-size: 10px; color: #777; background-color: #f9f9f9; clear: both;">
           ${data.clause}
         </footer>
       ` : ''}

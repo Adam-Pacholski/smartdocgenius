@@ -38,7 +38,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
       </div>
       
       <!-- Main Content in Creative Layout -->
-      <div style="padding: 40px 40px 60px;">
+      <div style="padding: 40px 40px 80px;">
         <!-- Two Column Layout for Skills and Languages -->
         <div style="display: flex; gap: 30px; margin-bottom: 40px;">
           <!-- Skills Section -->
@@ -100,7 +100,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
       
       <!-- Footer with Clause -->
       ${data.clause ? `
-        <footer style="padding: 20px 30px 40px; font-size: 10px; color: #777; background-color: #f5f5f5; border-top: 2px solid ${primaryColor};">
+        <footer style="padding: 20px 30px 60px; font-size: 10px; color: #777; background-color: #f5f5f5; border-top: 2px solid ${primaryColor}; clear: both;">
           ${data.clause}
         </footer>
       ` : ''}

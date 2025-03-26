@@ -42,7 +42,7 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
       <!-- Main Content -->
       <div style="display: flex; padding: 0 0 30px;">
         <!-- Left Column -->
-        <div style="flex: 2; padding: 20px 30px 50px 30px;">
+        <div style="flex: 2; padding: 20px 30px 60px 30px;">
           <!-- Experience Section -->
           ${data.doswiadczenie ? `
             <section>
@@ -61,7 +61,7 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
         </div>
         
         <!-- Right Column -->
-        <div style="flex: 1; padding: 20px 30px 50px 30px; background-color: #f9f9f9;">
+        <div style="flex: 1; padding: 20px 30px 60px 30px; background-color: #f9f9f9;">
           <!-- Skills Section -->
           ${data.umiejetnosci ? `
             <section>
@@ -90,7 +90,7 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
       
       <!-- Footer with Clause -->
       ${data.clause ? `
-        <footer style="padding: 20px 30px 40px; border-top: 1px solid #eee; font-size: 10px; color: #777;">
+        <footer style="padding: 20px 30px 60px; border-top: 1px solid #eee; font-size: 10px; color: #777; clear: both; background-color: #f9f9f9;">
           ${data.clause}
         </footer>
       ` : ''}
