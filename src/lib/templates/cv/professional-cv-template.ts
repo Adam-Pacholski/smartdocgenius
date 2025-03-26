@@ -17,35 +17,46 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
   console.log('Professional CV data being rendered:', data);
   
   return `
-    <div style="font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; max-width: 21cm; margin: 0 auto; padding: 0; border: 1px solid #ddd;">
-      <!-- Professional Header -->
-      <div style="display: flex; align-items: center; padding: 30px; border-bottom: 3px solid ${primaryColor}; background-color: #fff;">
+    <div style="font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; max-width: 21cm; margin: 0 auto; padding: 0;">
+      <!-- Header Section with Dark Background -->
+      <div style="display: flex; align-items: center; padding: 30px; background-color: #2c3e50; color: white;">
+        <div style="flex: 1;">
+          <h1 style="margin: 0; font-size: 28px; color: white;">${fullName}</h1>
+          <p style="margin: 5px 0 0; font-size: 18px; color: #e9e9e9;">${position}</p>
+        </div>
         ${data.photo ? `
-          <div style="width: 120px; height: 150px; overflow: hidden; margin-right: 30px; border: 1px solid #eee;">
+          <div style="width: 120px; height: 150px; overflow: hidden; border: 2px solid white;">
             <img src="${data.photo}" alt="${fullName}" style="width: 100%; height: 100%; object-fit: cover;" />
           </div>
         ` : ''}
-        <div>
-          <h1 style="margin: 0; font-size: 28px; color: #333;">${fullName}</h1>
-          <p style="margin: 5px 0 15px; font-size: 18px; color: ${primaryColor};">${position}</p>
-          
-          <div style="display: flex; flex-wrap: wrap; gap: 15px; font-size: 14px;">
-            ${data.email ? `<div><strong>Email:</strong> ${data.email}</div>` : ''}
-            ${data.phone ? `<div><strong>Telefon:</strong> ${data.phone}</div>` : ''}
-            ${data.address ? `<div><strong>Adres:</strong> ${data.address}</div>` : ''}
-            ${dateOfBirth ? `<div><strong>Data urodzenia:</strong> ${dateOfBirth}</div>` : ''}
-          </div>
-        </div>
       </div>
       
-      <!-- Main Content in Professional Layout -->
-      <div style="display: flex;">
-        <!-- Main Column -->
-        <div style="flex: 2; padding: 30px; border-right: 1px solid #eee;">
+      <!-- Contact Information Bar -->
+      <div style="background-color: ${primaryColor}; padding: 15px 30px; display: flex; flex-wrap: wrap; color: white;">
+        ${data.email ? `<div style="margin-right: 30px;"><strong>Email:</strong> ${data.email}</div>` : ''}
+        ${data.phone ? `<div style="margin-right: 30px;"><strong>Telefon:</strong> ${data.phone}</div>` : ''}
+        ${data.address ? `<div style="margin-right: 30px;"><strong>Adres:</strong> ${data.address}</div>` : ''}
+        ${dateOfBirth ? `<div><strong>Data urodzenia:</strong> ${dateOfBirth}</div>` : ''}
+      </div>
+      
+      <!-- Main Content -->
+      <div style="display: flex; padding: 0;">
+        <!-- Left Column -->
+        <div style="flex: 2; padding: 25px 30px; border-right: 1px solid #eee;">
+          <!-- Profile Summary -->
+          ${data.summary ? `
+            <section style="margin-bottom: 30px;">
+              <h2 style="color: #2c3e50; font-size: 22px; margin-top: 0; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
+                PROFIL ZAWODOWY
+              </h2>
+              <p style="text-align: justify;">${data.summary}</p>
+            </section>
+          ` : ''}
+          
           <!-- Experience Section -->
           ${data.doswiadczenie ? `
             <section style="margin-bottom: 30px;">
-              <h2 style="color: ${primaryColor}; font-size: 20px; margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+              <h2 style="color: #2c3e50; font-size: 22px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 DOŚWIADCZENIE ZAWODOWE
               </h2>
               ${formatExperienceSection(data.doswiadczenie)}
@@ -55,7 +66,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
           <!-- Education Section -->
           ${data.edukacja ? `
             <section>
-              <h2 style="color: ${primaryColor}; font-size: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+              <h2 style="color: #2c3e50; font-size: 22px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 WYKSZTAŁCENIE
               </h2>
               ${formatEducationSection(data.edukacja)}
@@ -63,12 +74,12 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
           ` : ''}
         </div>
         
-        <!-- Sidebar -->
-        <div style="flex: 1; padding: 30px; background-color: #fcfcfc;">
+        <!-- Right Column -->
+        <div style="flex: 1; padding: 25px 30px; background-color: #f8f9fa;">
           <!-- Skills Section -->
           ${data.umiejetnosci ? `
             <section style="margin-bottom: 30px;">
-              <h2 style="color: ${primaryColor}; font-size: 20px; margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+              <h2 style="color: #2c3e50; font-size: 22px; margin-top: 0; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 UMIEJĘTNOŚCI
               </h2>
               ${formatSkillsSection(data.umiejetnosci, config.skillsProgressColor || primaryColor)}
@@ -78,7 +89,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
           <!-- Languages Section -->
           ${data.jezyki ? `
             <section style="margin-bottom: 30px;">
-              <h2 style="color: ${primaryColor}; font-size: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+              <h2 style="color: #2c3e50; font-size: 22px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 JĘZYKI OBCE
               </h2>
               ${formatLanguagesSection(data.jezyki)}
@@ -88,7 +99,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
           <!-- Interests Section -->
           ${data.zainteresowania ? `
             <section>
-              <h2 style="color: ${primaryColor}; font-size: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+              <h2 style="color: #2c3e50; font-size: 22px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 ZAINTERESOWANIA
               </h2>
               ${formatInterestsSection(data.zainteresowania)}
@@ -99,7 +110,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
       
       <!-- Footer with Clause -->
       ${data.clause ? `
-        <footer style="padding: 20px 30px; font-size: 10px; color: #777; background-color: #f9f9f9; border-top: 1px solid #eee;">
+        <footer style="padding: 20px 30px; font-size: 10px; color: #777; background-color: #f1f1f1; border-top: 2px solid ${primaryColor};">
           ${data.clause}
         </footer>
       ` : ''}

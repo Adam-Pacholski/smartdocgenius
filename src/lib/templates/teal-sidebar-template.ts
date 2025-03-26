@@ -1,3 +1,4 @@
+
 /**
  * Teal Sidebar Template
  * 
@@ -39,6 +40,8 @@ export const tealSidebarTemplate: DocumentTemplate = {
       fontSize
     } = prepareTemplateData(data, config);
     
+    const birthDate = data.birthDate || '';
+    
     return `
       <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; box-sizing: border-box; display: flex; flex-direction: row; min-height: 29.7cm;">
         <!-- Sidebar -->
@@ -49,7 +52,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
           <div style="margin-bottom: 20px; font-size: 13px;">
             ${data.email ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>✉</span> ${data.email}</p>` : ''}
             ${data.phone ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>✆</span> ${data.phone}</p>` : ''}
-            ${data.birthDate ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>📅</span> ${data.birthDate}</p>` : ''}
+            ${birthDate ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>🎂</span> ${birthDate}</p>` : ''}
             ${data.address ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>📍</span> ${data.address}</p>` : ''}
           </div>
           
