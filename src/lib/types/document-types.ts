@@ -1,4 +1,3 @@
-
 export interface TemplateField {
   id: string;
   label: string;
@@ -7,6 +6,7 @@ export interface TemplateField {
   required?: boolean;
   section: string;
   defaultValue?: string;
+  description?: string; // Added this property
 }
 
 export interface DocumentTemplate {

@@ -542,7 +542,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                               <Switch
                                 id={`is-current-${index}`}
                                 checked={!!entry.isCurrent}
-                                onCheckedChange={(checked) => {
+                                onCheckedChange={(checked: boolean) => {
                                   updateEntry('doswiadczenie', index, 'isCurrent', checked);
                                 }}
                               />
@@ -660,7 +660,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                               <Switch
                                 id={`edu-is-current-${index}`}
                                 checked={!!entry.isCurrent}
-                                onCheckedChange={(checked) => {
+                                onCheckedChange={(checked: boolean) => {
                                   updateEntry('edukacja', index, 'isCurrent', checked);
                                 }}
                               />
