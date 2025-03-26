@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -540,8 +541,8 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                               <Switch
                                 id={`is-current-${index}`}
                                 checked={!!entry.isCurrent}
-                                onCheckedChange={(value) => {
-                                  updateEntry('doswiadczenie', index, 'isCurrent', value);
+                                onCheckedChange={(checked) => {
+                                  updateEntry('doswiadczenie', index, 'isCurrent', checked);
                                 }}
                               />
                               <Label htmlFor={`is-current-${index}`} className="text-sm cursor-pointer">
@@ -658,8 +659,8 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                               <Switch
                                 id={`edu-is-current-${index}`}
                                 checked={!!entry.isCurrent}
-                                onCheckedChange={(value) => {
-                                  updateEntry('edukacja', index, 'isCurrent', value);
+                                onCheckedChange={(checked) => {
+                                  updateEntry('edukacja', index, 'isCurrent', checked);
                                 }}
                               />
                               <Label htmlFor={`edu-is-current-${index}`} className="text-sm cursor-pointer">
@@ -1230,4 +1231,3 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 };
 
 export default DocumentEditor;
-
