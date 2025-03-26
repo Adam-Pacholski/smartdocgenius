@@ -42,7 +42,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
       <!-- Main Content -->
       <div style="display: flex; padding: 0;">
         <!-- Left Column -->
-        <div style="flex: 2; padding: 25px 30px; border-right: 1px solid #eee;">
+        <div style="flex: 2; padding: 25px 30px 50px 30px; border-right: 1px solid #eee;">
           <!-- Profile Summary -->
           ${data.summary ? `
             <section style="margin-bottom: 30px;">
@@ -75,7 +75,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
         </div>
         
         <!-- Right Column -->
-        <div style="flex: 1; padding: 25px 30px; background-color: #f8f9fa;">
+        <div style="flex: 1; padding: 25px 30px 50px 30px; background-color: #f8f9fa;">
           <!-- Skills Section -->
           ${data.umiejetnosci ? `
             <section style="margin-bottom: 30px;">
@@ -110,7 +110,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
       
       <!-- Footer with Clause -->
       ${data.clause ? `
-        <footer style="padding: 20px 30px; font-size: 10px; color: #777; background-color: #f1f1f1; border-top: 2px solid ${primaryColor};">
+        <footer style="padding: 20px 30px 40px; font-size: 10px; color: #777; background-color: #f1f1f1; border-top: 2px solid ${primaryColor};">
           ${data.clause}
         </footer>
       ` : ''}
