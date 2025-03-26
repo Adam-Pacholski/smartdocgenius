@@ -6,8 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { DocumentTemplate } from '@/lib/templates';
 import { ArrowLeft, FileDown, ArrowRight, Upload, Plus, Trash2, GripVertical, Calendar } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+
 import { Slider } from '@/components/ui/slider';
 import { Progress } from '@/components/ui/progress';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
@@ -280,34 +279,33 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         // Format period based on whether it's current or not
         let period = '';
         if (entry.startDate) {
-          period = entry.isCurrent ? 
-            `${entry.startDate} - do teraz` : 
-            `${entry.startDate}${entry.endDate ? ` - ${entry.endDate}` : ''}`;
+          const start = entry.startDate.toString();
+          const end = entry.endDate ? entry.endDate.toString() : '';
+          period = entry.isCurrent ? `${start} - do teraz` : `${start}${end ? ` - ${end}` : ''}`;
         }
-        
-        result += `${entry.company || ''} | ${entry.position || ''} | ${period}\n`;
+
+        result += `${entry.company ? entry.company.toString() : ''} | ${entry.position ? entry.position.toString() : ''} | ${period}\n`;
         if (entry.details) {
-          result += `${entry.details}\n`;
+          result += `${entry.details.toString()}\n`;
         }
       } else if (fieldName === 'edukacja') {
-        // Format period based on whether it's current or not
         let period = '';
         if (entry.startDate) {
-          period = entry.isCurrent ? 
-            `${entry.startDate} - do teraz` : 
-            `${entry.startDate}${entry.endDate ? ` - ${entry.endDate}` : ''}`;
+          const start = entry.startDate.toString();
+          const end = entry.endDate ? entry.endDate.toString() : '';
+          period = entry.isCurrent ? `${start} - do teraz` : `${start}${end ? ` - ${end}` : ''}`;
         }
-        
-        result += `${entry.school || ''} | ${entry.degree || ''} | ${period}\n`;
+
+        result += `${entry.school ? entry.school.toString() : ''} | ${entry.degree ? entry.degree.toString() : ''} | ${period}\n`;
         if (entry.details) {
-          result += `${entry.details}\n`;
+          result += `${entry.details.toString()}\n`;
         }
       } else if (fieldName === 'umiejetnosci') {
-        result += `- ${entry.skill || ''} | ${entry.proficiency || 3}\n`;
+        result += `- ${entry.skill ? entry.skill.toString() : ''} | ${entry.proficiency !== undefined ? entry.proficiency.toString() : '3'}\n`;
       } else if (fieldName === 'jezyki') {
-        result += `- ${entry.language || ''} - ${entry.level || ''}\n`;
+        result += `- ${entry.language ? entry.language.toString() : ''} - ${entry.level ? entry.level.toString() : ''}\n`;
       } else if (fieldName === 'zainteresowania') {
-        result += `- ${entry.interest || ''}\n`;
+        result += `- ${entry.interest ? entry.interest.toString() : ''}\n`;
       }
       
       result += '\n';

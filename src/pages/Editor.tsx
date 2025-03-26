@@ -206,7 +206,7 @@ const Editor: React.FC = () => {
                     }}
                     className="mb-4"
                   >
-                    <TabsList className="flex flex-wrap md:grid md:grid-cols-4 w-full overflow-visible mb-1">
+                    <TabsList className="flex flex-wrap  md:grid md:grid-cols-4 w-full overflow-visible mb-1 h-full gap-2  ">
                       {sectionOrder.map((section) => (
                         <TabsTrigger 
                           key={section}
