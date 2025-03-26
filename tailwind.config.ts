@@ -63,6 +63,12 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
+				// Add section background colors
+				"section-bg": {
+					primary: 'hsl(var(--section-bg-primary))',
+					secondary: 'hsl(var(--section-bg-secondary))',
+					accent: 'hsl(var(--section-bg-accent))',
+				},
 				graphite: {
 					50: '#f9fafb',
 					100: '#f3f4f6',
@@ -130,6 +136,7 @@ export default {
 				'glass-hover': '0 0 20px rgba(0, 0, 0, 0.1)',
 				'subtle': '0 1px 3px rgba(0, 0, 0, 0.05)',
 				'elegant': '0 4px 20px rgba(0, 0, 0, 0.08)',
+				'section': '0 1px 3px rgba(0, 0, 0, 0.1)', 
 			},
 			backdropBlur: {
 				'xs': '2px',

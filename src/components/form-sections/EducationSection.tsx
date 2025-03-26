@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, GripVertical } from 'lucide-react';
 import SortableItem from '@/components/sortable/SortableItem';
 import DatePickerInput from '@/components/date-picker/DatePickerInput';
 
@@ -39,7 +39,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -52,14 +52,19 @@ const EducationSection: React.FC<EducationSectionProps> = ({
         >
           {entries.map((entry, index) => (
             <SortableItem key={`edu-${index}`} id={`edu-${index}`}>
-              <div className="p-4 border rounded-md bg-gray-50 mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium">Wykształcenie {index + 1}</h4>
+              <div className="p-4 border rounded-md bg-section-bg-secondary shadow-sm mb-4">
+                <div className="flex items-center justify-between mb-3 pb-2 border-b">
+                  <div className="flex items-center gap-2">
+                    <div className="text-gray-400 cursor-move">
+                      <GripVertical className="h-5 w-5" />
+                    </div>
+                    <h4 className="font-medium text-primary">Wykształcenie {index + 1}</h4>
+                  </div>
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={() => onRemoveEntry('edukacja', index)}
-                    className="h-8 text-destructive"
+                    className="h-8 text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
                     Usuń
@@ -74,6 +79,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                       value={entry.school?.toString() || ''}
                       onChange={(e) => onUpdateEntry('edukacja', index, 'school', e.target.value)}
                       placeholder="np. Uniwersytet Warszawski"
+                      className="border-input/80 focus:border-primary"
                     />
                   </div>
                   <div className="space-y-2">
@@ -83,6 +89,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                       value={entry.degree?.toString() || ''}
                       onChange={(e) => onUpdateEntry('edukacja', index, 'degree', e.target.value)}
                       placeholder="np. Informatyka, mgr"
+                      className="border-input/80 focus:border-primary"
                     />
                   </div>
                 </div>
@@ -120,7 +127,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                         id={`edu-end-date-${index}`}
                       />
                     ) : (
-                      <div className="h-10 flex items-center px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground">
+                      <div className="h-10 flex items-center px-3 py-2 border border-input/70 rounded-md bg-muted/50 text-muted-foreground">
                         do teraz
                       </div>
                     )}
@@ -134,7 +141,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     value={entry.details?.toString() || ''}
                     onChange={(e) => onUpdateEntry('edukacja', index, 'details', e.target.value)}
                     placeholder="- Specjalizacja&#10;- Ważne projekty"
-                    className="min-h-[100px]"
+                    className="min-h-[100px] border-input/80 focus:border-primary"
                   />
                 </div>
               </div>
@@ -146,7 +153,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
       <Button 
         type="button" 
         variant="outline" 
-        className="w-full mt-2" 
+        className="w-full mt-2 border-dashed border-2" 
         onClick={() => onAddEntry('edukacja')}
       >
         <Plus className="h-4 w-4 mr-1" />

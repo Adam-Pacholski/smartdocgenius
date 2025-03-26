@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react';
 import Header from './Header';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import { Separator } from '@/components/ui/separator';
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,7 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
           {children}
         </div>
       </main>
-      <footer className="py-6 border-t border-border">
+      <footer className="py-6 bg-section-bg-secondary border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
@@ -28,6 +29,7 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
               <Link to="/polityka-prywatnosci" className="text-sm text-muted-foreground hover:text-foreground">
                 Polityka prywatności i cookies
               </Link>
+              <Separator orientation="vertical" className="h-4 mx-1 hidden md:block" />
               <Link to="/kontakt" className="text-sm text-muted-foreground hover:text-foreground">
                 Kontakt
               </Link>

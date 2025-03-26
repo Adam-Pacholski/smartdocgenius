@@ -33,6 +33,11 @@
     --input: 220 13% 91%;
     --ring: 220 13% 91%;
 
+    /* New section colors */
+    --section-bg-primary: 210 50% 98%;
+    --section-bg-secondary: 220 50% 96%;
+    --section-bg-accent: 200 60% 97%;
+    
     --radius: 0.6rem;
 
     --sidebar-background: 0 0% 100%;
@@ -73,6 +78,11 @@
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
     --ring: 216 12.2% 83.9%;
+    
+    /* Dark mode section colors */
+    --section-bg-primary: 215 30% 14%;
+    --section-bg-secondary: 220 30% 16%;
+    --section-bg-accent: 210 30% 15%;
   }
 
   * {
@@ -100,6 +110,23 @@
   
   .text-balance {
     text-wrap: balance;
+  }
+  
+  /* New section utility classes */
+  .section-primary {
+    @apply bg-section-bg-primary border border-border rounded-lg shadow-sm;
+  }
+  
+  .section-secondary {
+    @apply bg-section-bg-secondary border border-border rounded-lg shadow-sm;
+  }
+  
+  .section-accent {
+    @apply bg-section-bg-accent border border-border rounded-lg shadow-sm;
+  }
+  
+  .section-divided {
+    @apply border-t border-border py-6;
   }
 }
 

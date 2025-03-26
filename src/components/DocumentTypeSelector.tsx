@@ -39,16 +39,19 @@ const DocumentTypeSelector: React.FC<DocumentTypeSelectorProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {documentTypes.map((type) => (
         <Card 
           key={type.id} 
           className={cn(
-            "cursor-pointer transition-all duration-300 transform hover:scale-102 hover:-translate-y-1",
+            "cursor-pointer transition-all duration-300 transform hover:scale-102 hover:-translate-y-1 border",
             selectedType === type.id 
-              ? "ring-2 ring-primary shadow-elegant" 
+              ? "ring-2 ring-primary shadow-elegant border-primary/30" 
               : "shadow-subtle hover:shadow-elegant",
-            type.comingSoon ? "opacity-80" : ""
+            type.comingSoon ? "opacity-80" : "",
+            type.id === 'cv' ? "bg-section-bg-accent" : 
+            type.id === 'cover-letter' ? "bg-section-bg-primary" : 
+            "bg-section-bg-secondary"
           )}
           onClick={() => handleTypeSelect(type.id)}
         >

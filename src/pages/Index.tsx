@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, FileText, Sparkles, CheckCircle } from 'lucide-react';
 import Layout from '@/components/Layout';
 import RoadmapSection from '@/components/RoadmapSection';
+import { Separator } from '@/components/ui/separator';
 
 const features = [
   {
@@ -60,7 +62,7 @@ const Index: React.FC = () => {
       </section>
       
       {/* Features section */}
-      <section className="py-12 md:py-24 bg-muted/50">
+      <section className="py-12 md:py-24 bg-section-bg-secondary">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center text-center space-y-4 mb-12">
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
@@ -69,13 +71,14 @@ const Index: React.FC = () => {
             <p className="max-w-[650px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Narzędzie stworzone, aby ułatwić i przyspieszyć proces tworzenia profesjonalnych dokumentów.
             </p>
+            <Separator className="w-24 bg-primary/30 h-0.5 mt-2" />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <div 
                 key={index} 
-                className="flex flex-col items-center text-center p-6 bg-background rounded-lg shadow-subtle"
+                className="flex flex-col items-center text-center p-6 bg-card rounded-lg shadow-elegant border"
               >
                 <div className="p-3 rounded-full bg-primary/10 mb-4">
                   {feature.icon}
@@ -92,7 +95,7 @@ const Index: React.FC = () => {
       <RoadmapSection />
       
       {/* CTA section */}
-      <section className="py-12 md:py-24">
+      <section className="py-12 md:py-24 bg-section-bg-accent">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center text-center space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl max-w-3xl text-balance">
