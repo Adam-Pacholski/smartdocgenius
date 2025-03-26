@@ -331,11 +331,11 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
   const sectionFields = template.fields.filter(field => field.section === currentSection);
 
   const sectionTitles: Record<string, string> = {
+    'konfiguracja': 'Konfiguracja',
     'dane_osobowe': 'Dane osobowe',
     'odbiorca': 'Odbiorca',
     'tresc_listu': 'Treść listu',
     'klauzula': 'Klauzula',
-    'konfiguracja': 'Konfiguracja',
     'doswiadczenie': 'Doświadczenie zawodowe',
     'edukacja': 'Wykształcenie',
     'umiejetnosci': 'Umiejętności',
@@ -344,11 +344,11 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
   };
 
   const sectionDescriptions: Record<string, string> = {
+    'konfiguracja': 'Dostosuj wygląd dokumentu',
     'dane_osobowe': 'Wprowadź swoje dane osobowe',
     'odbiorca': 'Wprowadź dane odbiorcy',
     'tresc_listu': 'Napisz treść swojego listu motywacyjnego',
     'klauzula': 'Dodaj klauzulę o przetwarzaniu danych osobowych',
-    'konfiguracja': 'Dostosuj wygląd dokumentu',
     'doswiadczenie': 'Dodaj informacje o swoim doświadczeniu zawodowym',
     'edukacja': 'Uzupełnij dane o swoim wykształceniu',
     'umiejetnosci': 'Wymień swoje umiejętności',
@@ -535,6 +535,31 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       case 'umiejetnosci':
         return (
           <div className="space-y-4">
+            {currentSection === 'umiejetnosci' && (
+              <div className="space-y-4 mb-4 p-4 border rounded-md bg-gray-50">
+                <Label htmlFor="skillsProgressColor">Kolor paska umiejętności</Label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    id="skillsProgressColor"
+                    value={formData.skillsProgressColor || '#3498db'}
+                    onChange={(e) => handleChange('skillsProgressColor', e.target.value)}
+                    className="w-14 h-10 cursor-pointer rounded border"
+                  />
+                  <div className="flex-1">
+                    <Progress 
+                      value={75} 
+                      progressColor={formData.skillsProgressColor || '#3498db'} 
+                      className="h-4 w-full" 
+                    />
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Wybierz kolor, który będzie użyty do wyświetlania poziomu umiejętności
+                </p>
+              </div>
+            )}
+            
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -587,6 +612,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         />
                         <Progress 
                           value={(Number(entry.proficiency || 3) / 5) * 100} 
+                          progressColor={formData.skillsProgressColor || undefined}
                           className="h-2 w-full mt-1" 
                         />
                       </div>
@@ -869,3 +895,4 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 };
 
 export default DocumentEditor;
+

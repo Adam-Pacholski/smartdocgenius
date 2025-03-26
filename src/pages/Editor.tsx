@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
@@ -49,6 +48,7 @@ const Editor: React.FC = () => {
     primaryColor: '#3498db',
     fontFamily: 'Arial, sans-serif',
     fontSize: '12px',
+    skillsProgressColor: '#3498db',
   });
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
@@ -84,6 +84,16 @@ const Editor: React.FC = () => {
       documentName: selectedTypeId === 'cv' ? 'CV' : 'List motywacyjny'
     }));
   };
+
+  useEffect(() => {
+    // Update skillsProgressColor from formData if it exists
+    if (formData.skillsProgressColor) {
+      setConfig(prev => ({
+        ...prev,
+        skillsProgressColor: formData.skillsProgressColor
+      }));
+    }
+  }, [formData.skillsProgressColor]);
 
   const handleBack = () => {
     if (currentStep === EditorStep.SelectTemplate) {
