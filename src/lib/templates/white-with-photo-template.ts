@@ -1,3 +1,4 @@
+
 /**
  * White with Photo Template
  * 

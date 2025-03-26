@@ -238,20 +238,29 @@ export const prepareTemplateData = (data: Record<string, string>, config: Record
   };
 };
 
-export function getRecipientSection(data: Record<string, string>): string {
-  if (!data.recipientCompany && !data.recipientName && !data.recipientPosition && !data.recipientAddress) {
-    return '';
+export const getRecipientSection = (data: Record<string, any>) => {
+  const recipientParts = [];
+  
+  if (data.recipientName) {
+    recipientParts.push(`<p>${data.recipientName}</p>`);
   }
   
-  return `
-    <div style="margin-bottom: 25px;">
-      ${data.recipientName ? `<p style="margin: 0 0 5px;">${data.recipientName}</p>` : ''}
-      ${data.recipientPosition ? `<p style="margin: 0 0 5px;">${data.recipientPosition}</p>` : ''}
-      ${data.recipientCompany ? `<p style="margin: 0 0 5px;"><strong>${data.recipientCompany}</strong></p>` : ''}
-      ${data.recipientAddress ? `<p style="margin: 0 0 5px;">${data.recipientAddress}</p>` : ''}
-    </div>
-  `;
-}
+  if (data.recipientPosition) {
+    recipientParts.push(`<p>${data.recipientPosition}</p>`);
+  }
+  
+  if (data.recipientCompany) {
+    recipientParts.push(`<p><strong>${data.recipientCompany}</strong></p>`);
+  }
+  
+  if (data.recipientAddress) {
+    recipientParts.push(`<p>${data.recipientAddress}</p>`);
+  }
+  
+  return recipientParts.length > 0 
+    ? `<div style="margin-bottom: 30px;">${recipientParts.join('\n')}</div>` 
+    : '';
+};
 
 export const getClauseSection = (data: Record<string, string>): string => {
   return `
