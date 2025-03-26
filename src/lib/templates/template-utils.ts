@@ -1,3 +1,4 @@
+
 export const formatExperienceSection = (experienceText: string): string => {
   if (!experienceText) return '';
   
@@ -205,4 +206,56 @@ export const parseMultiEntryData = (text: string): Array<Record<string, string>>
   
   console.log('Parsed education entries:', entries);
   return entries;
+};
+
+// Add the missing functions for cover letter templates
+export const prepareTemplateData = (data: Record<string, string>, config: Record<string, any> = {}): any => {
+  // Default config values
+  const primaryColor = config.primaryColor || '#3498db';
+  const fontFamily = config.fontFamily || 'Arial, sans-serif';
+  const fontSize = config.fontSize || '12px';
+  
+  // Format data
+  const firstName = data.firstName || '';
+  const lastName = data.lastName || '';
+  const fullName = `${firstName} ${lastName}`.trim();
+  const fullNameUpper = fullName.toUpperCase();
+  const position = data.position || '';
+  
+  // Format date
+  const today = new Date();
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  const date = data.date || today.toLocaleDateString('pl-PL', options);
+  
+  return {
+    firstName,
+    lastName,
+    fullName,
+    fullNameUpper,
+    position,
+    date,
+    primaryColor,
+    fontFamily,
+    fontSize
+  };
+};
+
+export const getRecipientSection = (data: Record<string, string>): string => {
+  return `
+    <div style="margin-bottom: 20px;">
+      ${data.recipientName ? `<p style="margin: 0 0 3px;">${data.recipientName}</p>` : ''}
+      ${data.recipientCompany ? `<p style="margin: 0 0 3px;">${data.recipientCompany}</p>` : ''}
+      ${data.recipientAddress ? `<p style="margin: 0 0 3px;">${data.recipientAddress}</p>` : ''}
+    </div>
+  `;
+};
+
+export const getClauseSection = (data: Record<string, string>): string => {
+  return `
+    <div style="position: absolute; bottom: 30px; left: 30px; right: 30px;">
+      <p data-clause style="margin: 0; font-size: 10px; color: #666; text-align: justify;">
+        ${data.clause || ''}
+      </p>
+    </div>
+  `;
 };

@@ -64,7 +64,7 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
           ${data.umiejetnosci ? `
             <section>
               <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;">Umiejętności</h2>
-              ${formatSkillsSection(data.umiejetnosci, formData.skillsProgressColor || primaryColor)}
+              ${formatSkillsSection(data.umiejetnosci, config.skillsProgressColor || primaryColor)}
             </section>
           ` : ''}
           
