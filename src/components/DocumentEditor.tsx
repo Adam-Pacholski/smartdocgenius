@@ -369,9 +369,11 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         newEntries[index] = {};
       }
       
-      let typedValue: string | number | boolean = value;
-      
-      newEntries[index][field] = typedValue;
+      if (typeof value === 'boolean') {
+        newEntries[index][field] = value;
+      } else {
+        newEntries[index][field] = value;
+      }
       
       const formattedString = formatEntriesToString(section, newEntries);
       handleChange(section, formattedString);
@@ -543,8 +545,8 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                               <Switch
                                 id={`is-current-${index}`}
                                 checked={!!entry.isCurrent}
-                                onCheckedChange={(checked: boolean) => {
-                                  updateEntry('doswiadczenie', index, 'isCurrent', checked);
+                                onCheckedChange={(checked) => {
+                                  updateEntry('doswiadczenie', index, 'isCurrent', Boolean(checked));
                                 }}
                               />
                               <Label htmlFor={`is-current-${index}`} className="text-sm cursor-pointer">
@@ -661,8 +663,8 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                               <Switch
                                 id={`edu-is-current-${index}`}
                                 checked={!!entry.isCurrent}
-                                onCheckedChange={(checked: boolean) => {
-                                  updateEntry('edukacja', index, 'isCurrent', checked);
+                                onCheckedChange={(checked) => {
+                                  updateEntry('edukacja', index, 'isCurrent', Boolean(checked));
                                 }}
                               />
                               <Label htmlFor={`edu-is-current-${index}`} className="text-sm cursor-pointer">
