@@ -364,7 +364,6 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     });
   };
 
-  // Update the updateEntry function to accept boolean values
   const updateEntry = (section: string, index: number, field: string, value: string | number | boolean) => {
     setMultiEntries(prev => {
       const newEntries = [...prev[section]];
@@ -882,3 +881,207 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             </Button>
           </div>
         );
+
+      case 'zainteresowania':
+        return (
+          <div className="space-y-4">
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(event) => handleDragEnd(event, 'zainteresowania')}
+              modifiers={[restrictToVerticalAxis]}
+            >
+              <SortableContext
+                items={multiEntries.zainteresowania.map((_, index) => `interest-${index}`)}
+                strategy={verticalListSortingStrategy}
+              >
+                {multiEntries.zainteresowania.map((entry, index) => (
+                  <SortableItem key={`interest-${index}`} id={`interest-${index}`}>
+                    <div className="p-4 border rounded-md bg-gray-50 mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium">Zainteresowanie {index + 1}</h4>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => removeEntry('zainteresowania', index)}
+                          className="h-8 text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          Usuń
+                        </Button>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor={`interest-${index}`}>Zainteresowanie</Label>
+                        <Input
+                          id={`interest-${index}`}
+                          value={entry.interest || ''}
+                          onChange={(e) => updateEntry('zainteresowania', index, 'interest', e.target.value)}
+                          placeholder="np. Fotografia"
+                        />
+                      </div>
+                    </div>
+                  </SortableItem>
+                ))}
+              </SortableContext>
+            </DndContext>
+            
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="w-full mt-2" 
+              onClick={() => addEntry('zainteresowania')}
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Dodaj zainteresowanie
+            </Button>
+          </div>
+        );
+      
+      default:
+        return (
+          <div className="space-y-4">
+            {sectionFields.map(field => {
+              if (field.type === 'text' || field.type === 'email' || field.type === 'tel') {
+                return (
+                  <div key={field.id} className="space-y-2">
+                    <Label htmlFor={field.id}>{field.label}</Label>
+                    <Input
+                      id={field.id}
+                      type={field.type}
+                      value={formData[field.id] || ''}
+                      onChange={(e) => handleChange(field.id, e.target.value)}
+                      placeholder={field.placeholder}
+                    />
+                    {field.description && (
+                      <p className="text-sm text-muted-foreground">{field.description}</p>
+                    )}
+                  </div>
+                );
+              } else if (field.type === 'textarea') {
+                return (
+                  <div key={field.id} className="space-y-2">
+                    <Label htmlFor={field.id}>{field.label}</Label>
+                    <Textarea
+                      id={field.id}
+                      value={formData[field.id] || ''}
+                      onChange={(e) => handleChange(field.id, e.target.value)}
+                      placeholder={field.placeholder}
+                      className="min-h-[200px]"
+                    />
+                    {field.description && (
+                      <p className="text-sm text-muted-foreground">{field.description}</p>
+                    )}
+                  </div>
+                );
+              } else if (field.type === 'photo') {
+                return (
+                  <div key={field.id} className="space-y-2">
+                    <Label htmlFor={field.id}>{field.label}</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <div className="flex items-center justify-center w-full h-40 border-2 border-dashed rounded-lg border-gray-300 cursor-pointer hover:bg-gray-50 relative">
+                          {formData[field.id] ? (
+                            <>
+                              <img
+                                src={formData[field.id]}
+                                alt="Uploaded"
+                                className="h-full w-full object-contain rounded-lg"
+                              />
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                className="absolute top-2 right-2"
+                                onClick={() => handleChange(field.id, '')}
+                              >
+                                Usuń
+                              </Button>
+                            </>
+                          ) : (
+                            <div className="space-y-1 text-center p-4">
+                              <Upload className="mx-auto h-8 w-8 text-gray-400" />
+                              <div className="text-sm text-gray-600">
+                                <label
+                                  htmlFor="file-upload"
+                                  className="font-medium text-primary hover:underline cursor-pointer"
+                                >
+                                  Dodaj zdjęcie
+                                </label>
+                                <input
+                                  id="file-upload"
+                                  name="file-upload"
+                                  type="file"
+                                  accept="image/*"
+                                  className="sr-only"
+                                  onChange={handlePhotoUpload}
+                                />
+                              </div>
+                              <p className="text-xs text-gray-500">
+                                PNG, JPG maksymalnie 10MB
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        {field.description && (
+                          <Alert>
+                            <AlertDescription>{field.description}</AlertDescription>
+                          </Alert>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              } else if (field.type === 'date') {
+                return (
+                  <DatePickerInput
+                    key={field.id}
+                    id={field.id}
+                    label={field.label}
+                    value={formData[field.id] || ''}
+                    onChange={(value) => handleChange(field.id, value)}
+                  />
+                );
+              }
+              return null;
+            })}
+          </div>
+        );
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{sectionTitles[currentSection] || 'Edycja dokumentu'}</CardTitle>
+        <CardDescription>{sectionDescriptions[currentSection] || 'Edytuj informacje w dokumencie'}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {renderCVSectionForm()}
+      </CardContent>
+      <CardFooter className="flex justify-between mt-4">
+        <Button variant="outline" onClick={onBack}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Wstecz
+        </Button>
+        <div className="flex space-x-2">
+          <Button variant="outline" onClick={onExport}>
+            <FileDown className="mr-2 h-4 w-4" />
+            Eksportuj PDF
+          </Button>
+          {onNext && (
+            <Button onClick={onNext}>
+              Dalej
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </CardFooter>
+    </Card>
+  );
+};
+
+export default DocumentEditor;
