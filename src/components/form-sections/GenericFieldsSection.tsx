@@ -67,6 +67,7 @@ const GenericFieldsSection: React.FC<GenericFieldsSectionProps> = ({
                 label={field.label}
                 value={formData[field.id] || ''}
                 onChange={(value) => handleChange(field.id, value)}
+                description={field.description}
               />
             );
           case 'photo':

@@ -41,6 +41,8 @@ export const minimalistIconsTemplate: DocumentTemplate = {
       fontSize
     } = prepareTemplateData(data, config);
     
+    const birthDate = data.birthDate || '';
+    
     return `
       <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 40px; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.4; color: #333; box-sizing: border-box;">
       
@@ -54,6 +56,7 @@ export const minimalistIconsTemplate: DocumentTemplate = {
             ${data.email ? `<p style="margin: 0;"><span style="color: ${primaryColor}; margin-right: 5px;">✉</span> ${data.email}</p>` : ''}
             ${data.phone ? `<p style="margin: 0;"><span style="color: ${primaryColor}; margin-right: 5px;">✆</span> ${data.phone}</p>` : ''}
             ${data.address ? `<p style="margin: 0;"><span style="color: ${primaryColor}; margin-right: 5px;">📍</span> ${data.address}</p>` : ''}
+            ${birthDate ? `<p style="margin: 0;"><span style="color: ${primaryColor}; margin-right: 5px;">🎂</span> ${birthDate}</p>` : ''}
           </div>
         </div>
         
