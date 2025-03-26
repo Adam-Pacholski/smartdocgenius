@@ -1,21 +1,16 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { FileDown, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { DocumentTemplate } from '@/lib/templates';
 import { generatePdfFromHtml, estimatePageCount } from '@/lib/utils/pdf-generator';
 import { toast } from '@/components/ui/use-toast';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
-} from '@/components/ui/pagination';
+
+// Import our new components
+import DocumentRenderer from './document-preview/DocumentRenderer';
+import NavigationOverlay from './document-preview/NavigationOverlay';
+import PreviewPagination from './document-preview/PreviewPagination';
+import PreviewHeader from './document-preview/PreviewHeader';
 
 interface DocumentPreviewProps {
   template: DocumentTemplate;
@@ -135,121 +130,16 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     }
   };
   
-  const renderPageBreaks = () => {
-    if (pageCount <= 1) return null;
-    
-    return Array.from({ length: pageCount - 1 }).map((_, index) => (
-      <div 
-        key={index}
-        className="absolute left-0 right-0 border-b-2 border-red-400 border-dashed pointer-events-none z-10"
-        style={{ top: `${(index + 1) * 1123}px` }}
-      >
-        <div className="absolute right-0 bg-red-100 text-red-800 px-2 py-0.5 text-xs rounded-tl-md">
-          Podział strony
-        </div>
-      </div>
-    ));
-  };
-  
-  const renderPagination = () => {
-    if (pageCount <= 1) return null;
-    
-    // Generate page numbers to show (first, last, and around current)
-    const pagesToShow = new Set<number>();
-    pagesToShow.add(1); // Always show first page
-    pagesToShow.add(pageCount); // Always show last page
-    
-    // Show pages around current
-    for (let i = Math.max(1, currentPage - 1); i <= Math.min(pageCount, currentPage + 1); i++) {
-      pagesToShow.add(i);
-    }
-    
-    const sortedPages = Array.from(pagesToShow).sort((a, b) => a - b);
-    
-    return (
-      <Pagination className="mt-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious 
-              onClick={() => handlePageChange(currentPage - 1)}
-              className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
-            />
-          </PaginationItem>
-          
-          {sortedPages.map((page, index) => {
-            // Check if we need to add ellipsis
-            if (index > 0 && page > sortedPages[index - 1] + 1) {
-              return (
-                <React.Fragment key={`ellipsis-${page}`}>
-                  <PaginationItem>
-                    <span className="flex h-9 w-9 items-center justify-center opacity-50">...</span>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink 
-                      onClick={() => handlePageChange(page)}
-                      isActive={currentPage === page}
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                </React.Fragment>
-              );
-            }
-            
-            return (
-              <PaginationItem key={page}>
-                <PaginationLink 
-                  onClick={() => handlePageChange(page)}
-                  isActive={currentPage === page}
-                >
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          })}
-          
-          <PaginationItem>
-            <PaginationNext 
-              onClick={() => handlePageChange(currentPage + 1)}
-              className={currentPage === pageCount ? 'pointer-events-none opacity-50' : ''}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    );
-  };
-  
   return (
     <Card className="shadow-subtle h-full">
-      <CardHeader className="pb-2 flex flex-row items-center justify-between">
-        <div className="flex items-center gap-2">
-          {onBack && (
-            <Button 
-              onClick={onBack} 
-              variant="ghost" 
-              size="sm" 
-              className="mr-2"
-            >
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Zmień szablon
-            </Button>
-          )}
-          <CardTitle className="text-lg">Podgląd</CardTitle>
-          {pageCount > 1 && (
-            <span className="text-sm text-muted-foreground ml-2">
-              Strona {currentPage} z {pageCount}
-            </span>
-          )}
-        </div>
-        <Button 
-          onClick={handleExportPdf} 
-          variant="outline" 
-          className="flex items-center gap-1"
-          disabled={isExporting}
-        >
-          <FileDown className="h-4 w-4" />
-          {isExporting ? 'Eksportowanie...' : 'Eksportuj PDF'}
-        </Button>
+      <CardHeader className="pb-2">
+        <PreviewHeader 
+          pageCount={pageCount} 
+          currentPage={currentPage}
+          isExporting={isExporting}
+          onExport={handleExportPdf}
+          onBack={onBack}
+        />
       </CardHeader>
       <CardContent>
         {pageCount > 1 && (
@@ -273,60 +163,29 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           className="bg-gray-100 rounded-md border overflow-hidden shadow-sm p-4 flex justify-center"
         >
           <div className="relative">
-            <ScrollArea 
-              className="w-full h-[800px]"
-              scrollHideDelay={0}
-            >
-              <div className="flex justify-center">
-                <div 
-                  ref={actualRef}
-                  className="a4-preview bg-white shadow-md"
-                  style={{ 
-                    transformOrigin: 'top center',
-                    width: '794px', // A4 width at 96 DPI
-                    minHeight: '1123px', // A4 height at 96 DPI
-                    transform: `scale(${scale})`,
-                    margin: `0 0 ${(scale - 1) * -600}px 0`, // Adjust bottom margin to prevent scroll issues
-                    padding: 0,
-                    maxWidth: '100%'
-                  }}
-                  dangerouslySetInnerHTML={{ __html: htmlContent }}
-                />
-              </div>
-              
-              {/* Page break indicators */}
-              {previewLoaded && renderPageBreaks()}
-            </ScrollArea>
+            <DocumentRenderer 
+              htmlContent={htmlContent}
+              pageCount={pageCount}
+              scale={scale}
+              previewLoaded={previewLoaded}
+              previewRef={actualRef}
+            />
             
             {/* Page navigation overlay */}
-            {pageCount > 1 && (
-              <div className="absolute top-2 right-2 bg-white shadow-md rounded-md px-2 py-1 text-sm flex items-center">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-8 w-8"
-                  disabled={currentPage === 1}
-                  onClick={() => handlePageChange(currentPage - 1)}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span>{currentPage} / {pageCount}</span>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-8 w-8"
-                  disabled={currentPage === pageCount}
-                  onClick={() => handlePageChange(currentPage + 1)}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
+            <NavigationOverlay 
+              currentPage={currentPage}
+              pageCount={pageCount}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
         
         {/* Pagination controls below the preview */}
-        {renderPagination()}
+        <PreviewPagination 
+          currentPage={currentPage}
+          pageCount={pageCount}
+          onPageChange={handlePageChange}
+        />
       </CardContent>
     </Card>
   );
