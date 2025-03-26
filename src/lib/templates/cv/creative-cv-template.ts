@@ -13,6 +13,8 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
   
+  console.log('Creative CV data being rendered:', data);
+  
   return `
     <div style="font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; max-width: 21cm; margin: 0 auto; padding: 0;">
       <!-- Creative Header with Circular Photo -->
@@ -44,7 +46,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
                 Umiejętności
                 <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
               </h2>
-              ${formatSkillsSection(data.umiejetnosci)}
+              ${formatSkillsSection(data.umiejetnosci, data.skillsProgressColor || primaryColor)}
             </div>
           ` : ''}
           

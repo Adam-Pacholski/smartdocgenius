@@ -1,296 +1,208 @@
-
-import { DocumentTemplate } from '../types/document-types';
-import { format } from 'date-fns';
-
-/**
- * Prepares common template data and styling from form data and configuration
- */
-export const prepareTemplateData = (data: Record<string, string>, config: Record<string, any> = {}) => {
-  const firstName = data.firstName || '';
-  const lastName = data.lastName || '';
-  const fullName = `${firstName} ${lastName}`.trim();
-  const fullNameUpper = fullName.toUpperCase(); // Added fullNameUpper property
-  const position = data.position || '';
-  const currentDate = data.date ? data.date : format(new Date(), 'dd.MM.yyyy');
-  
-  const primaryColor = config.primaryColor || '#3498db';
-  const fontFamily = config.fontFamily || 'Arial, sans-serif';
-  const fontSize = config.fontSize || '12px';
-  
-  return {
-    firstName,
-    lastName,
-    fullName,
-    fullNameUpper, // Return the new property
-    position,
-    date: currentDate,
-    primaryColor,
-    fontFamily,
-    fontSize
-  };
-};
-
-/**
- * Gets recipient section HTML for cover letter
- */
-export const getRecipientSection = (data: Record<string, string>) => {
-  if (!data.recipientName && !data.recipientCompany && !data.recipientAddress) {
-    return '';
-  }
-  
-  return `
-    <div style="margin-bottom: 25px;">
-      ${data.recipientName ? `<p style="margin: 0;">${data.recipientName}</p>` : ''}
-      ${data.recipientPosition ? `<p style="margin: 0;">${data.recipientPosition}</p>` : ''}
-      ${data.recipientCompany ? `<p style="margin: 0;">${data.recipientCompany}</p>` : ''}
-      ${data.recipientAddress ? `<p style="margin: 0;">${data.recipientAddress}</p>` : ''}
-    </div>
-  `;
-};
-
-/**
- * Gets clause section HTML for cover letter
- */
-export const getClauseSection = (data: Record<string, string>) => {
-  if (!data.clause) {
-    return '';
-  }
-  
-  return `
-    <div style="margin-top: 30px; font-size: 9px; color: #666;">
-      <p style="margin: 0;">${data.clause}</p>
-    </div>
-  `;
-};
-
-/**
- * Format the experience section for CV from string data
- */
-export const formatExperienceSection = (experienceData: string) => {
-  if (!experienceData) return '';
+export const formatExperienceSection = (experienceText: string): string => {
+  if (!experienceText) return '';
   
   try {
-    const entries = parseMultiEntryData(experienceData);
-    let html = '';
+    const experiences = experienceText.split('\n\n').filter(exp => exp.trim() !== '');
+    let output = '';
     
-    entries.forEach(entry => {
-      html += `
-        <div style="margin-bottom: 20px;">
+    experiences.forEach(experience => {
+      const lines = experience.split('\n');
+      const header = lines[0];
+      const details = lines.slice(1).join('\n');
+      
+      const [company, position, period] = header.split('|').map(item => item.trim());
+      
+      output += `
+        <div style="margin-bottom: 15px;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-            <strong>${entry.company || ''}</strong>
-            <span>${entry.period || ''}</span>
+            <strong>${company}</strong>
+            <span>${period}</span>
           </div>
-          <div style="font-style: italic; margin-bottom: 5px;">${entry.position || ''}</div>
-          ${entry.details ? `<ul style="margin: 5px 0; padding-left: 20px;">
-            ${entry.details.split('\n').filter(line => line.trim().length > 0).map(line => 
-              `<li>${line.replace(/^-\s*/, '')}</li>`
-            ).join('')}
-          </ul>` : ''}
+          <div style="margin-bottom: 5px;">${position}</div>
+          ${details ? `<div style="color: #555; font-size: 0.95em;">${details.replace(/\n/g, '<br>')}</div>` : ''}
         </div>
       `;
     });
     
-    return html;
-  } catch (e) {
-    console.error("Error parsing experience data:", e);
-    return '<p>Error displaying experience data</p>';
+    return output;
+  } catch (error) {
+    console.error('Error formatting experience section:', error);
+    return `<p>Error formatting experience data</p>`;
   }
 };
 
-/**
- * Format the education section for CV from string data
- */
-export const formatEducationSection = (educationData: string) => {
-  if (!educationData) return '';
+export const formatEducationSection = (educationText: string): string => {
+  if (!educationText) return '';
   
   try {
-    const entries = parseMultiEntryData(educationData);
-    let html = '';
+    const entries = parseMultiEntryData(educationText);
+    let output = '';
     
     entries.forEach(entry => {
-      html += `
-        <div style="margin-bottom: 20px;">
+      const school = entry.school || '';
+      const degree = entry.degree || '';
+      const period = entry.period || '';
+      const details = entry.details || '';
+      
+      output += `
+        <div style="margin-bottom: 15px;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-            <strong>${entry.school || ''}</strong>
-            <span>${entry.period || ''}</span>
+            <strong>${school}</strong>
+            <span>${period}</span>
           </div>
-          <div style="font-style: italic; margin-bottom: 5px;">${entry.degree || ''}</div>
-          ${entry.details ? `<ul style="margin: 5px 0; padding-left: 20px;">
-            ${entry.details.split('\n').filter(line => line.trim().length > 0).map(line => 
-              `<li>${line.replace(/^-\s*/, '')}</li>`
-            ).join('')}
-          </ul>` : ''}
+          <div style="margin-bottom: 5px;">${degree}</div>
+          ${details ? `<div style="color: #555; font-size: 0.95em;">${details.replace(/\n/g, '<br>')}</div>` : ''}
         </div>
       `;
     });
     
-    return html;
-  } catch (e) {
-    console.error("Error parsing education data:", e);
-    return '<p>Error displaying education data</p>';
+    return output;
+  } catch (error) {
+    console.error('Error formatting education section:', error);
+    return `<p>Error formatting education data</p>`;
   }
 };
 
-/**
- * Format the skills section for CV from string data with proficiency bar
- */
-export const formatSkillsSection = (skillsData: string) => {
-  if (!skillsData) return '';
+export const formatSkillsSection = (skillsText: string, progressColor: string = '#3498db'): string => {
+  if (!skillsText) return '';
   
   try {
-    const lines = skillsData.split('\n')
+    const skills = skillsText.split('\n')
       .filter(line => line.trim() !== '')
       .map(line => {
-        // Check if line contains proficiency level
-        if (line.includes('|')) {
-          const parts = line.replace(/^-\s*/, '').split('|').map(part => part.trim());
+        const cleanLine = line.replace(/^-\s*/, '').trim();
+        if (cleanLine.includes('|')) {
+          const [skill, proficiencyStr] = cleanLine.split('|').map(part => part.trim());
+          const proficiency = parseInt(proficiencyStr) || 3;
+          const percentage = (proficiency / 5) * 100;
+          
           return {
-            skill: parts[0] || '',
-            proficiency: parseInt(parts[1]) || 3
-          };
-        } else {
-          return {
-            skill: line.replace(/^-\s*/, '').trim(),
-            proficiency: 3 // Default level
+            skill,
+            proficiency,
+            percentage
           };
         }
+        
+        return {
+          skill: cleanLine,
+          proficiency: 3,
+          percentage: 60
+        };
       });
     
-    let html = '<div>';
+    let output = '<div style="margin-top: 10px;">';
     
-    lines.forEach(item => {
-      const percentage = (item.proficiency / 5) * 100;
-      
-      html += `
-        <div style="margin-bottom: 12px;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <div style="font-weight: 500;">${item.skill}</div>
-            <div>${item.proficiency}/5</div>
+    skills.forEach(({ skill, proficiency, percentage }) => {
+      output += `
+        <div style="margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+            <div>${skill}</div>
+            <div>${proficiency}/5</div>
           </div>
-          <div style="height: 6px; width: 100%; background-color: #f0f0f0; border-radius: 3px; overflow: hidden;">
-            <div style="height: 100%; width: ${percentage}%; background-color: #8B5CF6;"></div>
+          <div style="background-color: #eee; height: 8px; border-radius: 4px; overflow: hidden;">
+            <div style="background-color: ${progressColor}; height: 100%; width: ${percentage}%;"></div>
           </div>
         </div>
       `;
     });
     
-    html += '</div>';
-    return html;
-  } catch (e) {
-    console.error("Error parsing skills data:", e);
-    return '<p>Error displaying skills data</p>';
+    output += '</div>';
+    return output;
+  } catch (error) {
+    console.error('Error formatting skills section:', error);
+    return `<p>Error formatting skills data</p>`;
   }
 };
 
-/**
- * Format the languages section for CV from string data
- */
-export const formatLanguagesSection = (languagesData: string) => {
-  if (!languagesData) return '';
+export const formatLanguagesSection = (languagesText: string): string => {
+  if (!languagesText) return '';
   
   try {
-    const lines = languagesData.split('\n')
+    const languages = languagesText.split('\n')
       .filter(line => line.trim() !== '')
       .map(line => {
         const parts = line.replace(/^-\s*/, '').split('-').map(part => part.trim());
         return {
-          language: parts[0] || '',
+          language: parts[0],
           level: parts.length > 1 ? parts[1] : ''
         };
       });
     
-    let html = '<ul style="padding-left: 20px; margin: 10px 0;">';
+    let output = '<ul>';
     
-    lines.forEach(item => {
-      html += `<li><strong>${item.language}</strong>${item.level ? ` - ${item.level}` : ''}</li>`;
+    languages.forEach(({ language, level }) => {
+      output += `<li>${language} ${level ? ` - ${level}` : ''}</li>`;
     });
     
-    html += '</ul>';
-    return html;
-  } catch (e) {
-    console.error("Error parsing languages data:", e);
-    return '<p>Error displaying languages data</p>';
+    output += '</ul>';
+    return output;
+  } catch (error) {
+    console.error('Error formatting languages section:', error);
+    return `<p>Error formatting languages data</p>`;
   }
 };
 
-/**
- * Format the interests section for CV from string data
- */
-export const formatInterestsSection = (interestsData: string) => {
-  if (!interestsData) return '';
+export const formatInterestsSection = (interestsText: string): string => {
+  if (!interestsText) return '';
   
   try {
-    const lines = interestsData.split('\n')
+    const interests = interestsText.split('\n')
       .filter(line => line.trim() !== '')
       .map(line => line.replace(/^-\s*/, '').trim());
     
-    return `
-      <ul style="padding-left: 20px; margin: 10px 0;">
-        ${lines.map(interest => `<li>${interest}</li>`).join('')}
-      </ul>
-    `;
-  } catch (e) {
-    console.error("Error parsing interests data:", e);
-    return '<p>Error displaying interests data</p>';
+    let output = '<ul>';
+    
+    interests.forEach(interest => {
+      output += `<li>${interest}</li>`;
+    });
+    
+    output += '</ul>';
+    return output;
+  } catch (error) {
+    console.error('Error formatting interests section:', error);
+    return `<p>Error formatting interests data</p>`;
   }
 };
 
-/**
- * Parse multi-entry data from string format
- */
-export function parseMultiEntryData(data: string): Array<Record<string, string>> {
-  if (!data || data.trim() === '') return [];
+export const parseMultiEntryData = (text: string): Array<Record<string, string>> => {
+  if (!text) return [];
   
-  const lines = data.split('\n').filter(line => line.trim() !== '');
-  const entries = [];
+  const lines = text.split('\n').filter(line => line.trim() !== '');
+  const entries: Array<Record<string, string>> = [];
   let currentEntry: Record<string, string> = {};
   let currentDetails: string[] = [];
   
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+    const line = lines[i].trim();
     
-    // New entry starts with pipe-separated values
     if (line.includes('|') && !line.startsWith('-')) {
-      // Save previous entry if exists
-      if (Object.keys(currentEntry).length > 0) {
+      if (Object.keys(currentEntry).length > 0 || currentDetails.length > 0) {
         if (currentDetails.length > 0) {
           currentEntry.details = currentDetails.join('\n');
+          currentDetails = [];
         }
         entries.push({...currentEntry});
         currentEntry = {};
-        currentDetails = [];
       }
       
-      // Parse header line with pipe separators
       const parts = line.split('|').map(part => part.trim());
       
-      if (parts.length >= 2 && !line.includes('school')) {
-        currentEntry.company = parts[0] || '';
-        currentEntry.position = parts[1] || '';
-        if (parts.length >= 3) {
-          currentEntry.period = parts[2] || '';
-        }
-      } else if (parts.length >= 2) {
-        currentEntry.school = parts[0] || '';
-        currentEntry.degree = parts[1] || '';
-        if (parts.length >= 3) {
-          currentEntry.period = parts[2] || '';
-        }
-      }
+      if (parts.length >= 1) currentEntry.school = parts[0];
+      if (parts.length >= 2) currentEntry.degree = parts[1];
+      if (parts.length >= 3) currentEntry.period = parts[2];
     } 
-    // Detail lines
-    else if (line.trim().startsWith('-') || line.trim().length > 0) {
+    else if (line.trim() !== '') {
       currentDetails.push(line);
     }
   }
   
-  // Add the last entry
-  if (Object.keys(currentEntry).length > 0) {
+  if (Object.keys(currentEntry).length > 0 || currentDetails.length > 0) {
     if (currentDetails.length > 0) {
       currentEntry.details = currentDetails.join('\n');
     }
     entries.push({...currentEntry});
   }
   
+  console.log('Parsed education entries:', entries);
   return entries;
-}
+};

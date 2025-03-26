@@ -13,6 +13,8 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
   
+  console.log('CV data being rendered:', data);
+  
   return `
     <div style="font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; max-width: 21cm; margin: 0 auto; padding: 0;">
       <!-- Header Section -->
@@ -62,7 +64,7 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
           ${data.umiejetnosci ? `
             <section>
               <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;">Umiejętności</h2>
-              ${formatSkillsSection(data.umiejetnosci)}
+              ${formatSkillsSection(data.umiejetnosci, formData.skillsProgressColor || primaryColor)}
             </section>
           ` : ''}
           

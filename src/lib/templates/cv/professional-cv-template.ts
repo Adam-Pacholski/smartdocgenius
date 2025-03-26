@@ -13,6 +13,8 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
   
+  console.log('Professional CV data being rendered:', data);
+  
   return `
     <div style="font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; max-width: 21cm; margin: 0 auto; padding: 0; border: 1px solid #ddd;">
       <!-- Professional Header -->
@@ -67,7 +69,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
               <h2 style="color: ${primaryColor}; font-size: 20px; margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid #eee;">
                 UMIEJĘTNOŚCI
               </h2>
-              ${formatSkillsSection(data.umiejetnosci)}
+              ${formatSkillsSection(data.umiejetnosci, data.skillsProgressColor || primaryColor)}
             </section>
           ` : ''}
           

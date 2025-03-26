@@ -127,6 +127,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     if (!formData[fieldName]) return [];
     
     try {
+      console.log(`Parsing ${fieldName} data:`, formData[fieldName]);
       const lines = formData[fieldName].split('\n').filter(line => line.trim() !== '');
       const entries = [];
       let currentEntry: Record<string, string | number> = {};
@@ -173,9 +174,10 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         entries.push({...currentEntry});
       }
       
+      console.log(`Parsed ${fieldName} entries:`, entries);
       return entries;
     } catch (e) {
-      console.error("Error parsing entries:", e);
+      console.error(`Error parsing ${fieldName} entries:`, e);
       return [];
     }
   }
@@ -479,7 +481,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                           <Label htmlFor={`school-${index}`}>Nazwa uczelni/szkoły</Label>
                           <Input
                             id={`school-${index}`}
-                            value={entry.school || ''}
+                            value={entry.school?.toString() || ''}
                             onChange={(e) => updateEntry('edukacja', index, 'school', e.target.value)}
                             placeholder="np. Uniwersytet Warszawski"
                           />
@@ -488,7 +490,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                           <Label htmlFor={`degree-${index}`}>Kierunek/Tytuł</Label>
                           <Input
                             id={`degree-${index}`}
-                            value={entry.degree || ''}
+                            value={entry.degree?.toString() || ''}
                             onChange={(e) => updateEntry('edukacja', index, 'degree', e.target.value)}
                             placeholder="np. Informatyka, mgr"
                           />
@@ -497,7 +499,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                           <Label htmlFor={`period-${index}`}>Okres</Label>
                           <Input
                             id={`period-${index}`}
-                            value={entry.period || ''}
+                            value={entry.period?.toString() || ''}
                             onChange={(e) => updateEntry('edukacja', index, 'period', e.target.value)}
                             placeholder="np. 2015 - 2020"
                           />
