@@ -18,7 +18,7 @@ const documentTypes: DocumentType[] = [
     icon: 'user',
     templates: cvTemplates,
     // Removing comingSoon flag to allow template selection
-    displayComingSoon: true // Use this flag to display the "Coming soon" label in UI but still allow selection
+    displayComingSoon: true // Use this flag to display the "W trakcie testów" label in UI but still allow selection
   },
 ];
 

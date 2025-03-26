@@ -9,6 +9,8 @@ import Editor from "./pages/Editor";
 import NotFound from "./pages/NotFound";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -23,8 +25,10 @@ const App = () => (
           <Route path="/editor" element={<Editor />} />
           <Route path="/o-mnie" element={<About />} />
           <Route path="/kontakt" element={<Contact />} />
+          <Route path="/polityka-prywatnosci" element={<PrivacyPolicy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <CookieConsent />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
