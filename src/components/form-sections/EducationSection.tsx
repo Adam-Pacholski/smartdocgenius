@@ -1,0 +1,159 @@
+
+import React from 'react';
+import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Plus, Trash2 } from 'lucide-react';
+import SortableItem from '@/components/sortable/SortableItem';
+import DatePickerInput from '@/components/date-picker/DatePickerInput';
+
+interface EducationSectionProps {
+  entries: Array<Record<string, string | number | boolean>>;
+  onDragEnd: (event: DragEndEvent, section: string) => void;
+  onAddEntry: (section: string) => void;
+  onRemoveEntry: (section: string, index: number) => void;
+  onUpdateEntry: (section: string, index: number, field: string, value: string | number | boolean) => void;
+}
+
+const EducationSection: React.FC<EducationSectionProps> = ({
+  entries,
+  onDragEnd,
+  onAddEntry,
+  onRemoveEntry,
+  onUpdateEntry,
+}) => {
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  return (
+    <div className="space-y-4">
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={(event) => onDragEnd(event, 'edukacja')}
+        modifiers={[restrictToVerticalAxis]}
+      >
+        <SortableContext
+          items={entries.map((_, index) => `edu-${index}`)}
+          strategy={verticalListSortingStrategy}
+        >
+          {entries.map((entry, index) => (
+            <SortableItem key={`edu-${index}`} id={`edu-${index}`}>
+              <div className="p-4 border rounded-md bg-gray-50 mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-medium">Wykształcenie {index + 1}</h4>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => onRemoveEntry('edukacja', index)}
+                    className="h-8 text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    Usuń
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                  <div className="space-y-2">
+                    <Label htmlFor={`school-${index}`}>Nazwa uczelni/szkoły</Label>
+                    <Input
+                      id={`school-${index}`}
+                      value={entry.school?.toString() || ''}
+                      onChange={(e) => onUpdateEntry('edukacja', index, 'school', e.target.value)}
+                      placeholder="np. Uniwersytet Warszawski"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`degree-${index}`}>Kierunek/Tytuł</Label>
+                    <Input
+                      id={`degree-${index}`}
+                      value={entry.degree?.toString() || ''}
+                      onChange={(e) => onUpdateEntry('edukacja', index, 'degree', e.target.value)}
+                      placeholder="np. Informatyka, mgr"
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                  <DatePickerInput 
+                    label="Data rozpoczęcia" 
+                    value={entry.startDate?.toString() || ''} 
+                    onChange={(value) => onUpdateEntry('edukacja', index, 'startDate', value)}
+                    id={`edu-start-date-${index}`}
+                  />
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor={`edu-end-date-${index}`}>Data zakończenia</Label>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id={`edu-is-current-${index}`}
+                          checked={!!entry.isCurrent}
+                          onCheckedChange={(checked) => {
+                            onUpdateEntry('edukacja', index, 'isCurrent', Boolean(checked));
+                          }}
+                        />
+                        <Label htmlFor={`edu-is-current-${index}`} className="text-sm cursor-pointer">
+                          W trakcie
+                        </Label>
+                      </div>
+                    </div>
+                    
+                    {!entry.isCurrent ? (
+                      <DatePickerInput 
+                        label="" 
+                        value={entry.endDate?.toString() || ''} 
+                        onChange={(value) => onUpdateEntry('edukacja', index, 'endDate', value)}
+                        id={`edu-end-date-${index}`}
+                      />
+                    ) : (
+                      <div className="h-10 flex items-center px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground">
+                        do teraz
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor={`edu-details-${index}`}>Dodatkowe informacje</Label>
+                  <Textarea
+                    id={`edu-details-${index}`}
+                    value={entry.details?.toString() || ''}
+                    onChange={(e) => onUpdateEntry('edukacja', index, 'details', e.target.value)}
+                    placeholder="- Specjalizacja&#10;- Ważne projekty"
+                    className="min-h-[100px]"
+                  />
+                </div>
+              </div>
+            </SortableItem>
+          ))}
+        </SortableContext>
+      </DndContext>
+      
+      <Button 
+        type="button" 
+        variant="outline" 
+        className="w-full mt-2" 
+        onClick={() => onAddEntry('edukacja')}
+      >
+        <Plus className="h-4 w-4 mr-1" />
+        Dodaj wykształcenie
+      </Button>
+    </div>
+  );
+};
+
+export default EducationSection;
