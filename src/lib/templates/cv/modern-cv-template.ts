@@ -12,6 +12,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
+  const dateOfBirth = data.dateOfBirth || '';
   
   console.log('Modern CV data being rendered:', data);
   
@@ -39,6 +40,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
             ${data.email ? `<p style="margin: 5px 0;"><strong>Email:</strong> ${data.email}</p>` : ''}
             ${data.phone ? `<p style="margin: 5px 0;"><strong>Telefon:</strong> ${data.phone}</p>` : ''}
             ${data.address ? `<p style="margin: 5px 0;"><strong>Adres:</strong> ${data.address}</p>` : ''}
+            ${dateOfBirth ? `<p style="margin: 5px 0;"><strong>Data urodzenia:</strong> ${dateOfBirth}</p>` : ''}
           </section>
           
           <!-- Skills Section -->

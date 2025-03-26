@@ -12,6 +12,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
+  const dateOfBirth = data.dateOfBirth || '';
   
   console.log('Creative CV data being rendered:', data);
   
@@ -32,6 +33,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
           ${data.email ? `<div style="display: flex; align-items: center; gap: 5px;"><span>✉</span> ${data.email}</div>` : ''}
           ${data.phone ? `<div style="display: flex; align-items: center; gap: 5px;"><span>✆</span> ${data.phone}</div>` : ''}
           ${data.address ? `<div style="display: flex; align-items: center; gap: 5px;"><span>📍</span> ${data.address}</div>` : ''}
+          ${dateOfBirth ? `<div style="display: flex; align-items: center; gap: 5px;"><span>🎂</span> ${dateOfBirth}</div>` : ''}
         </div>
       </div>
       

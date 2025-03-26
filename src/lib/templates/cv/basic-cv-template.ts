@@ -12,6 +12,7 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
+  const dateOfBirth = data.dateOfBirth || '';
   
   console.log('CV data being rendered:', data);
   
@@ -35,7 +36,7 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
         ${data.email ? `<div style="margin-right: 30px;"><strong>Email:</strong> ${data.email}</div>` : ''}
         ${data.phone ? `<div style="margin-right: 30px;"><strong>Telefon:</strong> ${data.phone}</div>` : ''}
         ${data.address ? `<div style="margin-right: 30px;"><strong>Adres:</strong> ${data.address}</div>` : ''}
-        ${data.dateOfBirth ? `<div><strong>Data urodzenia:</strong> ${data.dateOfBirth}</div>` : ''}
+        ${dateOfBirth ? `<div><strong>Data urodzenia:</strong> ${dateOfBirth}</div>` : ''}
       </div>
       
       <!-- Main Content -->

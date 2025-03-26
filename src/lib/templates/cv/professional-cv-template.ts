@@ -12,6 +12,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
+  const dateOfBirth = data.dateOfBirth || '';
   
   console.log('Professional CV data being rendered:', data);
   
@@ -32,6 +33,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
             ${data.email ? `<div><strong>Email:</strong> ${data.email}</div>` : ''}
             ${data.phone ? `<div><strong>Telefon:</strong> ${data.phone}</div>` : ''}
             ${data.address ? `<div><strong>Adres:</strong> ${data.address}</div>` : ''}
+            ${dateOfBirth ? `<div><strong>Data urodzenia:</strong> ${dateOfBirth}</div>` : ''}
           </div>
         </div>
       </div>
