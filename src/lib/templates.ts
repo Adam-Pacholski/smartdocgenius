@@ -17,9 +17,18 @@ const documentTypes: DocumentType[] = [
     description: 'Profesjonalne CV, które wyróżni Cię na tle innych kandydatów',
     icon: 'user',
     templates: cvTemplates,
-    // Removing comingSoon flag to allow template selection
-    displayComingSoon: true // Use this flag to display the "W trakcie testów" label in UI but still allow selection
+    // Showing "W trakcie testów" but allowing selection
+    displayComingSoon: true
   },
+  {
+    id: 'other',
+    name: 'Inny dokument',
+    description: 'Masz pomysł na dokument? Napisz do nas!',
+    icon: 'plus-circle',
+    templates: [],
+    redirectTo: '/kontakt',
+    displayComingSoon: false
+  }
 ];
 
 export * from './types/document-types';

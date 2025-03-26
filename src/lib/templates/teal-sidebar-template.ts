@@ -55,16 +55,6 @@ export const tealSidebarTemplate: DocumentTemplate = {
             ${birthDate ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>🎂</span> ${birthDate}</p>` : ''}
             ${data.address ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>📍</span> ${data.address}</p>` : ''}
           </div>
-          
-          <!-- Skills Section -->
-          <div>
-            <h2 style="font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; margin-bottom: 10px;">Umiejętności</h2>
-            <ul style="list-style: none; padding: 0;">
-              <li style="margin-bottom: 5px;">Umiejętność 1</li>
-              <li style="margin-bottom: 5px;">Umiejętność 2</li>
-              <li style="margin-bottom: 5px;">Umiejętność 3</li>
-            </ul>
-          </div>
         </div>
         
         <!-- Document Content -->
