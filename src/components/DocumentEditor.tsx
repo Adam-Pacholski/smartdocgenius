@@ -364,11 +364,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         newEntries[index] = {};
       }
       
-      if (typeof value === 'boolean') {
-        newEntries[index][field] = value;
-      } else {
-        newEntries[index][field] = value;
-      }
+      newEntries[index][field] = value;
       
       const formattedString = formatEntriesToString(section, newEntries);
       handleChange(section, formattedString);
@@ -540,7 +536,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                                 id={`is-current-${index}`}
                                 checked={!!entry.isCurrent}
                                 onCheckedChange={(checked) => {
-                                  updateEntry('doswiadczenie', index, 'isCurrent', checked === true);
+                                  updateEntry('doswiadczenie', index, 'isCurrent', checked ? true : false);
                                 }}
                               />
                               <Label htmlFor={`is-current-${index}`} className="text-sm cursor-pointer">
@@ -658,7 +654,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                                 id={`edu-is-current-${index}`}
                                 checked={!!entry.isCurrent}
                                 onCheckedChange={(checked) => {
-                                  updateEntry('edukacja', index, 'isCurrent', checked === true);
+                                  updateEntry('edukacja', index, 'isCurrent', checked ? true : false);
                                 }}
                               />
                               <Label htmlFor={`edu-is-current-${index}`} className="text-sm cursor-pointer">
