@@ -13,13 +13,15 @@ interface DatePickerInputProps {
   value: string;
   onChange: (value: string) => void;
   id: string;
+  description?: string; // Added description as an optional prop
 }
 
 const DatePickerInput: React.FC<DatePickerInputProps> = ({ 
   label, 
   value, 
   onChange, 
-  id 
+  id,
+  description
 }) => {
   const [date, setDate] = useState<Date | undefined>();
 
@@ -70,6 +72,9 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
           />
         </PopoverContent>
       </Popover>
+      {description && (
+        <p className="text-sm text-muted-foreground">{description}</p>
+      )}
     </div>
   );
 };
