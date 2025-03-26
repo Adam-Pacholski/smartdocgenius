@@ -40,6 +40,8 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
       fontSize
     } = prepareTemplateData(data, config);
     
+    const birthDate = data.birthDate || '';
+    
     return `
       <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 40px; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.4; color: #333; box-sizing: border-box;">
         <!-- Header with name and position -->
@@ -61,6 +63,7 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
         <div style="display: flex; margin-bottom: 30px; font-size: 13px; color: #666;">
           ${data.email ? `<div style="margin-right: 20px;"><span style="color: ${primaryColor}; margin-right: 5px;">✉</span> ${data.email}</div>` : ''}
           ${data.phone ? `<div style="margin-right: 20px;"><span style="color: ${primaryColor}; margin-right: 5px;">✆</span> ${data.phone}</div>` : ''}
+          ${birthDate ? `<div style="margin-right: 20px;"><span style="color: ${primaryColor}; margin-right: 5px;">🎂</span> ${birthDate}</div>` : ''}
           ${data.address ? `<div style="margin-right: 20px;"><span style="color: ${primaryColor}; margin-right: 5px;">📍</span> ${data.address}</div>` : ''}
         </div>
         
