@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { DocumentTemplate } from '@/lib/templates';
-import { ArrowLeft, FileDown, ArrowRight, Upload, Plus, Trash2, GripVertical } from 'lucide-react';
+import { ArrowLeft, FileDown, ArrowRight, Upload, Plus, Trash2, GripVertical, Calendar } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Slider } from '@/components/ui/slider';
@@ -15,6 +16,11 @@ import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrate
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { CSS } from '@dnd-kit/utilities';
 import { parseMultiEntryData } from '@/lib/templates/template-utils';
+import { Switch } from '@/components/ui/switch';
+import { format } from 'date-fns';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -71,7 +77,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
   onNext,
   currentSection,
 }) => {
-  const [multiEntries, setMultiEntries] = useState<Record<string, Array<Record<string, string | number>>>>({
+  const [multiEntries, setMultiEntries] = useState<Record<string, Array<Record<string, string | number | boolean>>>>({
     doswiadczenie: [],
     edukacja: [],
     umiejetnosci: [],
@@ -123,14 +129,14 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   }
 
-  function parseExistingEntries(fieldName: string): Array<Record<string, string | number>> {
+  function parseExistingEntries(fieldName: string): Array<Record<string, string | number | boolean>> {
     if (!formData[fieldName]) return [];
     
     try {
       console.log(`Parsing ${fieldName} data:`, formData[fieldName]);
       const lines = formData[fieldName].split('\n').filter(line => line.trim() !== '');
       const entries = [];
-      let currentEntry: Record<string, string | number> = {};
+      let currentEntry: Record<string, string | number | boolean> = {};
       let currentLines: string[] = [];
       
       for (let i = 0; i < lines.length; i++) {
@@ -151,14 +157,40 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
           if (fieldName === 'doswiadczenie') {
             currentEntry.company = parts[0] || '';
             currentEntry.position = parts[1] || '';
-            if (parts.length >= 3) {
-              currentEntry.period = parts[2] || '';
+            
+            // Check if period contains "do teraz" to determine if it's current
+            const periodText = parts[2] || '';
+            currentEntry.isCurrent = periodText.includes('do teraz');
+            
+            // Extract dates from period
+            if (periodText) {
+              const dateParts = periodText.split('-').map(d => d.trim());
+              currentEntry.startDate = dateParts[0] || '';
+              
+              if (dateParts.length > 1 && !currentEntry.isCurrent) {
+                currentEntry.endDate = dateParts[1] || '';
+              } else {
+                currentEntry.endDate = '';
+              }
             }
           } else if (fieldName === 'edukacja') {
             currentEntry.school = parts[0] || '';
             currentEntry.degree = parts[1] || '';
-            if (parts.length >= 3) {
-              currentEntry.period = parts[2] || '';
+            
+            // Check if period contains "do teraz" to determine if it's current
+            const periodText = parts[2] || '';
+            currentEntry.isCurrent = periodText.includes('do teraz');
+            
+            // Extract dates from period
+            if (periodText) {
+              const dateParts = periodText.split('-').map(d => d.trim());
+              currentEntry.startDate = dateParts[0] || '';
+              
+              if (dateParts.length > 1 && !currentEntry.isCurrent) {
+                currentEntry.endDate = dateParts[1] || '';
+              } else {
+                currentEntry.endDate = '';
+              }
             }
           }
         } 
@@ -182,7 +214,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   }
 
-  function parseExistingSkills(): Array<Record<string, string | number>> {
+  function parseExistingSkills(): Array<Record<string, string | number | boolean>> {
     if (!formData.umiejetnosci) return [];
     
     try {
@@ -207,7 +239,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   }
 
-  function parseExistingLanguages(): Array<Record<string, string | number>> {
+  function parseExistingLanguages(): Array<Record<string, string | number | boolean>> {
     if (!formData.jezyki) return [];
     
     try {
@@ -226,7 +258,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   }
 
-  function parseExistingInterests(): Array<Record<string, string | number>> {
+  function parseExistingInterests(): Array<Record<string, string | number | boolean>> {
     if (!formData.zainteresowania) return [];
     
     try {
@@ -241,17 +273,33 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   }
 
-  function formatEntriesToString(fieldName: string, entries: Array<Record<string, string | number>>): string {
+  function formatEntriesToString(fieldName: string, entries: Array<Record<string, string | number | boolean>>): string {
     let result = '';
     
     entries.forEach(entry => {
       if (fieldName === 'doswiadczenie') {
-        result += `${entry.company || ''} | ${entry.position || ''} | ${entry.period || ''}\n`;
+        // Format period based on whether it's current or not
+        let period = '';
+        if (entry.startDate) {
+          period = entry.isCurrent ? 
+            `${entry.startDate} - do teraz` : 
+            `${entry.startDate}${entry.endDate ? ` - ${entry.endDate}` : ''}`;
+        }
+        
+        result += `${entry.company || ''} | ${entry.position || ''} | ${period}\n`;
         if (entry.details) {
           result += `${entry.details}\n`;
         }
       } else if (fieldName === 'edukacja') {
-        result += `${entry.school || ''} | ${entry.degree || ''} | ${entry.period || ''}\n`;
+        // Format period based on whether it's current or not
+        let period = '';
+        if (entry.startDate) {
+          period = entry.isCurrent ? 
+            `${entry.startDate} - do teraz` : 
+            `${entry.startDate}${entry.endDate ? ` - ${entry.endDate}` : ''}`;
+        }
+        
+        result += `${entry.school || ''} | ${entry.degree || ''} | ${period}\n`;
         if (entry.details) {
           result += `${entry.details}\n`;
         }
@@ -284,6 +332,11 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   };
 
+  const formatDateForDisplay = (date: Date | undefined) => {
+    if (!date) return '';
+    return format(date, 'dd.MM.yyyy');
+  };
+
   const addEntry = (section: string) => {
     setMultiEntries(prev => {
       const newEntries = [...prev[section], {}];
@@ -312,7 +365,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     });
   };
 
-  const updateEntry = (section: string, index: number, field: string, value: string | number) => {
+  const updateEntry = (section: string, index: number, field: string, value: string | number | boolean) => {
     setMultiEntries(prev => {
       const newEntries = [...prev[section]];
       if (!newEntries[index]) {
@@ -358,6 +411,71 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     'zainteresowania': 'Opisz swoje zainteresowania i hobby'
   };
 
+  const DatePickerInput = ({ 
+    label, 
+    value, 
+    onChange, 
+    id
+  }: { 
+    label: string, 
+    value: string, 
+    onChange: (value: string) => void, 
+    id: string 
+  }) => {
+    const [date, setDate] = useState<Date | undefined>();
+
+    useEffect(() => {
+      if (value) {
+        // Try to parse value as a date
+        const parts = value.split('.');
+        if (parts.length === 3) {
+          const day = parseInt(parts[0]);
+          const month = parseInt(parts[1]) - 1;
+          const year = parseInt(parts[2]);
+          const parsedDate = new Date(year, month, day);
+          if (!isNaN(parsedDate.getTime())) {
+            setDate(parsedDate);
+          }
+        }
+      }
+    }, [value]);
+
+    return (
+      <div className="space-y-2">
+        <Label htmlFor={id}>{label}</Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              id={id}
+              variant={"outline"}
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !date && "text-muted-foreground"
+              )}
+            >
+              <Calendar className="mr-2 h-4 w-4" />
+              {date ? format(date, 'dd.MM.yyyy') : <span>Wybierz datę</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <CalendarComponent
+              mode="single"
+              selected={date}
+              onSelect={(newDate) => {
+                setDate(newDate);
+                if (newDate) {
+                  onChange(format(newDate, 'dd.MM.yyyy'));
+                }
+              }}
+              initialFocus
+              className={cn("p-3 pointer-events-auto")}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+    );
+  };
+
   const renderCVSectionForm = () => {
     switch (currentSection) {
       case 'doswiadczenie':
@@ -389,12 +507,12 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         </Button>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                         <div className="space-y-2">
                           <Label htmlFor={`company-${index}`}>Nazwa firmy</Label>
                           <Input
                             id={`company-${index}`}
-                            value={entry.company || ''}
+                            value={entry.company?.toString() || ''}
                             onChange={(e) => updateEntry('doswiadczenie', index, 'company', e.target.value)}
                             placeholder="np. ABC Sp. z o.o."
                           />
@@ -403,19 +521,50 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                           <Label htmlFor={`position-${index}`}>Stanowisko</Label>
                           <Input
                             id={`position-${index}`}
-                            value={entry.position || ''}
+                            value={entry.position?.toString() || ''}
                             onChange={(e) => updateEntry('doswiadczenie', index, 'position', e.target.value)}
                             placeholder="np. Specjalista ds. marketingu"
                           />
                         </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                        <DatePickerInput 
+                          label="Data rozpoczęcia" 
+                          value={entry.startDate?.toString() || ''} 
+                          onChange={(value) => updateEntry('doswiadczenie', index, 'startDate', value)}
+                          id={`start-date-${index}`}
+                        />
+                        
                         <div className="space-y-2">
-                          <Label htmlFor={`period-${index}`}>Okres zatrudnienia</Label>
-                          <Input
-                            id={`period-${index}`}
-                            value={entry.period || ''}
-                            onChange={(e) => updateEntry('doswiadczenie', index, 'period', e.target.value)}
-                            placeholder="np. 01.2020 - 06.2022"
-                          />
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor={`end-date-${index}`}>Data zakończenia</Label>
+                            <div className="flex items-center space-x-2">
+                              <Switch
+                                id={`is-current-${index}`}
+                                checked={!!entry.isCurrent}
+                                onCheckedChange={(checked) => {
+                                  updateEntry('doswiadczenie', index, 'isCurrent', checked);
+                                }}
+                              />
+                              <Label htmlFor={`is-current-${index}`} className="text-sm cursor-pointer">
+                                W trakcie
+                              </Label>
+                            </div>
+                          </div>
+                          
+                          {!entry.isCurrent ? (
+                            <DatePickerInput 
+                              label="" 
+                              value={entry.endDate?.toString() || ''} 
+                              onChange={(value) => updateEntry('doswiadczenie', index, 'endDate', value)}
+                              id={`end-date-${index}`}
+                            />
+                          ) : (
+                            <div className="h-10 flex items-center px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground">
+                              do teraz
+                            </div>
+                          )}
                         </div>
                       </div>
                       
@@ -476,7 +625,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         </Button>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                         <div className="space-y-2">
                           <Label htmlFor={`school-${index}`}>Nazwa uczelni/szkoły</Label>
                           <Input
@@ -495,21 +644,52 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                             placeholder="np. Informatyka, mgr"
                           />
                         </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                        <DatePickerInput 
+                          label="Data rozpoczęcia" 
+                          value={entry.startDate?.toString() || ''} 
+                          onChange={(value) => updateEntry('edukacja', index, 'startDate', value)}
+                          id={`edu-start-date-${index}`}
+                        />
+                        
                         <div className="space-y-2">
-                          <Label htmlFor={`period-${index}`}>Okres</Label>
-                          <Input
-                            id={`period-${index}`}
-                            value={entry.period?.toString() || ''}
-                            onChange={(e) => updateEntry('edukacja', index, 'period', e.target.value)}
-                            placeholder="np. 2015 - 2020"
-                          />
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor={`edu-end-date-${index}`}>Data zakończenia</Label>
+                            <div className="flex items-center space-x-2">
+                              <Switch
+                                id={`edu-is-current-${index}`}
+                                checked={!!entry.isCurrent}
+                                onCheckedChange={(checked) => {
+                                  updateEntry('edukacja', index, 'isCurrent', checked);
+                                }}
+                              />
+                              <Label htmlFor={`edu-is-current-${index}`} className="text-sm cursor-pointer">
+                                W trakcie
+                              </Label>
+                            </div>
+                          </div>
+                          
+                          {!entry.isCurrent ? (
+                            <DatePickerInput 
+                              label="" 
+                              value={entry.endDate?.toString() || ''} 
+                              onChange={(value) => updateEntry('edukacja', index, 'endDate', value)}
+                              id={`edu-end-date-${index}`}
+                            />
+                          ) : (
+                            <div className="h-10 flex items-center px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground">
+                              do teraz
+                            </div>
+                          )}
                         </div>
                       </div>
                       
                       <div className="space-y-2">
-                        <Label htmlFor={`details-${index}`}>Dodatkowe informacje</Label>
+                        <Label htmlFor={`edu-details-${index}`}>Dodatkowe informacje</Label>
                         <Textarea
-                          id={`details-${index}`}
+                          id={`edu-details-${index}`}
                           value={entry.details?.toString() || ''}
                           onChange={(e) => updateEntry('edukacja', index, 'details', e.target.value)}
                           placeholder="- Specjalizacja&#10;- Ważne projekty"
@@ -835,12 +1015,11 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     className="min-h-[200px] font-mono text-sm"
                   />
                 ) : field.type === 'date' ? (
-                  <Input
-                    id={field.id}
-                    type="date"
+                  <DatePickerInput
+                    label=""
                     value={formData[field.id] || ''}
-                    onChange={(e) => handleChange(field.id, e.target.value)}
-                    required={field.required}
+                    onChange={(value) => handleChange(field.id, value)}
+                    id={field.id}
                   />
                 ) : field.type === 'email' ? (
                   <Input
@@ -897,4 +1076,3 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 };
 
 export default DocumentEditor;
-

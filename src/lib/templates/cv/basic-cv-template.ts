@@ -34,7 +34,8 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
       <div style="background-color: #f9f9f9; padding: 15px 30px; display: flex; flex-wrap: wrap;">
         ${data.email ? `<div style="margin-right: 30px;"><strong>Email:</strong> ${data.email}</div>` : ''}
         ${data.phone ? `<div style="margin-right: 30px;"><strong>Telefon:</strong> ${data.phone}</div>` : ''}
-        ${data.address ? `<div><strong>Adres:</strong> ${data.address}</div>` : ''}
+        ${data.address ? `<div style="margin-right: 30px;"><strong>Adres:</strong> ${data.address}</div>` : ''}
+        ${data.dateOfBirth ? `<div><strong>Data urodzenia:</strong> ${data.dateOfBirth}</div>` : ''}
       </div>
       
       <!-- Main Content -->

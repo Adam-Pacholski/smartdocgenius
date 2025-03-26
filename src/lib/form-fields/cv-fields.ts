@@ -20,6 +20,14 @@ export const cvBaseFields: TemplateField[] = [
     section: SECTIONS.PERSONAL,
   },
   {
+    id: 'dateOfBirth',
+    label: 'Data urodzenia',
+    placeholder: 'RRRR-MM-DD',
+    type: 'date',
+    required: false,
+    section: SECTIONS.PERSONAL,
+  },
+  {
     id: 'position',
     label: 'Stanowisko',
     placeholder: 'Np. Frontend Developer',
