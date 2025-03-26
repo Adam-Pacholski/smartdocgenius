@@ -7,7 +7,7 @@ export interface TemplateField {
   required?: boolean;
   section: string;
   defaultValue?: string;
-  description?: string; // Added this property
+  description?: string;
 }
 
 export interface DocumentTemplate {
@@ -26,7 +26,7 @@ export interface DocumentType {
   icon: string;
   templates: DocumentTemplate[];
   comingSoon?: boolean;
-  displayComingSoon?: boolean; // Added this property to fix type errors
+  displayComingSoon?: boolean;
 }
 
 // Sekcje formularza

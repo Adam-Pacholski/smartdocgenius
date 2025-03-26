@@ -1232,4 +1232,3 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 };
 
 export default DocumentEditor;
-

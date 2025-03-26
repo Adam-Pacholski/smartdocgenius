@@ -1,41 +1,40 @@
 
 import * as React from "react"
-import * as ProgressPrimitive from "@radix-ui/react-progress"
 
 import { cn } from "@/lib/utils"
 
-interface ProgressProps extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
-  progressColor?: string;
+interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
+  value?: number
+  max?: number
+  progressColor?: string
 }
 
-const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
-  ProgressProps
->(({ className, value, progressColor, ...props }, ref) => (
-  <ProgressPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative h-4 w-full overflow-hidden rounded-full bg-secondary",
-      className
-    )}
-    {...props}
-  >
-    <ProgressPrimitive.Indicator
-      className="h-full w-full flex-1 transition-all duration-300 ease-in-out"
-      style={{ 
-        transform: `translateX(-${100 - (value || 0)}%)`,
-        backgroundColor: progressColor,
-        backgroundImage: !progressColor ? (
-          value && value > 80 ? 'linear-gradient(90deg, #8B5CF6, #D946EF)' :
-          value && value > 60 ? 'linear-gradient(90deg, #9b87f5, #8B5CF6)' :
-          value && value > 40 ? 'linear-gradient(90deg, #0EA5E9, #9b87f5)' :
-          value && value > 20 ? 'linear-gradient(90deg, #33C3F0, #0EA5E9)' :
-          'linear-gradient(90deg, #56CCF2, #33C3F0)'
-        ) : 'none'
-      }}
-    />
-  </ProgressPrimitive.Root>
-))
-Progress.displayName = ProgressPrimitive.Root.displayName
+const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
+  ({ className, value, max = 100, progressColor, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={max}
+        aria-valuenow={value}
+        className={cn(
+          "relative h-2 w-full overflow-hidden rounded-full bg-secondary",
+          className
+        )}
+        {...props}
+      >
+        <div
+          className="h-full w-full flex-1 bg-primary transition-all"
+          style={{
+            transform: `translateX(-${100 - (value || 0)}%)`,
+            backgroundColor: progressColor,
+          }}
+        />
+      </div>
+    )
+  }
+)
+Progress.displayName = "Progress"
 
 export { Progress }
