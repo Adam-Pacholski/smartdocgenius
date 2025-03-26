@@ -68,7 +68,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
         </div>
         
         <!-- Document Content -->
-        <div style="width: 70%; padding: 40px 20px 20px 20px;">
+        <div style="width: 70%; padding: 40px 20px 50px 20px;">
           <!-- Date -->
           <p style="text-align: right; margin-bottom: 20px;">${date}</p>
           
@@ -90,7 +90,7 @@ export const tealSidebarTemplate: DocumentTemplate = {
           <p style="margin-top: 5px;">${fullName}</p>
           
           <!-- Clause -->
-          <div style="margin-top: 40px;">
+          <div style="margin-top: 40px; padding-bottom: 30px;">
             <p style="font-size: 9px; color: #666;">${data.clause || ''}</p>
           </div>
         </div>

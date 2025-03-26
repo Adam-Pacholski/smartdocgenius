@@ -64,7 +64,7 @@ export const blueHeaderTemplate: DocumentTemplate = {
         </div>
         
         <!-- Document Body -->
-        <div style="padding: 20px 30px; background-color: #ffffff; position: relative; min-height: 800px; box-sizing: border-box;">
+        <div style="padding: 20px 30px 50px; background-color: #ffffff; position: relative; min-height: 800px; box-sizing: border-box;">
           <!-- Date -->
           <p style="margin-bottom: 15px;">${date}</p>
           
@@ -87,7 +87,7 @@ export const blueHeaderTemplate: DocumentTemplate = {
           <p style="margin-top: 5px; font-weight: bold;">${fullName}</p>
           
           <!-- Clause - Fixed positioning to avoid overlap -->
-          <div style="margin-top: 60px; padding-top: 40px;">
+          <div style="margin-top: 60px; padding-top: 40px; padding-bottom: 20px;">
             <p data-clause style="font-size: 10px; color: #666; text-align: justify;">
               ${data.clause || ''}
             </p>

@@ -40,6 +40,9 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         />
       </div>
       
+      {/* Improved bottom padding to prevent content from touching the edge */}
+      <div className="h-16"></div>
+      
       {/* Page break indicators */}
       {previewLoaded && <PageBreakIndicator pageCount={pageCount} />}
     </ScrollArea>

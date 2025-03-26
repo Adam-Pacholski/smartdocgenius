@@ -56,6 +56,21 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     clone.style.background = 'white';
     clone.style.transform = 'none'; // Remove any scaling that might be applied
     
+    // Add padding to the bottom of the document to ensure content doesn't touch the edge
+    const allDivs = clone.querySelectorAll('div');
+    allDivs.forEach(div => {
+      // Add bottom padding to main content containers
+      if (div.style.padding && !div.style.padding.includes('0px')) {
+        const currentPadding = div.style.padding.split(' ');
+        if (currentPadding.length === 4) { // If padding is specified as top right bottom left
+          currentPadding[2] = '40px'; // Increase bottom padding
+          div.style.padding = currentPadding.join(' ');
+        } else if (currentPadding.length === 1) { // If padding is specified as a single value
+          div.style.paddingBottom = '40px';
+        }
+      }
+    });
+    
     tempContainer.appendChild(clone);
     document.body.appendChild(tempContainer);
     
@@ -78,7 +93,19 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
           x: 0,
           y: yStart,
           scrollY: -yStart,
-          height: 1123 // A4 height at 96 DPI for display
+          height: 1123, // A4 height at 96 DPI for display
+          // Add a small margin to prevent content touching the bottom edge
+          onclone: (document, element) => {
+            const containers = element.querySelectorAll('div[style*="padding"]');
+            containers.forEach(container => {
+              if (container instanceof HTMLElement) {
+                // Ensure adequate bottom padding
+                if (!container.style.paddingBottom || parseInt(container.style.paddingBottom) < 40) {
+                  container.style.paddingBottom = '40px';
+                }
+              }
+            });
+          }
         });
         
         // Add a new page for each page after the first
