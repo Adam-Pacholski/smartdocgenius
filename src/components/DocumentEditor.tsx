@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -76,15 +77,13 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
   onNext,
   currentSection,
 }) => {
-  const [multiEntries, setMultiEntries] = useState<Record<string, Array<Record<string, string | number | boolean>>>>(
-    {
-      doswiadczenie: [],
-      edukacja: [],
-      umiejetnosci: [],
-      jezyki: [],
-      zainteresowania: [],
-    }
-  );
+  const [multiEntries, setMultiEntries] = useState<Record<string, Array<Record<string, string | number | boolean>>>>({
+    doswiadczenie: [],
+    edukacja: [],
+    umiejetnosci: [],
+    jezyki: [],
+    zainteresowania: [],
+  });
 
   useEffect(() => {
     setMultiEntries({
@@ -545,7 +544,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                               <Switch
                                 id={`is-current-${index}`}
                                 checked={!!entry.isCurrent}
-                                onCheckedChange={(checked) => {
+                                onCheckedChange={(checked: boolean) => {
                                   updateEntry('doswiadczenie', index, 'isCurrent', checked);
                                 }}
                               />
@@ -663,7 +662,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
                               <Switch
                                 id={`edu-is-current-${index}`}
                                 checked={!!entry.isCurrent}
-                                onCheckedChange={(checked) => {
+                                onCheckedChange={(checked: boolean) => {
                                   updateEntry('edukacja', index, 'isCurrent', checked);
                                 }}
                               />
@@ -883,3 +882,356 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
               Dodaj język
             </Button>
           </div>
+        );
+        
+      case 'zainteresowania':
+        return (
+          <div className="space-y-4">
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(event) => handleDragEnd(event, 'zainteresowania')}
+              modifiers={[restrictToVerticalAxis]}
+            >
+              <SortableContext
+                items={multiEntries.zainteresowania.map((_, index) => `interest-${index}`)}
+                strategy={verticalListSortingStrategy}
+              >
+                {multiEntries.zainteresowania.map((entry, index) => (
+                  <SortableItem key={`interest-${index}`} id={`interest-${index}`}>
+                    <div className="p-4 border rounded-md bg-gray-50 mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium">Zainteresowanie {index + 1}</h4>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => removeEntry('zainteresowania', index)}
+                          className="h-8 text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          Usuń
+                        </Button>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor={`interest-${index}`}>Zainteresowanie</Label>
+                        <Input
+                          id={`interest-${index}`}
+                          value={entry.interest || ''}
+                          onChange={(e) => updateEntry('zainteresowania', index, 'interest', e.target.value)}
+                          placeholder="np. Fotografia"
+                        />
+                      </div>
+                    </div>
+                  </SortableItem>
+                ))}
+              </SortableContext>
+            </DndContext>
+            
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="w-full mt-2" 
+              onClick={() => addEntry('zainteresowania')}
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Dodaj zainteresowanie
+            </Button>
+          </div>
+        );
+        
+      default:
+        // For other sections, render regular inputs
+        return (
+          <div className="space-y-4">
+            {sectionFields.map((field) => {
+              switch (field.type) {
+                case 'text':
+                case 'email':
+                case 'tel':
+                  return (
+                    <div key={field.id} className="space-y-2">
+                      <Label htmlFor={field.id}>{field.label}</Label>
+                      <Input
+                        id={field.id}
+                        placeholder={field.placeholder}
+                        value={formData[field.id] || ''}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        type={field.type}
+                      />
+                      {field.description && (
+                        <p className="text-sm text-muted-foreground">{field.description}</p>
+                      )}
+                    </div>
+                  );
+                case 'textarea':
+                  return (
+                    <div key={field.id} className="space-y-2">
+                      <Label htmlFor={field.id}>{field.label}</Label>
+                      <Textarea
+                        id={field.id}
+                        placeholder={field.placeholder}
+                        value={formData[field.id] || ''}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        className="min-h-[150px]"
+                      />
+                      {field.description && (
+                        <p className="text-sm text-muted-foreground">{field.description}</p>
+                      )}
+                    </div>
+                  );
+                case 'date':
+                  return (
+                    <DatePickerInput
+                      key={field.id}
+                      id={field.id}
+                      label={field.label}
+                      value={formData[field.id] || ''}
+                      onChange={(value) => handleChange(field.id, value)}
+                    />
+                  );
+                case 'photo':
+                  return (
+                    <div key={field.id} className="space-y-2">
+                      <Label htmlFor={field.id}>{field.label}</Label>
+                      <div className="mt-1 flex items-center">
+                        {formData.photo ? (
+                          <div className="relative">
+                            <img
+                              src={formData.photo}
+                              alt="Profile"
+                              className="h-24 w-24 object-cover rounded-md"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                              onClick={() => handleChange('photo', '')}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <label
+                            htmlFor="photo-upload"
+                            className="cursor-pointer flex flex-col items-center justify-center h-24 w-24 border-2 border-dashed border-gray-300 rounded-md hover:border-primary transition-colors"
+                          >
+                            <Upload className="h-6 w-6 text-muted-foreground" />
+                            <span className="mt-1 text-xs text-muted-foreground">Dodaj zdjęcie</span>
+                            <input
+                              id="photo-upload"
+                              name="photo"
+                              type="file"
+                              className="sr-only"
+                              accept="image/*"
+                              onChange={handlePhotoUpload}
+                            />
+                          </label>
+                        )}
+                      </div>
+                      {field.description && (
+                        <p className="text-sm text-muted-foreground">{field.description}</p>
+                      )}
+                    </div>
+                  );
+                case 'color':
+                  return (
+                    <div key={field.id} className="space-y-2">
+                      <Label htmlFor={field.id}>{field.label}</Label>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="color"
+                          id={field.id}
+                          value={formData[field.id] || field.defaultValue || '#000000'}
+                          onChange={(e) => handleChange(field.id, e.target.value)}
+                          className="w-14 h-10 cursor-pointer rounded border"
+                        />
+                        <span className="text-sm font-medium">{formData[field.id] || field.defaultValue}</span>
+                      </div>
+                      {field.description && (
+                        <p className="text-sm text-muted-foreground">{field.description}</p>
+                      )}
+                    </div>
+                  );
+                default:
+                  return null;
+              }
+            })}
+          </div>
+        );
+    }
+  };
+
+  const renderBasicForm = () => (
+    <Card className="animate-fade-in">
+      <CardHeader>
+        <CardTitle>{sectionTitles[currentSection]}</CardTitle>
+        <CardDescription>{sectionDescriptions[currentSection]}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {currentSection.includes('doswiadczenie') || 
+         currentSection.includes('edukacja') || 
+         currentSection.includes('umiejetnosci') || 
+         currentSection.includes('jezyki') || 
+         currentSection.includes('zainteresowania') ? (
+          renderCVSectionForm()
+        ) : (
+          <div className="space-y-4">
+            {sectionFields.map((field) => {
+              switch (field.type) {
+                case 'text':
+                case 'email':
+                case 'tel':
+                  return (
+                    <div key={field.id} className="space-y-2">
+                      <Label htmlFor={field.id}>{field.label}</Label>
+                      <Input
+                        id={field.id}
+                        placeholder={field.placeholder}
+                        value={formData[field.id] || ''}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        type={field.type}
+                      />
+                      {field.description && (
+                        <p className="text-sm text-muted-foreground">{field.description}</p>
+                      )}
+                    </div>
+                  );
+                case 'textarea':
+                  return (
+                    <div key={field.id} className="space-y-2">
+                      <Label htmlFor={field.id}>{field.label}</Label>
+                      <Textarea
+                        id={field.id}
+                        placeholder={field.placeholder}
+                        value={formData[field.id] || ''}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        className="min-h-[150px]"
+                      />
+                      {field.description && (
+                        <p className="text-sm text-muted-foreground">{field.description}</p>
+                      )}
+                    </div>
+                  );
+                case 'date':
+                  return (
+                    <DatePickerInput
+                      key={field.id}
+                      id={field.id}
+                      label={field.label}
+                      value={formData[field.id] || ''}
+                      onChange={(value) => handleChange(field.id, value)}
+                    />
+                  );
+                case 'photo':
+                  return (
+                    <div key={field.id} className="space-y-2">
+                      <Label htmlFor={field.id}>{field.label}</Label>
+                      <div className="mt-1 flex items-center">
+                        {formData.photo ? (
+                          <div className="relative">
+                            <img
+                              src={formData.photo}
+                              alt="Profile"
+                              className="h-24 w-24 object-cover rounded-md"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                              onClick={() => handleChange('photo', '')}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <label
+                            htmlFor="photo-upload"
+                            className="cursor-pointer flex flex-col items-center justify-center h-24 w-24 border-2 border-dashed border-gray-300 rounded-md hover:border-primary transition-colors"
+                          >
+                            <Upload className="h-6 w-6 text-muted-foreground" />
+                            <span className="mt-1 text-xs text-muted-foreground">Dodaj zdjęcie</span>
+                            <input
+                              id="photo-upload"
+                              name="photo"
+                              type="file"
+                              className="sr-only"
+                              accept="image/*"
+                              onChange={handlePhotoUpload}
+                            />
+                          </label>
+                        )}
+                      </div>
+                      {field.description && (
+                        <p className="text-sm text-muted-foreground">{field.description}</p>
+                      )}
+                    </div>
+                  );
+                case 'color':
+                  return (
+                    <div key={field.id} className="space-y-2">
+                      <Label htmlFor={field.id}>{field.label}</Label>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="color"
+                          id={field.id}
+                          value={formData[field.id] || field.defaultValue || '#000000'}
+                          onChange={(e) => handleChange(field.id, e.target.value)}
+                          className="w-14 h-10 cursor-pointer rounded border"
+                        />
+                        <span className="text-sm font-medium">{formData[field.id] || field.defaultValue}</span>
+                      </div>
+                      {field.description && (
+                        <p className="text-sm text-muted-foreground">{field.description}</p>
+                      )}
+                    </div>
+                  );
+                default:
+                  return null;
+              }
+            })}
+          </div>
+        )}
+      </CardContent>
+      <CardFooter className="flex flex-col sm:flex-row gap-2 border-t pt-6">
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="w-full sm:w-auto" 
+          onClick={onBack}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Wstecz
+        </Button>
+        <div className="flex-1 flex justify-end gap-2">
+          {onNext && (
+            <Button 
+              type="button" 
+              className="w-full sm:w-auto" 
+              onClick={onNext}
+            >
+              Dalej
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          )}
+          {!onNext && (
+            <Button 
+              type="button" 
+              className="w-full sm:w-auto" 
+              onClick={onExport}
+            >
+              Pobierz PDF
+              <FileDown className="ml-2 h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </CardFooter>
+    </Card>
+  );
+
+  return renderBasicForm();
+};
+
+export default DocumentEditor;
