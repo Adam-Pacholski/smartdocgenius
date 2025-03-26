@@ -1,19 +1,16 @@
-
 /**
- * Minimalist Icons Template (Minimalistyczny z ikonami)
+ * Minimalist Icons Template
  * 
  * Description:
- * A minimalist template with an emphasis on clean design and informative icons.
- * Features a subtle border under the header and contact information with icons.
+ * A clean and minimalist template that uses icons to represent contact information.
+ * It focuses on simplicity and readability, making it suitable for various professional contexts.
  * 
  * Structure:
- * - Clean header with name and position
- * - Optional photo at the top right
- * - Contact information with colorful icons in the top section
- * - Colored underline separator
+ * - Header with name and job title
+ * - Contact information displayed using icons
+ * - Main content area for the letter body
  * 
  * Customization Points:
- * - primaryColor: Controls the accent color for icons and the header underline (default: #c0392b)
  * - fontFamily: Controls the font used throughout the document
  * - fontSize: Controls the base font size 
  * 
@@ -23,72 +20,65 @@
 
 import { DocumentTemplate } from '../types/document-types';
 import { allCoverLetterFields } from '../form-fields/cover-letter-fields';
-import { prepareTemplateData, getRecipientSection, getClauseSection } from './template-utils';
+import { prepareTemplateData, getRecipientSection } from './template-utils';
 
 export const minimalistIconsTemplate: DocumentTemplate = {
   id: 'minimalist-icons',
-  name: 'Minimalistyczny z ikonami',
-  description: 'Prosty układ z ikonami kontaktowymi w nagłówku',
+  name: 'Minimalistyczne ikony',
+  description: 'Czysty i minimalistyczny szablon z ikonami dla danych kontaktowych',
   thumbnail: 'lm-minimalist-icons.png',
   fields: allCoverLetterFields,
   template: (data, config = {}) => {
     // Prepare data and styles
     const {
-      firstName,
-      lastName,
-      fullNameUpper,
+      fullName,
       position,
       date,
-      primaryColor,
       fontFamily,
       fontSize
     } = prepareTemplateData(data, config);
     
     return `
-      <div style="max-width: 21cm; margin: 0; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333;">
-        <div style="padding: 30px 30px 80px 30px; min-height: 800px; position: relative;">
-          <!-- Header -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">
-            <div>
-              <h1 style="margin: 0; color: ${primaryColor}; font-size: 28px;">${fullNameUpper}</h1>
-              <p style="margin: 5px 0 0; color: #666; text-transform: uppercase;">${position}</p>
-            </div>
-            
-            ${data.photo ? `
-              <div style="width: 120px; height: 150px; overflow: hidden;">
-                <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" alt="${fullNameUpper}" />
-              </div>
-            ` : ''}
+      <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.4; color: #333; box-sizing: border-box;">
+      
+        <!-- Header -->
+        <div style="padding: 30px 20px; border-bottom: 2px solid #ddd;">
+          <h1 style="margin: 0; font-size: 28px; font-weight: bold; color: #1e293b;">${fullName}</h1>
+          <p style="margin: 5px 0; font-size: 16px; color: #475569;">${position}</p>
+          
+          <!-- Contact Information -->
+          <div style="margin-top: 20px; font-size: 14px; color: #64748b;">
+            ${data.email ? `<p style="margin: 5px 0;"><span style="margin-right: 5px;">✉</span> ${data.email}</p>` : ''}
+            ${data.phone ? `<p style="margin: 5px 0;"><span style="margin-right: 5px;">✆</span> ${data.phone}</p>` : ''}
+            ${data.address ? `<p style="margin: 5px 0;"><span style="margin-right: 5px;">📍</span> ${data.address}</p>` : ''}
           </div>
-          
-          <!-- Contact Info Icons -->
-          <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; margin: 15px 0 20px 0; color: #666; font-size: 13px;">
-            ${data.email ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">✉</span> ${data.email}</span>` : ''}
-            ${data.phone ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">✆</span> ${data.phone}</span>` : ''}
-            ${data.birthDate ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">📅</span> ${data.birthDate}</span>` : ''}
-            ${data.address ? `<span style="margin-left: 15px; margin-bottom: 5px; word-break: break-all;"><span style="color: ${primaryColor}; font-size: 16px;">📍</span> ${data.address}</span>` : ''}
-          </div>
-          
-          <!-- Date -->
-          <p style="margin: 20px 0;">${date}</p>
-          
-          <!-- Recipient -->
-          ${getRecipientSection(data)}
-          
-          <!-- Greeting -->
-          <p style="margin-bottom: 15px;">${data.opening || 'Szanowni Państwo,'}</p>
-          
-          <!-- Content -->
-          <div style="text-align: justify;">
-            <p style="white-space: pre-line; margin-bottom: 20px;">${data.body || ''}</p>
-          </div>
-          
-          <!-- Closing -->
-          <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
-          <p style="margin-top: 5px;">${firstName} ${lastName}</p>
-          
-          <!-- Clause -->
-          ${getClauseSection(data)}
+        </div>
+      
+      <!-- Document Body -->
+      <div style="padding: 40px 20px; position: relative; min-height: 800px;">
+        <!-- Date -->
+        <p style="text-align: right; margin-bottom: 20px;">${date}</p>
+        
+        <!-- Recipient -->
+        ${getRecipientSection(data)}
+        
+        <!-- Subject line -->
+        ${data.subject ? `<p style="margin: 20px 0; font-weight: bold;">Temat: ${data.subject}</p>` : ''}
+        
+        <!-- Content -->
+        <p style="margin-bottom: 15px;">${data.opening || 'Szanowni Państwo,'}</p>
+        
+        <div style="text-align: justify;">
+          <p style="white-space: pre-line; margin-bottom: 20px;">${data.body || ''}</p>
+        </div>
+        
+        <!-- Closing -->
+        <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
+        <p style="margin-top: 5px; font-weight: bold;">${fullName}</p>
+        
+        <!-- Clause -->
+        <div style="margin-top: 60px;">
+          <p style="font-size: 9px; color: #666; text-align: justify;">${data.clause || ''}</p>
         </div>
       </div>
     `;

@@ -238,15 +238,20 @@ export const prepareTemplateData = (data: Record<string, string>, config: Record
   };
 };
 
-export const getRecipientSection = (data: Record<string, string>): string => {
+export function getRecipientSection(data: Record<string, string>): string {
+  if (!data.recipientCompany && !data.recipientName && !data.recipientPosition && !data.recipientAddress) {
+    return '';
+  }
+  
   return `
-    <div style="margin-bottom: 20px;">
-      ${data.recipientName ? `<p style="margin: 0 0 3px;">${data.recipientName}</p>` : ''}
-      ${data.recipientCompany ? `<p style="margin: 0 0 3px;">${data.recipientCompany}</p>` : ''}
-      ${data.recipientAddress ? `<p style="margin: 0 0 3px;">${data.recipientAddress}</p>` : ''}
+    <div style="margin-bottom: 25px;">
+      ${data.recipientName ? `<p style="margin: 0 0 5px;">${data.recipientName}</p>` : ''}
+      ${data.recipientPosition ? `<p style="margin: 0 0 5px;">${data.recipientPosition}</p>` : ''}
+      ${data.recipientCompany ? `<p style="margin: 0 0 5px;"><strong>${data.recipientCompany}</strong></p>` : ''}
+      ${data.recipientAddress ? `<p style="margin: 0 0 5px;">${data.recipientAddress}</p>` : ''}
     </div>
   `;
-};
+}
 
 export const getClauseSection = (data: Record<string, string>): string => {
   return `

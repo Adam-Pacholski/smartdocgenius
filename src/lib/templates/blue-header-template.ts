@@ -69,6 +69,9 @@ export const blueHeaderTemplate: DocumentTemplate = {
           <!-- Recipient -->
           ${getRecipientSection(data)}
           
+          <!-- Subject line -->
+          ${data.subject ? `<p style="margin: 20px 0; font-weight: bold;">Temat: ${data.subject}</p>` : ''}
+          
           <!-- Greeting -->
           <p style="margin-bottom: 15px;">${data.opening || 'Szanowni Państwo,'}</p>
           
