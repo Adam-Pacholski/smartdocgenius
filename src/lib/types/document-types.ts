@@ -1,8 +1,9 @@
+
 export interface TemplateField {
   id: string;
   label: string;
   placeholder: string;
-  type: 'text' | 'textarea' | 'date' | 'email' | 'tel' | 'photo';
+  type: 'text' | 'textarea' | 'date' | 'email' | 'tel' | 'photo' | 'color';
   required?: boolean;
   section: string;
   defaultValue?: string;
