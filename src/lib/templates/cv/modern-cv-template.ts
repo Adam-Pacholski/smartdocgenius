@@ -12,7 +12,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
-  const dateOfBirth = data.dateOfBirth || '';
+  const dateOfBirth = data.dateOfBirth || data.birthDate || '';
   
   console.log('Modern CV data being rendered:', data);
   
@@ -47,7 +47,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
           ${data.umiejetnosci ? `
             <section style="margin-bottom: 30px;">
               <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Umiejętności</h2>
-              ${formatSkillsSection(data.umiejetnosci, data.skillsProgressColor || primaryColor)}
+              ${formatSkillsSection(data.umiejetnosci, config.skillsProgressColor || primaryColor)}
             </section>
           ` : ''}
           

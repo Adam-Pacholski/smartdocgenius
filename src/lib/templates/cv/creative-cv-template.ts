@@ -12,7 +12,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
-  const dateOfBirth = data.dateOfBirth || '';
+  const dateOfBirth = data.dateOfBirth || data.birthDate || '';
   
   console.log('Creative CV data being rendered:', data);
   
@@ -48,7 +48,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
                 Umiejętności
                 <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
               </h2>
-              ${formatSkillsSection(data.umiejetnosci, data.skillsProgressColor || primaryColor)}
+              ${formatSkillsSection(data.umiejetnosci, config.skillsProgressColor || primaryColor)}
             </div>
           ` : ''}
           

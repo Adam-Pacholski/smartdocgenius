@@ -12,7 +12,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
-  const dateOfBirth = data.dateOfBirth || '';
+  const dateOfBirth = data.dateOfBirth || data.birthDate || '';
   
   console.log('Professional CV data being rendered:', data);
   
@@ -71,7 +71,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
               <h2 style="color: ${primaryColor}; font-size: 20px; margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid #eee;">
                 UMIEJĘTNOŚCI
               </h2>
-              ${formatSkillsSection(data.umiejetnosci, data.skillsProgressColor || primaryColor)}
+              ${formatSkillsSection(data.umiejetnosci, config.skillsProgressColor || primaryColor)}
             </section>
           ` : ''}
           

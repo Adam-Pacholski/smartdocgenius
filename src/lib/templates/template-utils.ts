@@ -1,4 +1,3 @@
-
 export const formatExperienceSection = (experienceText: string): string => {
   if (!experienceText) return '';
   
@@ -208,24 +207,22 @@ export const parseMultiEntryData = (text: string): Array<Record<string, string>>
   return entries;
 };
 
-// Add the missing functions for cover letter templates
 export const prepareTemplateData = (data: Record<string, string>, config: Record<string, any> = {}): any => {
-  // Default config values
   const primaryColor = config.primaryColor || '#3498db';
   const fontFamily = config.fontFamily || 'Arial, sans-serif';
   const fontSize = config.fontSize || '12px';
   
-  // Format data
   const firstName = data.firstName || '';
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
   const fullNameUpper = fullName.toUpperCase();
   const position = data.position || '';
   
-  // Format date
   const today = new Date();
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
   const date = data.date || today.toLocaleDateString('pl-PL', options);
+  
+  const birthDate = data.dateOfBirth || data.birthDate || '';
   
   return {
     firstName,
@@ -234,6 +231,7 @@ export const prepareTemplateData = (data: Record<string, string>, config: Record
     fullNameUpper,
     position,
     date,
+    birthDate,
     primaryColor,
     fontFamily,
     fontSize

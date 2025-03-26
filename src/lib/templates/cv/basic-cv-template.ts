@@ -12,7 +12,7 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
-  const dateOfBirth = data.dateOfBirth || '';
+  const dateOfBirth = data.dateOfBirth || data.birthDate || '';
   
   console.log('CV data being rendered:', data);
   
