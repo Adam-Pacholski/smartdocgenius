@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { FileText, User, MessageSquare } from 'lucide-react';
+import { FileText, User, MessageSquare, PlusCircle } from 'lucide-react';
 import documentTypes from '@/lib/templates';
 import { toast } from '@/components/ui/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -19,12 +19,12 @@ const DocumentTypeSelector: React.FC<DocumentTypeSelectorProps> = ({
   const navigate = useNavigate();
 
   const handleTypeSelect = (typeId: string) => {
-    if (typeId === 'custom-document') {
-      navigate('/kontakt');
+    const docType = documentTypes.find(dt => dt.id === typeId);
+    
+    if (docType?.redirectTo) {
+      navigate(docType.redirectTo);
       return;
     }
-    
-    const docType = documentTypes.find(dt => dt.id === typeId);
     
     if (docType?.comingSoon) {
       toast({
@@ -36,15 +36,6 @@ const DocumentTypeSelector: React.FC<DocumentTypeSelectorProps> = ({
     }
     
     onSelectType(typeId);
-  };
-
-  // Add custom document type
-  const customDocumentType = {
-    id: 'custom-document',
-    name: 'Inny dokument',
-    description: 'Masz pomysł na dokument? Napisz do nas, a my go dodamy!',
-    icon: 'message-square',
-    templates: []
   };
 
   return (
@@ -77,40 +68,21 @@ const DocumentTypeSelector: React.FC<DocumentTypeSelectorProps> = ({
               <div className="bg-primary/10 p-2 rounded-full">
                 {type.icon === 'file-text' && <FileText className="h-5 w-5 text-primary" />}
                 {type.icon === 'user' && <User className="h-5 w-5 text-primary" />}
+                {type.icon === 'plus-circle' && <PlusCircle className="h-5 w-5 text-primary" />}
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <span className="text-sm text-muted-foreground">
-              {type.templates.length} {type.templates.length === 1 ? 'szablon' : 
-                type.templates.length < 5 ? 'szablony' : 'szablonów'}
+              {type.redirectTo 
+                ? "Skontaktuj się z nami" 
+                : `${type.templates.length} ${type.templates.length === 1 ? 'szablon' : 
+                  type.templates.length < 5 ? 'szablony' : 'szablonów'}`
+              }
             </span>
           </CardContent>
         </Card>
       ))}
-
-      {/* Custom document card */}
-      <Card 
-        className="cursor-pointer transition-all duration-300 transform hover:scale-102 hover:-translate-y-1 shadow-subtle hover:shadow-elegant"
-        onClick={() => handleTypeSelect('custom-document')}
-      >
-        <CardHeader className="pb-2">
-          <div className="flex items-start justify-between">
-            <div>
-              <CardTitle className="text-lg">{customDocumentType.name}</CardTitle>
-              <CardDescription className="mt-1.5">{customDocumentType.description}</CardDescription>
-            </div>
-            <div className="bg-primary/10 p-2 rounded-full">
-              <MessageSquare className="h-5 w-5 text-primary" />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <span className="text-sm text-muted-foreground">
-            Skontaktuj się z nami
-          </span>
-        </CardContent>
-      </Card>
     </div>
   );
 };

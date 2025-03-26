@@ -27,6 +27,7 @@ export interface DocumentType {
   templates: DocumentTemplate[];
   comingSoon?: boolean;
   displayComingSoon?: boolean;
+  redirectTo?: string;
 }
 
 // Sekcje formularza
