@@ -12,6 +12,7 @@
  * - Main content area for the letter body
  * 
  * Customization Points:
+ * - primaryColor: Controls the color of the divider line and icons
  * - fontFamily: Controls the font used throughout the document
  * - fontSize: Controls the base font size 
  * 
@@ -35,28 +36,32 @@ export const minimalistIconsTemplate: DocumentTemplate = {
       fullName,
       position,
       date,
+      primaryColor,
       fontFamily,
       fontSize
     } = prepareTemplateData(data, config);
     
     return `
-      <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.4; color: #333; box-sizing: border-box;">
+      <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 40px; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.4; color: #333; box-sizing: border-box;">
       
         <!-- Header -->
-        <div style="padding: 30px 20px; border-bottom: 2px solid #ddd;">
+        <div style="padding-bottom: 20px;">
           <h1 style="margin: 0; font-size: 28px; font-weight: bold; color: #1e293b;">${fullName}</h1>
           <p style="margin: 5px 0; font-size: 16px; color: #475569;">${position}</p>
           
           <!-- Contact Information -->
-          <div style="margin-top: 20px; font-size: 14px; color: #64748b;">
-            ${data.email ? `<p style="margin: 5px 0;"><span style="margin-right: 5px;">✉</span> ${data.email}</p>` : ''}
-            ${data.phone ? `<p style="margin: 5px 0;"><span style="margin-right: 5px;">✆</span> ${data.phone}</p>` : ''}
-            ${data.address ? `<p style="margin: 5px 0;"><span style="margin-right: 5px;">📍</span> ${data.address}</p>` : ''}
+          <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px; font-size: 14px; color: #64748b;">
+            ${data.email ? `<p style="margin: 0;"><span style="color: ${primaryColor}; margin-right: 5px;">✉</span> ${data.email}</p>` : ''}
+            ${data.phone ? `<p style="margin: 0;"><span style="color: ${primaryColor}; margin-right: 5px;">✆</span> ${data.phone}</p>` : ''}
+            ${data.address ? `<p style="margin: 0;"><span style="color: ${primaryColor}; margin-right: 5px;">📍</span> ${data.address}</p>` : ''}
           </div>
         </div>
+        
+        <!-- Divider line with primary color -->
+        <div style="border-bottom: 2px solid ${primaryColor}; margin: 0 0 30px 0;"></div>
       
       <!-- Document Body -->
-      <div style="padding: 40px 20px; position: relative; min-height: 800px;">
+      <div style="position: relative;">
         <!-- Date -->
         <p style="text-align: right; margin-bottom: 20px;">${date}</p>
         
