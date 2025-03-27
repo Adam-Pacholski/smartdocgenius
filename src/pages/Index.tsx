@@ -38,8 +38,8 @@ const Index: React.FC = () => {
   // Hero background style based on theme
   const bgStyle = theme === 'dark' 
     ? { 
-        backgroundColor: '#1c2431', 
-        background: 'radial-gradient(125% 125% at 50% 10%, #1c2431 40%, #151c28 100%)' 
+        backgroundColor: '#0F1624', 
+        background: 'radial-gradient(125% 125% at 50% 10%, #0F1624 40%, #091018 100%)' 
       }
     : { 
         backgroundColor: 'white', 
@@ -80,7 +80,7 @@ const Index: React.FC = () => {
         
         <div 
           className="absolute inset-0 -z-10 h-full w-full"
-          style={mounted ? bgStyle : { backgroundColor: theme === 'dark' ? '#1c2431' : 'white' }}
+          style={mounted ? bgStyle : { backgroundColor: theme === 'dark' ? '#0F1624' : 'white' }}
         />
       </section>
       
