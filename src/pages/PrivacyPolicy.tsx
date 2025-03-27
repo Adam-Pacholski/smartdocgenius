@@ -2,51 +2,54 @@
 import React from 'react';
 import Layout from '@/components/Layout';
 import { Separator } from '@/components/ui/separator';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const PrivacyPolicy: React.FC = () => {
+  const { t } = useLanguage();
+  
   return (
     <Layout>
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Polityka Prywatności i Plików Cookie</h1>
+        <h1 className="text-3xl font-bold mb-6">{t('privacy.title')}</h1>
         
         <div className="space-y-8">
           <section>
-            <h2 className="text-xl font-semibold mb-3">1. Informacje ogólne</h2>
+            <h2 className="text-xl font-semibold mb-3">{t('privacy.section1.title')}</h2>
             <p className="text-muted-foreground">
-              Niniejsza Polityka Prywatności i Plików Cookie określa zasady przetwarzania i ochrony danych osobowych oraz wykorzystywania plików cookie w ramach serwisu APDocs.
+              {t('privacy.section1.content')}
             </p>
           </section>
           
           <Separator />
           
           <section>
-            <h2 className="text-xl font-semibold mb-3">2. Administrator danych</h2>
+            <h2 className="text-xl font-semibold mb-3">{t('privacy.section2.title')}</h2>
             <p className="text-muted-foreground">
-              Administratorem danych osobowych jest AP-Development.eu.
+              {t('privacy.section2.content')}
             </p>
           </section>
           
           <Separator />
           
           <section>
-            <h2 className="text-xl font-semibold mb-3">3. Pliki Cookie</h2>
+            <h2 className="text-xl font-semibold mb-3">{t('privacy.section3.title')}</h2>
             <p className="text-muted-foreground mb-4">
-              Serwis korzysta z plików cookie w celu personalizacji treści oraz analizowania ruchu na stronie.
+              {t('privacy.section3.content')}
             </p>
-            <h3 className="text-lg font-medium mb-2">Czym są pliki cookie?</h3>
+            <h3 className="text-lg font-medium mb-2">{t('privacy.section3.what.title')}</h3>
             <p className="text-muted-foreground mb-4">
-              Pliki cookie to małe pliki tekstowe, które są przechowywane na urządzeniu użytkownika podczas przeglądania stron internetowych. Służą one do zapamiętywania preferencji użytkownika oraz ułatwiają korzystanie z witryny.
+              {t('privacy.section3.what.content')}
             </p>
-            <h3 className="text-lg font-medium mb-2">Rodzaje wykorzystywanych plików cookie:</h3>
+            <h3 className="text-lg font-medium mb-2">{t('privacy.section3.types.title')}</h3>
             <ul className="list-disc pl-6 text-muted-foreground space-y-2">
               <li>
-                <strong>Niezbędne pliki cookie</strong> - konieczne do prawidłowego funkcjonowania serwisu
+                <strong>{t('privacy.section3.types.necessary')}</strong>
               </li>
               <li>
-                <strong>Funkcjonalne pliki cookie</strong> - umożliwiające zapamiętywanie preferowanych ustawień użytkownika
+                <strong>{t('privacy.section3.types.functional')}</strong>
               </li>
               <li>
-                <strong>Analityczne pliki cookie</strong> - służące do analizy sposobu korzystania z serwisu
+                <strong>{t('privacy.section3.types.analytical')}</strong>
               </li>
             </ul>
           </section>
@@ -54,21 +57,21 @@ const PrivacyPolicy: React.FC = () => {
           <Separator />
           
           <section>
-            <h2 className="text-xl font-semibold mb-3">4. Zarządzanie plikami cookie</h2>
+            <h2 className="text-xl font-semibold mb-3">{t('privacy.section4.title')}</h2>
             <p className="text-muted-foreground mb-4">
-              Użytkownik może samodzielnie zarządzać plikami cookie, zmieniając ustawienia przeglądarki internetowej. Ograniczenie stosowania plików cookie może wpłynąć na funkcjonalność serwisu.
+              {t('privacy.section4.content1')}
             </p>
             <p className="text-muted-foreground">
-              Brak zmiany ustawień przeglądarki oznacza akceptację dla stosowanych plików cookie.
+              {t('privacy.section4.content2')}
             </p>
           </section>
           
           <Separator />
           
           <section>
-            <h2 className="text-xl font-semibold mb-3">5. Kontakt</h2>
+            <h2 className="text-xl font-semibold mb-3">{t('privacy.section5.title')}</h2>
             <p className="text-muted-foreground">
-              W przypadku pytań dotyczących Polityki Prywatności i Plików Cookie, prosimy o kontakt pod adresem: info@ap-development.eu
+              {t('privacy.section5.content')}
             </p>
           </section>
         </div>

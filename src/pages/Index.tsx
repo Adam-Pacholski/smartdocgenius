@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, FileText, Sparkles, CheckCircle } from 'lucide-react';
 import Layout from '@/components/Layout';
-import RoadmapSection from '@/components/RoadmapSection';
 import { Separator } from '@/components/ui/separator';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -117,8 +116,7 @@ const Index: React.FC = () => {
         </div>
       </section>
       
-      {/* Roadmap section */}
-      <RoadmapSection />
+      {/* RoadmapSection removed */}
       
       {/* CTA section */}
       <section className="py-12 md:py-24 bg-section-bg-accent">

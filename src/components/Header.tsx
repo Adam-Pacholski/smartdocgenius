@@ -29,9 +29,6 @@ const Header: React.FC = () => {
         <div className="hidden md:flex items-center space-x-4">
           <LanguageSwitcher />
           <ThemeToggle />
-          <Link to="/editor">
-            <Button size="sm">{t('button.start')}</Button>
-          </Link>
         </div>
         <button
           className="ml-2 md:hidden"
