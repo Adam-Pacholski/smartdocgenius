@@ -48,8 +48,18 @@ export const minimalistIconsTemplate: DocumentTemplate = {
       
         <!-- Header -->
         <div style="padding-bottom: 20px;">
-          <h1 style="margin: 0; font-size: 28px; font-weight: bold; color: #1e293b;">${fullName}</h1>
-          <p style="margin: 5px 0; font-size: 16px; color: #475569;">${position}</p>
+            <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                 <div>
+                 <h1 style="margin: 0; font-size: 28px; font-weight: bold; color: #1e293b;">${fullName}</h1>
+                  <p style="margin: 5px 0; font-size: 16px; color: #475569;">${position}</p>
+                </div>
+                 ${data.photo ? `
+            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%;">
+              <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover;" alt="${fullName}" />
+            </div>
+          ` : ''}
+            </div>
+         
           
           <!-- Contact Information -->
           <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px; font-size: 14px; color: #64748b;">
@@ -58,6 +68,8 @@ export const minimalistIconsTemplate: DocumentTemplate = {
             ${data.address ? `<p style="margin: 0;"><span style="color: ${primaryColor}; margin-right: 5px;">📍</span> ${data.address}</p>` : ''}
             ${birthDate ? `<p style="margin: 0;"><span style="color: ${primaryColor}; margin-right: 5px;">🎂</span> ${birthDate}</p>` : ''}
           </div>
+          
+          
         </div>
         
         <!-- Divider line with primary color -->

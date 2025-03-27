@@ -46,6 +46,12 @@ export const tealSidebarTemplate: DocumentTemplate = {
       <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; box-sizing: border-box; display: flex; flex-direction: row; min-height: 29.7cm;">
         <!-- Sidebar -->
         <div style="width: 30%; background-color: ${primaryColor}; color: white; padding: 40px 20px 20px 20px; box-sizing: border-box; border-radius: 6px 0 0 6px;">
+        
+${data.photo ? `
+  <div style="width: 100%; height: 150px; margin-bottom: 16px; overflow: hidden;  display: flex; align-items: center; justify-content: center;">
+    <img src="${data.photo}" style="width: 150px; height: 100%; border-radius: 8px; object-fit: cover;" alt="${fullName}" />
+  </div>
+` : ''}
           <h1 style="margin: 0 0 10px 0; font-size: 24px; text-transform: uppercase;">${fullName}</h1>
           <p style="margin: 0 0 20px 0; text-transform: uppercase; font-size: 14px;">${position}</p>
           
