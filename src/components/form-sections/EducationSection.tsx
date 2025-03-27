@@ -104,30 +104,26 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     />
                   </div>
                   
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor={`edu-is-current-${index}`}>W trakcie</Label>
-                      <Switch
-                        id={`edu-is-current-${index}`}
-                        checked={!!entry.isCurrent}
-                        onCheckedChange={(checked) => {
-                          onUpdateEntry('edukacja', index, 'isCurrent', Boolean(checked));
-                        }}
-                      />
-                    </div>
-                    
-                    {!entry.isCurrent ? (
-                      <DatePickerInput 
-                        label="Data zakończenia" 
-                        value={entry.endDate?.toString() || ''} 
-                        onChange={(value) => onUpdateEntry('edukacja', index, 'endDate', value)}
-                        id={`edu-end-date-${index}`}
-                      />
-                    ) : (
-                      <div className="h-10 flex items-center px-3 py-2 border border-input rounded-md bg-muted/50 dark:bg-gray-900/50 dark:border-gray-700 text-muted-foreground">
-                        do teraz
-                      </div>
-                    )}
+                  <div className="space-y-2">
+                    <DatePickerInput 
+                      label="Data zakończenia" 
+                      value={entry.endDate?.toString() || ''} 
+                      onChange={(value) => onUpdateEntry('edukacja', index, 'endDate', value)}
+                      id={`edu-end-date-${index}`}
+                    />
+                  </div>
+                </div>
+                
+                <div className="mb-3">
+                  <div className="flex items-center justify-start space-x-2">
+                    <Switch
+                      id={`edu-is-current-${index}`}
+                      checked={!!entry.isCurrent}
+                      onCheckedChange={(checked) => {
+                        onUpdateEntry('edukacja', index, 'isCurrent', Boolean(checked));
+                      }}
+                    />
+                    <Label htmlFor={`edu-is-current-${index}`} className="cursor-pointer">W trakcie</Label>
                   </div>
                 </div>
                 
