@@ -1,4 +1,3 @@
-
 import { format } from "date-fns";
 import { formatDateByLanguage, currentDate } from '../utils/document-utils';
 
@@ -67,11 +66,11 @@ export const formatEducationSection = (educationText: string): string => {
   }
 };
 
-export const formatSkillsSection = (skillsText: string, progressColor: string = '#3498db'): string => {
-  if (!skillsText) return '';
+export const formatSkillsSection = (skillsData: string, progressColor = '#3498db'): string => {
+  if (!skillsData) return '';
   
   try {
-    const skills = skillsText.split('\n')
+    const skills = skillsData.split('\n')
       .filter(line => line.trim() !== '')
       .map(line => {
         const cleanLine = line.replace(/^-\s*/, '').trim();
@@ -118,11 +117,11 @@ export const formatSkillsSection = (skillsText: string, progressColor: string = 
   }
 };
 
-export const formatLanguagesSection = (languagesText: string): string => {
-  if (!languagesText) return '';
+export const formatLanguagesSection = (languagesData: string): string => {
+  if (!languagesData) return '';
   
   try {
-    const languages = languagesText.split('\n')
+    const languages = languagesData.split('\n')
       .filter(line => line.trim() !== '')
       .map(line => {
         const parts = line.replace(/^-\s*/, '').split('-').map(part => part.trim());
@@ -146,11 +145,11 @@ export const formatLanguagesSection = (languagesText: string): string => {
   }
 };
 
-export const formatInterestsSection = (interestsText: string): string => {
-  if (!interestsText) return '';
+export const formatInterestsSection = (interestsData: string): string => {
+  if (!interestsData) return '';
   
   try {
-    const interests = interestsText.split('\n')
+    const interests = interestsData.split('\n')
       .filter(line => line.trim() !== '')
       .map(line => line.replace(/^-\s*/, '').trim());
     
@@ -165,6 +164,40 @@ export const formatInterestsSection = (interestsText: string): string => {
   } catch (error) {
     console.error('Error formatting interests section:', error);
     return `<p>Error formatting interests data</p>`;
+  }
+};
+
+export const formatLinksSection = (linksData: string): string => {
+  try {
+    const links = linksData.split('\n')
+      .filter(line => line.trim().length > 0)
+      .map(line => {
+        const parts = line.replace(/^-\s*/, '').split('|').map(part => part.trim());
+        const title = parts[0] || '';
+        const url = parts.length > 1 ? parts[1] : '';
+        
+        // Determine appropriate icon
+        let iconType = 'link';
+        if (url.includes('github.com')) {
+          iconType = 'github';
+        } else if (url.includes('linkedin.com')) {
+          iconType = 'linkedin';
+        }
+        
+        return `
+          <div style="margin-bottom: 8px;">
+            <strong>${title}:</strong> 
+            <a href="${url}" target="_blank" style="color: #555; text-decoration: underline;">
+              ${url}
+            </a>
+          </div>
+        `;
+      });
+    
+    return links.join('');
+  } catch (error) {
+    console.error('Error formatting links section:', error);
+    return '';
   }
 };
 

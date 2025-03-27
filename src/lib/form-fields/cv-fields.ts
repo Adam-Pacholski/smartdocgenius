@@ -116,6 +116,16 @@ export const cvBaseFields: TemplateField[] = [
     section: SECTIONS.LANGUAGES,
   },
   
+  // Links/Portfolio fields
+  {
+    id: 'linki',
+    label: 'Portfolio & Linki',
+    placeholder: 'Tytuł | URL (np. GitHub | https://github.com/username)',
+    type: 'textarea',
+    required: false,
+    section: SECTIONS.SKILLS,
+  },
+  
   // Interests fields
   {
     id: 'zainteresowania',

@@ -1,5 +1,5 @@
 
-import { formatExperienceSection, formatEducationSection, formatSkillsSection, formatLanguagesSection, formatInterestsSection } from '../template-utils';
+import { formatExperienceSection, formatEducationSection, formatSkillsSection, formatLanguagesSection, formatInterestsSection, formatLinksSection } from '../template-utils';
 
 export const modernCVTemplate = (data: Record<string, string>, config: Record<string, any> = {}) => {
   // Default config values
@@ -13,6 +13,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
   const fullName = `${firstName} ${lastName}`.trim();
   const position = data.position || '';
   const dateOfBirth = data.dateOfBirth || data.birthDate || '';
+  const summary = data.summary || '';
   
   console.log('Modern CV data being rendered:', data);
   
@@ -27,7 +28,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
       <!-- Two Column Layout -->
       <div style="display: flex;">
         <!-- Left Sidebar -->
-        <div style="flex: 1; background-color: #f5f5f5; padding: 30px 30px 70px 30px;">
+        <div style="flex: 1; background-color: #f5f5f5; padding: 30px 30px 70px 30px; page-break-inside: avoid;">
           ${data.photo ? `
             <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: 0 auto 20px;">
               <img src="${data.photo}" alt="${fullName}" style="width: 100%; height: 100%; object-fit: cover;" />
@@ -59,9 +60,17 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
             </section>
           ` : ''}
           
+          <!-- Links Section -->
+          ${data.linki ? `
+            <section style="margin-bottom: 30px;">
+              <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Portfolio & Linki</h2>
+              ${formatLinksSection(data.linki)}
+            </section>
+          ` : ''}
+          
           <!-- Interests Section -->
           ${data.zainteresowania ? `
-            <section>
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Zainteresowania</h2>
               ${formatInterestsSection(data.zainteresowania)}
             </section>
@@ -70,9 +79,17 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
         
         <!-- Right Content Area -->
         <div style="flex: 2; padding: 30px 30px 70px 30px;">
+          <!-- Summary Section -->
+          ${summary ? `
+            <section style="margin-bottom: 30px;">
+              <h2 style="font-size: 22px; color: ${primaryColor}; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 20px;">Podsumowanie zawodowe</h2>
+              <p>${summary}</p>
+            </section>
+          ` : ''}
+          
           <!-- Experience Section -->
           ${data.doswiadczenie ? `
-            <section style="margin-bottom: 30px;">
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="font-size: 22px; color: ${primaryColor}; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 20px;">Doświadczenie zawodowe</h2>
               ${formatExperienceSection(data.doswiadczenie)}
             </section>
@@ -80,7 +97,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
           
           <!-- Education Section -->
           ${data.edukacja ? `
-            <section>
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="font-size: 22px; color: ${primaryColor}; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 20px;">Wykształcenie</h2>
               ${formatEducationSection(data.edukacja)}
             </section>
@@ -90,7 +107,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
       
       <!-- Footer with Clause -->
       ${data.clause ? `
-        <footer style="padding: 20px 30px 60px; border-top: 1px solid #eee; font-size: 10px; color: #777; background-color: #f9f9f9; clear: both;">
+        <footer style="padding: 20px 30px 60px; border-top: 1px solid #eee; font-size: 10px; color: #777; background-color: #f9f9f9; clear: both; page-break-inside: avoid;">
           ${data.clause}
         </footer>
       ` : ''}
