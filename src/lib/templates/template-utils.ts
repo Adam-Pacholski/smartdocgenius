@@ -207,34 +207,34 @@ export const parseMultiEntryData = (text: string): Array<Record<string, string>>
   return entries;
 };
 
-export const prepareTemplateData = (data: Record<string, string>, config: Record<string, any> = {}): any => {
-  const primaryColor = config.primaryColor || '#3498db';
-  const fontFamily = config.fontFamily || 'Arial, sans-serif';
-  const fontSize = config.fontSize || '12px';
-  
+/**
+ * Prepare common template data from form data and config
+ */
+export const prepareTemplateData = (data: Record<string, string>, config: Record<string, any> = {}): Record<string, any> => {
   const firstName = data.firstName || '';
   const lastName = data.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
-  const fullNameUpper = fullName.toUpperCase();
   const position = data.position || '';
   
-  const today = new Date();
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-  const date = data.date || today.toLocaleDateString('pl-PL', options);
+  // Default date (today) or custom date if provided
+  const dateValue = data.letterDate || currentDate();
+  const date = data.letterDate || dateValue;
   
-  const birthDate = data.dateOfBirth || data.birthDate || '';
+  // Template styling
+  const primaryColor = config.primaryColor || data.primaryColor || '#3498db';
+  const fontFamily = config.fontFamily || '"Segoe UI", Arial, sans-serif';
+  const fontSize = config.fontSize || '12px';
   
   return {
     firstName,
     lastName,
     fullName,
-    fullNameUpper,
     position,
     date,
-    birthDate,
+    dateValue,
     primaryColor,
     fontFamily,
-    fontSize
+    fontSize,
   };
 };
 

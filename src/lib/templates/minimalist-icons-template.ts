@@ -23,6 +23,7 @@
 import { DocumentTemplate } from '../types/document-types';
 import { allCoverLetterFields } from '../form-fields/cover-letter-fields';
 import { prepareTemplateData, getRecipientSection } from './template-utils';
+import { formatDateByLanguage } from '../utils/document-utils';
 
 export const minimalistIconsTemplate: DocumentTemplate = {
   id: 'minimalist-icons',
@@ -42,6 +43,22 @@ export const minimalistIconsTemplate: DocumentTemplate = {
     } = prepareTemplateData(data, config);
     
     const birthDate = data.birthDate || '';
+    const language = config.language || 'pl';
+    
+    // Format the date according to the selected language if a custom date is specified
+    let formattedDate = date;
+    if (data.letterDate) {
+      const parts = data.letterDate.split('.');
+      if (parts.length === 3) {
+        const day = parseInt(parts[0]);
+        const month = parseInt(parts[1]) - 1;
+        const year = parseInt(parts[2]);
+        const dateObj = new Date(year, month, day);
+        if (!isNaN(dateObj.getTime())) {
+          formattedDate = formatDateByLanguage(dateObj, language);
+        }
+      }
+    }
     
     return `
       <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 40px; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.4; color: #333; box-sizing: border-box;">
@@ -78,7 +95,7 @@ export const minimalistIconsTemplate: DocumentTemplate = {
       <!-- Document Body -->
       <div style="position: relative;">
         <!-- Date -->
-        <p style="text-align: right; margin-bottom: 20px;">${date}</p>
+        <p style="text-align: right; margin-bottom: 20px;">${formattedDate}</p>
         
         <!-- Recipient -->
         ${getRecipientSection(data)}

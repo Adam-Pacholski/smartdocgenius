@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DatePickerInputProps {
   label: string;
@@ -25,6 +26,12 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
 }) => {
   const [date, setDate] = useState<Date | undefined>();
   const [open, setOpen] = useState(false);
+  const { language, t } = useLanguage();
+
+  // Function to format date based on current language
+  const formatDateForDisplay = (date: Date): string => {
+    return format(date, 'dd.MM.yyyy');
+  };
 
   useEffect(() => {
     if (value) {
@@ -41,6 +48,20 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
     }
   }, [value]);
 
+  const handleYearChange = (increment: number) => {
+    if (date) {
+      const newDate = new Date(date);
+      newDate.setFullYear(newDate.getFullYear() + increment);
+      setDate(newDate);
+      onChange(formatDateForDisplay(newDate));
+    } else {
+      const newDate = new Date();
+      newDate.setFullYear(newDate.getFullYear() + increment);
+      setDate(newDate);
+      onChange(formatDateForDisplay(newDate));
+    }
+  };
+
   return (
     <div className="space-y-2">
       {label && <Label htmlFor={id}>{label}</Label>}
@@ -55,17 +76,51 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
             )}
           >
             <Calendar className="mr-2 h-4 w-4" />
-            {date ? format(date, 'dd.MM.yyyy') : <span>Wybierz datę</span>}
+            {date ? formatDateForDisplay(date) : <span>{t('datepicker.selectDate')}</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0 bg-popover border-border" align="start">
+          <div className="flex justify-between p-2 border-b border-border">
+            <Button 
+              variant="outline"
+              size="sm"
+              onClick={() => handleYearChange(-5)}
+              type="button"
+            >
+              -5 {t('datepicker.years')}
+            </Button>
+            <Button 
+              variant="outline"
+              size="sm"
+              onClick={() => handleYearChange(-1)}
+              type="button"
+            >
+              -1 {t('datepicker.year')}
+            </Button>
+            <Button 
+              variant="outline"
+              size="sm"
+              onClick={() => handleYearChange(1)}
+              type="button"
+            >
+              +1 {t('datepicker.year')}
+            </Button>
+            <Button 
+              variant="outline"
+              size="sm"
+              onClick={() => handleYearChange(5)}
+              type="button"
+            >
+              +5 {t('datepicker.years')}
+            </Button>
+          </div>
           <CalendarComponent
             mode="single"
             selected={date}
             onSelect={(newDate) => {
               setDate(newDate);
               if (newDate) {
-                onChange(format(newDate, 'dd.MM.yyyy'));
+                onChange(formatDateForDisplay(newDate));
                 setOpen(false);
               }
             }}

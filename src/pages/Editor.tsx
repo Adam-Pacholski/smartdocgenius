@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import Layout from '@/components/Layout';
@@ -10,7 +11,7 @@ import documentTypes, { DocumentTemplate } from '@/lib/templates';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { SECTIONS } from '@/lib/types/document-types';
 import { generatePdfFromHtml } from '@/lib/utils/pdf-generator';
-import {useLanguage} from "@/contexts/LanguageContext.tsx";
+import { useLanguage } from "@/contexts/LanguageContext.tsx";
 
 enum EditorStep {
   SelectType,
@@ -40,20 +41,29 @@ const CV_SECTION_ORDER = [
 
 const Editor: React.FC = () => {
   const previewRef = useRef<HTMLDivElement>(null);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [currentStep, setCurrentStep] = useState<EditorStep>(EditorStep.SelectType);
   const [selectedTypeId, setSelectedTypeId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [config, setConfig] = useState<Record<string, any>>({
-    documentName: 'Dokument',
+    documentName: t('editor.defaultDocName'),
     primaryColor: '#3498db',
     fontFamily: 'Arial, sans-serif',
     fontSize: '12px',
     skillsProgressColor: '#3498db',
+    language: language // Add language to the config
   });
 
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+
+  // Update config when language changes
+  useEffect(() => {
+    setConfig(prev => ({
+      ...prev,
+      language
+    }));
+  }, [language]);
 
   // Get the appropriate section order based on the document type
   const getSectionOrder = () => {
@@ -74,8 +84,8 @@ const Editor: React.FC = () => {
     // Initialize empty form data with field IDs from the template
     const initialData: Record<string, string> = {};
     template.fields.forEach(field => {
-      // Only set color fields with defaults
-      if (field.type === 'color' && field.defaultValue) {
+      // Set default values for fields that have them
+      if (field.defaultValue) {
         initialData[field.id] = field.defaultValue;
       } else {
         initialData[field.id] = '';
@@ -89,7 +99,8 @@ const Editor: React.FC = () => {
     // Update the config with appropriate document name
     setConfig(prev => ({
       ...prev,
-      documentName: selectedTypeId === 'cv' ? 'CV' : 'List motywacyjny'
+      documentName: selectedTypeId === 'cv' ? t('editor.cv') : t('editor.coverLetter'),
+      language: language
     }));
   };
 
@@ -137,14 +148,14 @@ const Editor: React.FC = () => {
       try {
         await generatePdfFromHtml(previewRef.current, fileName);
         toast({
-          title: "Eksport PDF",
-          description: "Dokument został wygenerowany i pobrany.",
+          title: t("editor.export.title"),
+          description: t("editor.export.success"),
         });
       } catch (error) {
         console.error("PDF export error:", error);
         toast({
-          title: "Błąd eksportu",
-          description: "Nie udało się wygenerować dokumentu PDF.",
+          title: t("editor.export.error"),
+          description: t("editor.export.error"),
           variant: "destructive",
         });
       }
@@ -154,33 +165,48 @@ const Editor: React.FC = () => {
   const sectionOrder = getSectionOrder();
   const currentSection = sectionOrder[currentSectionIndex];
 
-  const sectionTitles: Record<string, string> = {
-    'dane_osobowe': 'Dane osobowe',
-    'odbiorca': 'Odbiorca',
-    'tresc_listu': 'Treść listu',
-    'klauzula': 'Klauzula',
-    'konfiguracja': 'Konfiguracja',
-    'doswiadczenie': 'Doświadczenie',
-    'edukacja': 'Wykształcenie',
-    'umiejetnosci': 'Umiejętności',
-    'jezyki': 'Języki obce',
-    'zainteresowania': 'Zainteresowania'
+  // Map section keys to translation keys
+  const sectionTranslationKeys: Record<string, string> = {
+    'dane_osobowe': 'editor.section.personal',
+    'odbiorca': 'editor.section.recipient',
+    'tresc_listu': 'editor.section.content',
+    'klauzula': 'editor.section.clause',
+    'konfiguracja': 'editor.section.config',
+    'doswiadczenie': 'editor.section.experience',
+    'edukacja': 'editor.section.education',
+    'umiejetnosci': 'editor.section.skills',
+    'jezyki': 'editor.section.languages',
+    'zainteresowania': 'editor.section.interests'
+  };
+
+  // Translation of section descriptions
+  const sectionDescriptionKeys: Record<string, string> = {
+    'dane_osobowe': 'editor.section.personal.desc',
+    'odbiorca': 'editor.section.recipient.desc',
+    'tresc_listu': 'editor.section.content.desc',
+    'klauzula': 'editor.section.clause.desc',
+    'konfiguracja': 'editor.section.config.desc',
+    'doswiadczenie': 'editor.section.experience.desc',
+    'edukacja': 'editor.section.education.desc',
+    'umiejetnosci': 'editor.section.skills.desc',
+    'jezyki': 'editor.section.languages.desc',
+    'zainteresowania': 'editor.section.interests.desc'
   };
 
   return (
     <Layout className="pb-12">
       <div className="space-y-6">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">Edytor dokumentów</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('editor.title')}</h1>
           <p className="text-muted-foreground">
-            Stwórz profesjonalny dokument w kilku prostych krokach
+            {t('editor.subtitle')}
           </p>
         </div>
 
         <div className="flex flex-col space-y-8">
           {currentStep === EditorStep.SelectType && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-xl font-medium">Wybierz typ dokumentu</h2>
+              <h2 className="text-xl font-medium">{t('editor.step.type')}</h2>
               <DocumentTypeSelector
                 selectedType={selectedTypeId}
                 onSelectType={handleSelectType}
@@ -214,14 +240,14 @@ const Editor: React.FC = () => {
                     }}
                     className="mb-4"
                   >
-                    <TabsList className="flex flex-wrap  md:grid md:grid-cols-4 w-full overflow-visible mb-1 h-full gap-2  ">
+                    <TabsList className="flex flex-wrap md:grid md:grid-cols-4 w-full overflow-visible mb-1 h-full gap-2">
                       {sectionOrder.map((section) => (
                         <TabsTrigger 
                           key={section}
                           value={section} 
                           className="text-xs sm:text-sm whitespace-nowrap"
                         >
-                          {sectionTitles[section]}
+                          {t(sectionTranslationKeys[section])}
                         </TabsTrigger>
                       ))}
                     </TabsList>

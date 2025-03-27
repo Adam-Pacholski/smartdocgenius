@@ -22,6 +22,7 @@
 import { DocumentTemplate } from '../types/document-types';
 import { allCoverLetterFields } from '../form-fields/cover-letter-fields';
 import { prepareTemplateData, getRecipientSection } from './template-utils';
+import { formatDateByLanguage } from '../utils/document-utils';
 
 export const tealSidebarTemplate: DocumentTemplate = {
   id: 'teal-sidebar',
@@ -41,6 +42,22 @@ export const tealSidebarTemplate: DocumentTemplate = {
     } = prepareTemplateData(data, config);
     
     const birthDate = data.birthDate || '';
+    const language = config.language || 'pl';
+    
+    // Format the date according to the selected language if a custom date is specified
+    let formattedDate = date;
+    if (data.letterDate) {
+      const parts = data.letterDate.split('.');
+      if (parts.length === 3) {
+        const day = parseInt(parts[0]);
+        const month = parseInt(parts[1]) - 1;
+        const year = parseInt(parts[2]);
+        const dateObj = new Date(year, month, day);
+        if (!isNaN(dateObj.getTime())) {
+          formattedDate = formatDateByLanguage(dateObj, language);
+        }
+      }
+    }
     
     return `
       <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; box-sizing: border-box; display: flex; flex-direction: row; min-height: 29.7cm;">
@@ -66,7 +83,7 @@ ${data.photo ? `
         <!-- Document Content -->
         <div style="width: 70%; padding: 40px 20px 50px 20px;">
           <!-- Date -->
-          <p style="text-align: right; margin-bottom: 20px;">${date}</p>
+          <p style="text-align: right; margin-bottom: 20px;">${formattedDate}</p>
           
           <!-- Recipient -->
           ${getRecipientSection(data)}
