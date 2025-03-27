@@ -63,7 +63,8 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Add section background colors
+				// Section background colors - modify these to change section backgrounds
+				// These map to CSS variables defined in src/index.css
 				"section-bg": {
 					primary: 'hsl(var(--section-bg-primary))',
 					secondary: 'hsl(var(--section-bg-secondary))',

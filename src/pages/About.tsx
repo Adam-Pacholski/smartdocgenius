@@ -4,8 +4,11 @@ import Layout from '@/components/Layout';
 import { FileText, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const About: React.FC = () => {
+  const { t } = useLanguage();
+  
   return (
     <Layout>
       <div className="max-w-3xl mx-auto">
@@ -13,11 +16,11 @@ const About: React.FC = () => {
           <div className="p-3 rounded-full bg-primary/10 mr-4">
             <FileText className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-3xl font-bold">O mnie</h1>
+          <h1 className="text-3xl font-bold">{t('about.title')}</h1>
         </div>
 
         <div className="bg-card rounded-lg p-6 shadow-sm mb-8">
-          <h2 className="text-xl font-medium text-primary mb-4">Kim jestem</h2>
+          <h2 className="text-xl font-medium text-primary mb-4">{t('about.whoami')}</h2>
           <p className="mb-4 text-muted-foreground">
             Nazywam się Adam Pacholski i jestem pasjonatem nowych technologii oraz profesjonalnym web developerem. 
             Od zawsze fascynowało mnie, jak technologia może zmieniać świat i usprawniać życie ludzi. 
@@ -33,7 +36,7 @@ const About: React.FC = () => {
         </div>
 
         <div className="bg-card rounded-lg p-6 shadow-sm mb-8">
-          <h2 className="text-xl font-medium text-primary mb-4">Moje podejście do pracy</h2>
+          <h2 className="text-xl font-medium text-primary mb-4">{t('about.approach')}</h2>
           <p className="mb-4 text-muted-foreground">
             Dla mnie kluczowym aspektem każdej realizacji jest zrozumienie potrzeb klienta. 
             Każdy projekt traktuję indywidualnie, dostosowując rozwiązania do wymagań biznesowych i oczekiwań użytkowników końcowych. 
@@ -48,7 +51,7 @@ const About: React.FC = () => {
         </div>
 
         <div className="bg-card rounded-lg p-6 shadow-sm mb-8">
-          <h2 className="text-xl font-medium text-primary mb-4">O projekcie APDocs</h2>
+          <h2 className="text-xl font-medium text-primary mb-4">{t('about.project')}</h2>
           <p className="mb-4 text-muted-foreground">
             APDocs powstał w ramach mojej edukacji i doskonalenia umiejętności programistycznych przy współpracy z technologiami AI. 
             Jest to projekt, który łączy moją pasję do tworzenia użytecznych narzędzi z nauką najnowszych technologii.
@@ -60,12 +63,12 @@ const About: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center gap-4 mt-6">
             <a href="https://www.ap-development.eu" target="_blank" rel="noopener noreferrer">
               <Button variant="outline" className="w-full sm:w-auto">
-                Odwiedź AP-Development.eu
+                {t('about.visit')}
               </Button>
             </a>
             <Link to="/kontakt">
               <Button variant="default" className="w-full sm:w-auto group">
-                Wesprzyj projekt
+                {t('about.support')}
                 <Heart className="ml-2 h-4 w-4 transition-colors group-hover:text-red-500" />
               </Button>
             </Link>

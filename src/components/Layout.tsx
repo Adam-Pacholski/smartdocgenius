@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import ThemeToggle from './ThemeToggle';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface LayoutProps {
   children: ReactNode;
@@ -12,6 +13,9 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, className }) => {
+  const { t } = useLanguage();
+  const currentYear = new Date().getFullYear();
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -24,17 +28,17 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} APDocs. Wszystkie prawa zastrzeżone.
+              © {currentYear} {t('app.name')}. {t('footer.rights')}
             </p>
             <div className="flex items-center gap-4">
               <ThemeToggle variant="switch" />
               <Separator orientation="vertical" className="h-4 mx-1 hidden md:block" />
               <Link to="/polityka-prywatnosci" className="text-sm text-muted-foreground hover:text-foreground">
-                Polityka prywatności i cookies
+                {t('nav.privacy')}
               </Link>
               <Separator orientation="vertical" className="h-4 mx-1 hidden md:block" />
               <Link to="/kontakt" className="text-sm text-muted-foreground hover:text-foreground">
-                Kontakt
+                {t('nav.contact')}
               </Link>
             </div>
           </div>

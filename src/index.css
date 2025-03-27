@@ -1,10 +1,10 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* === LIGHT MODE COLORS === */
     --background: 210 40% 98%;
     --foreground: 220 40% 12%;
 
@@ -33,10 +33,11 @@
     --input: 220 13% 91%;
     --ring: 220 13% 91%;
 
-    /* New section colors */
-    --section-bg-primary: 210 50% 98%;
-    --section-bg-secondary: 220 50% 96%;
-    --section-bg-accent: 200 60% 97%;
+    /* === SECTION BACKGROUND COLORS (LIGHT MODE) === */
+    /* You can change these values to modify section background colors in light mode */
+    --section-bg-primary: 210 50% 98%;    /* Used for primary sections */
+    --section-bg-secondary: 220 50% 96%;  /* Used for secondary sections like features */
+    --section-bg-accent: 200 60% 97%;     /* Used for accent sections like CTA */
     
     --radius: 0.6rem;
 
@@ -51,6 +52,7 @@
   }
 
   .dark {
+    /* === DARK MODE COLORS === */
     --background: 220 40% 10%;
     --foreground: 210 40% 98%;
 
@@ -79,10 +81,11 @@
     --input: 215 27.9% 16.9%;
     --ring: 216 12.2% 83.9%;
     
-    /* Dark mode section colors */
-    --section-bg-primary: 215 30% 14%;
-    --section-bg-secondary: 220 30% 16%;
-    --section-bg-accent: 210 30% 15%;
+    /* === SECTION BACKGROUND COLORS (DARK MODE) === */
+    /* You can change these values to modify section background colors in dark mode */
+    --section-bg-primary: 215 30% 14%;    /* Used for primary sections */
+    --section-bg-secondary: 220 30% 16%;  /* Used for secondary sections like features */
+    --section-bg-accent: 210 30% 15%;     /* Used for accent sections like CTA */
   }
 
   * {

@@ -7,27 +7,11 @@ import Layout from '@/components/Layout';
 import RoadmapSection from '@/components/RoadmapSection';
 import { Separator } from '@/components/ui/separator';
 import { useTheme } from '@/contexts/ThemeContext';
-
-const features = [
-  {
-    title: 'Profesjonalne szablony',
-    description: 'Różnorodne szablony dokumentów dostosowane do różnych branż i potrzeb.',
-    icon: <FileText className="h-6 w-6 text-primary" />,
-  },
-  {
-    title: 'Łatwe w użyciu',
-    description: 'Intuicyjny interfejs, który przeprowadzi Cię krok po kroku przez proces tworzenia dokumentu.',
-    icon: <CheckCircle className="h-6 w-6 text-primary" />,
-  },
-  {
-    title: 'Zaawansowana personalizacja',
-    description: 'Pełna kontrola nad wyglądem i zawartością dokumentów, dostosowanych do Twoich potrzeb.',
-    icon: <Sparkles className="h-6 w-6 text-primary" />,
-  },
-];
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Index: React.FC = () => {
   const { theme } = useTheme();
+  const { t } = useLanguage();
   const [mounted, setMounted] = useState(false);
   
   // Ensure hydration is complete before showing theme-dependent UI
@@ -36,6 +20,7 @@ const Index: React.FC = () => {
   }, []);
   
   // Hero background style based on theme
+  // You can modify these gradients to change the hero section background
   const bgStyle = theme === 'dark' 
     ? { 
         backgroundColor: '#0F1624', 
@@ -45,6 +30,25 @@ const Index: React.FC = () => {
         backgroundColor: 'white', 
         background: 'radial-gradient(125% 125% at 50% 10%, #fff 40%, #f3f4f6 100%)' 
       };
+
+  // Features with translations
+  const features = [
+    {
+      title: t('features.templates.title'),
+      description: t('features.templates.desc'),
+      icon: <FileText className="h-6 w-6 text-primary" />,
+    },
+    {
+      title: t('features.ease.title'),
+      description: t('features.ease.desc'),
+      icon: <CheckCircle className="h-6 w-6 text-primary" />,
+    },
+    {
+      title: t('features.custom.title'),
+      description: t('features.custom.desc'),
+      icon: <Sparkles className="h-6 w-6 text-primary" />,
+    },
+  ];
   
   return (
     <Layout>
@@ -53,25 +57,24 @@ const Index: React.FC = () => {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center text-center space-y-4">
             <div className="inline-block rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">
-              Twórz profesjonalne dokumenty w minutę
+              {t('app.subtitle')}
             </div>
             <h1 className="text-3xl md:text-5xl font-bold tracking-tighter max-w-3xl text-balance animate-fade-in">
-              Twoje profesjonalne dokumenty. Szybko i prosto.
+              {t('app.tagline')}
             </h1>
             <p className="max-w-[650px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed animate-fade-in">
-              APDocs to nowoczesna aplikacja, która pomoże Ci stworzyć profesjonalne dokumenty w kilka minut.
-              Wybieraj spośród różnych typów dokumentów i szablonów dostosowanych do Twoich potrzeb.
+              {t('app.description')}
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 animate-fade-in">
               <Link to="/editor">
                 <Button size="lg" className="group">
-                  Rozpocznij teraz
+                  {t('button.start')}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
               <Link to="/o-mnie">
                 <Button variant="outline" size="lg">
-                  Dowiedz się więcej
+                  {t('button.learn')}
                 </Button>
               </Link>
             </div>
@@ -89,10 +92,10 @@ const Index: React.FC = () => {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center text-center space-y-4 mb-12">
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
-              Dlaczego APDocs?
+              {t('features.title')}
             </h2>
             <p className="max-w-[650px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Narzędzie stworzone, aby ułatwić i przyspieszyć proces tworzenia profesjonalnych dokumentów.
+              {t('features.subtitle')}
             </p>
             <Separator className="w-24 bg-primary/30 h-0.5 mt-2" />
           </div>
@@ -122,15 +125,15 @@ const Index: React.FC = () => {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center text-center space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl max-w-3xl text-balance">
-              Gotowy do tworzenia profesjonalnych dokumentów?
+              {t('cta.title')}
             </h2>
             <p className="max-w-[650px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Dołącz do tysięcy zadowolonych użytkowników i zacznij tworzyć profesjonalne dokumenty już dziś.
+              {t('cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
               <Link to="/editor">
                 <Button size="lg" className="group">
-                  Rozpocznij teraz
+                  {t('button.start')}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
