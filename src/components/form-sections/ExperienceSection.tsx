@@ -52,10 +52,10 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
         >
           {entries.map((entry, index) => (
             <SortableItem key={`exp-${index}`} id={`exp-${index}`}>
-              <div className="p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 dark:border-gray-700 mb-4 form-list-item shadow-sm">
+              <div className="p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 dark:border-gray-700 mb-4 form-list-item shadow-sm hover:shadow-md transition-shadow duration-200">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <div className="text-gray-400 cursor-move">
+                    <div className="text-gray-400 cursor-move hover:text-gray-600 dark:hover:text-gray-300">
                       <GripVertical className="h-5 w-5" />
                     </div>
                     <h4 className="font-medium">Pozycja {index + 1}</h4>
@@ -64,7 +64,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     variant="ghost" 
                     size="sm" 
                     onClick={() => onRemoveEntry('doswiadczenie', index)}
-                    className="h-8 text-destructive hover:bg-destructive/10"
+                    className="h-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
                     Usuń
@@ -79,7 +79,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                       value={entry.company?.toString() || ''}
                       onChange={(e) => onUpdateEntry('doswiadczenie', index, 'company', e.target.value)}
                       placeholder="np. ABC Sp. z o.o."
-                      className="dark:bg-gray-900/80 dark:border-gray-700"
+                      className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     />
                   </div>
                   <div className="space-y-2">
@@ -89,7 +89,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                       value={entry.position?.toString() || ''}
                       onChange={(e) => onUpdateEntry('doswiadczenie', index, 'position', e.target.value)}
                       placeholder="np. Specjalista ds. marketingu"
-                      className="dark:bg-gray-900/80 dark:border-gray-700"
+                      className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     />
                   </div>
                 </div>
@@ -122,6 +122,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                       onCheckedChange={(checked) => {
                         onUpdateEntry('doswiadczenie', index, 'isCurrent', Boolean(checked));
                       }}
+                      className="data-[state=checked]:bg-primary"
                     />
                     <Label htmlFor={`is-current-${index}`} className="cursor-pointer">Obecnie pracuję</Label>
                   </div>
@@ -134,7 +135,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     value={entry.details?.toString() || ''}
                     onChange={(e) => onUpdateEntry('doswiadczenie', index, 'details', e.target.value)}
                     placeholder="- Osiągnięcie 1&#10;- Osiągnięcie 2"
-                    className="min-h-[100px] dark:bg-gray-900/80 dark:border-gray-700"
+                    className="min-h-[100px] dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                   />
                 </div>
               </div>
@@ -146,7 +147,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
       <Button 
         type="button" 
         variant="outline" 
-        className="w-full mt-2 border-dashed dark:border-gray-700" 
+        className="w-full mt-2 border-dashed dark:border-gray-700 hover:bg-accent/50" 
         onClick={() => onAddEntry('doswiadczenie')}
       >
         <Plus className="h-4 w-4 mr-1" />
