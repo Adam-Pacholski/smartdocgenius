@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, GripVertical } from 'lucide-react';
 import SortableItem from '@/components/sortable/SortableItem';
 import DatePickerInput from '@/components/date-picker/DatePickerInput';
 
@@ -52,14 +52,19 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
         >
           {entries.map((entry, index) => (
             <SortableItem key={`exp-${index}`} id={`exp-${index}`}>
-              <div className="p-4 border rounded-md bg-gray-50 mb-4">
+              <div className="p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 mb-4 form-list-item shadow-sm">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium">Pozycja {index + 1}</h4>
+                  <div className="flex items-center gap-2">
+                    <div className="text-gray-400 cursor-move">
+                      <GripVertical className="h-5 w-5" />
+                    </div>
+                    <h4 className="font-medium">Pozycja {index + 1}</h4>
+                  </div>
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={() => onRemoveEntry('doswiadczenie', index)}
-                    className="h-8 text-destructive"
+                    className="h-8 text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
                     Usuń
@@ -74,6 +79,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                       value={entry.company?.toString() || ''}
                       onChange={(e) => onUpdateEntry('doswiadczenie', index, 'company', e.target.value)}
                       placeholder="np. ABC Sp. z o.o."
+                      className="dark:bg-gray-900/70 dark:border-gray-700"
                     />
                   </div>
                   <div className="space-y-2">
@@ -83,6 +89,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                       value={entry.position?.toString() || ''}
                       onChange={(e) => onUpdateEntry('doswiadczenie', index, 'position', e.target.value)}
                       placeholder="np. Specjalista ds. marketingu"
+                      className="dark:bg-gray-900/70 dark:border-gray-700"
                     />
                   </div>
                 </div>
@@ -120,7 +127,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                         id={`end-date-${index}`}
                       />
                     ) : (
-                      <div className="h-10 flex items-center px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground">
+                      <div className="h-10 flex items-center px-3 py-2 border border-input rounded-md bg-muted dark:bg-gray-900/50 dark:border-gray-700 text-muted-foreground">
                         do teraz
                       </div>
                     )}
@@ -134,7 +141,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     value={entry.details?.toString() || ''}
                     onChange={(e) => onUpdateEntry('doswiadczenie', index, 'details', e.target.value)}
                     placeholder="- Osiągnięcie 1&#10;- Osiągnięcie 2"
-                    className="min-h-[100px]"
+                    className="min-h-[100px] dark:bg-gray-900/70 dark:border-gray-700"
                   />
                 </div>
               </div>
@@ -146,7 +153,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
       <Button 
         type="button" 
         variant="outline" 
-        className="w-full mt-2" 
+        className="w-full mt-2 border-dashed" 
         onClick={() => onAddEntry('doswiadczenie')}
       >
         <Plus className="h-4 w-4 mr-1" />

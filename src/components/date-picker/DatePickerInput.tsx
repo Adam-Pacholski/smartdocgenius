@@ -13,7 +13,7 @@ interface DatePickerInputProps {
   value: string;
   onChange: (value: string) => void;
   id: string;
-  description?: string; // Added description as an optional prop
+  description?: string;
 }
 
 const DatePickerInput: React.FC<DatePickerInputProps> = ({ 
@@ -24,6 +24,7 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
   description
 }) => {
   const [date, setDate] = useState<Date | undefined>();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (value) {
@@ -43,7 +44,7 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             id={id}
@@ -65,6 +66,7 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
               setDate(newDate);
               if (newDate) {
                 onChange(format(newDate, 'dd.MM.yyyy'));
+                setOpen(false); // Close the popover after selecting a date
               }
             }}
             initialFocus

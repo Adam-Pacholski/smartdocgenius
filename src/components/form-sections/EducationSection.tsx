@@ -52,8 +52,8 @@ const EducationSection: React.FC<EducationSectionProps> = ({
         >
           {entries.map((entry, index) => (
             <SortableItem key={`edu-${index}`} id={`edu-${index}`}>
-              <div className="p-4 border rounded-md bg-section-bg-secondary shadow-sm mb-4">
-                <div className="flex items-center justify-between mb-3 pb-2 border-b">
+              <div className="p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 mb-4 form-list-item shadow-sm">
+                <div className="flex items-center justify-between mb-3 pb-2 border-b dark:border-gray-700">
                   <div className="flex items-center gap-2">
                     <div className="text-gray-400 cursor-move">
                       <GripVertical className="h-5 w-5" />
@@ -79,7 +79,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                       value={entry.school?.toString() || ''}
                       onChange={(e) => onUpdateEntry('edukacja', index, 'school', e.target.value)}
                       placeholder="np. Uniwersytet Warszawski"
-                      className="border-input/80 focus:border-primary"
+                      className="border-input/80 focus:border-primary dark:bg-gray-900/70 dark:border-gray-700"
                     />
                   </div>
                   <div className="space-y-2">
@@ -89,7 +89,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                       value={entry.degree?.toString() || ''}
                       onChange={(e) => onUpdateEntry('edukacja', index, 'degree', e.target.value)}
                       placeholder="np. Informatyka, mgr"
-                      className="border-input/80 focus:border-primary"
+                      className="border-input/80 focus:border-primary dark:bg-gray-900/70 dark:border-gray-700"
                     />
                   </div>
                 </div>
@@ -127,7 +127,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                         id={`edu-end-date-${index}`}
                       />
                     ) : (
-                      <div className="h-10 flex items-center px-3 py-2 border border-input/70 rounded-md bg-muted/50 text-muted-foreground">
+                      <div className="h-10 flex items-center px-3 py-2 border border-input/70 rounded-md bg-muted/50 dark:bg-gray-900/50 dark:border-gray-700 text-muted-foreground">
                         do teraz
                       </div>
                     )}
@@ -141,7 +141,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     value={entry.details?.toString() || ''}
                     onChange={(e) => onUpdateEntry('edukacja', index, 'details', e.target.value)}
                     placeholder="- Specjalizacja&#10;- Ważne projekty"
-                    className="min-h-[100px] border-input/80 focus:border-primary"
+                    className="min-h-[100px] border-input/80 focus:border-primary dark:bg-gray-900/70 dark:border-gray-700"
                   />
                 </div>
               </div>

@@ -37,6 +37,7 @@ const GenericFieldsSection: React.FC<GenericFieldsSectionProps> = ({
                   value={formData[field.id] || ''}
                   onChange={(e) => handleChange(field.id, e.target.value)}
                   type={field.type}
+                  className="dark:bg-gray-900/70 dark:border-gray-700"
                 />
                 {field.description && (
                   <p className="text-sm text-muted-foreground">{field.description}</p>
@@ -52,7 +53,7 @@ const GenericFieldsSection: React.FC<GenericFieldsSectionProps> = ({
                   placeholder={field.placeholder}
                   value={formData[field.id] || ''}
                   onChange={(e) => handleChange(field.id, e.target.value)}
-                  className="min-h-[150px]"
+                  className="min-h-[150px] dark:bg-gray-900/70 dark:border-gray-700"
                 />
                 {field.description && (
                   <p className="text-sm text-muted-foreground">{field.description}</p>
@@ -95,7 +96,7 @@ const GenericFieldsSection: React.FC<GenericFieldsSectionProps> = ({
                   ) : (
                     <label
                       htmlFor="photo-upload"
-                      className="cursor-pointer flex flex-col items-center justify-center h-24 w-24 border-2 border-dashed border-gray-300 rounded-md hover:border-primary transition-colors"
+                      className="cursor-pointer flex flex-col items-center justify-center h-24 w-24 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-md hover:border-primary transition-colors"
                     >
                       <Upload className="h-6 w-6 text-muted-foreground" />
                       <span className="mt-1 text-xs text-muted-foreground">Dodaj zdjęcie</span>
@@ -125,7 +126,7 @@ const GenericFieldsSection: React.FC<GenericFieldsSectionProps> = ({
                     id={field.id}
                     value={formData[field.id] || field.defaultValue || '#000000'}
                     onChange={(e) => handleChange(field.id, e.target.value)}
-                    className="w-14 h-10 cursor-pointer rounded border"
+                    className="w-14 h-10 cursor-pointer rounded border dark:border-gray-700"
                   />
                   <span className="text-sm font-medium">{formData[field.id] || field.defaultValue}</span>
                 </div>

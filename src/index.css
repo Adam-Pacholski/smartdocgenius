@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -57,7 +56,7 @@
     --card: 220 40% 12%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 220 40% 12%;
+    --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
 
     --primary: 210 40% 98%;
@@ -169,4 +168,38 @@
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-graphite-300;
+}
+
+/* Dark mode form styles */
+.dark .form-list-item {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .form-input {
+  @apply bg-gray-900 border-gray-700 text-white;
+}
+
+.dark textarea.form-input {
+  @apply bg-gray-900 border-gray-700 text-white;
+}
+
+.dark .day-outside {
+  @apply text-gray-600;
+}
+
+/* Calendar styles in dark mode */
+.dark .react-datepicker {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .react-datepicker__header {
+  @apply bg-gray-700 border-gray-600;
+}
+
+.dark .react-datepicker__day {
+  @apply text-white hover:bg-gray-700;
+}
+
+.dark .react-datepicker__day--selected {
+  @apply bg-blue-600;
 }
