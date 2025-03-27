@@ -24,14 +24,14 @@ export const recipientFields: TemplateField[] = [
 // Pola formularza dla treści listu
 export const contentFields: TemplateField[] = [
   { id: 'subject', label: 'Temat', placeholder: 'Aplikacja na stanowisko Specjalisty ds. marketingu', type: 'text', required: true, section: SECTIONS.CONTENT },
-  { id: 'opening', label: 'Otwarcie', placeholder: 'Szanowni Państwo,', type: 'text', required: true, section: SECTIONS.CONTENT, defaultValue: 'Szanowni Państwo,' },
+  { id: 'opening', label: 'Otwarcie', placeholder: 'Szanowni Państwo,', type: 'text', required: true, section: SECTIONS.CONTENT },
   { id: 'body', label: 'Treść listu', placeholder: 'Z wielką przyjemnością zgłaszam swoją kandydaturę na stanowisko...', type: 'textarea', required: true, section: SECTIONS.CONTENT },
-  { id: 'closing', label: 'Zakończenie', placeholder: 'Z wyrazami szacunku,', type: 'text', required: true, section: SECTIONS.CONTENT, defaultValue: 'Z wyrazami szacunku,' },
+  { id: 'closing', label: 'Zakończenie', placeholder: 'Z wyrazami szacunku,', type: 'text', required: true, section: SECTIONS.CONTENT },
 ];
 
 // Pola formularza dla klauzuli
 export const clauseFields: TemplateField[] = [
-  { id: 'clause', label: 'Klauzula', placeholder: 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.', type: 'textarea', section: SECTIONS.CLAUSE, defaultValue: 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.' },
+  { id: 'clause', label: 'Klauzula', placeholder: 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu prowadzenia rekrutacji na aplikowane przeze mnie stanowisko.', type: 'textarea', section: SECTIONS.CLAUSE },
 ];
 
 // Wszystkie pola formularza

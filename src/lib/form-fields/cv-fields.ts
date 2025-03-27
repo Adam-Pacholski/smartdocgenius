@@ -84,13 +84,6 @@ export const cvBaseFields: TemplateField[] = [
     type: 'textarea',
     required: false,
     section: SECTIONS.EXPERIENCE,
-    defaultValue: `Nazwa firmy | Stanowisko | Okres zatrudnienia
-- Osiągnięcie 1
-- Osiągnięcie 2
-
-Nazwa firmy | Stanowisko | Okres zatrudnienia
-- Osiągnięcie 1
-- Osiągnięcie 2`,
   },
   
   // Education fields
@@ -101,11 +94,6 @@ Nazwa firmy | Stanowisko | Okres zatrudnienia
     type: 'textarea',
     required: false,
     section: SECTIONS.EDUCATION,
-    defaultValue: `Nazwa uczelni | Kierunek | Okres
-- Dodatkowe informacje
-
-Nazwa szkoły | Profil | Okres
-- Dodatkowe informacje`,
   },
 
   // Skills fields
@@ -116,9 +104,6 @@ Nazwa szkoły | Profil | Okres
     type: 'textarea',
     required: false,
     section: SECTIONS.SKILLS,
-    defaultValue: `- Umiejętność 1 | 4
-- Umiejętność 2 | 3
-- Umiejętność 3 | 5`,
   },
   
   // Languages fields
@@ -129,8 +114,6 @@ Nazwa szkoły | Profil | Okres
     type: 'textarea',
     required: false,
     section: SECTIONS.LANGUAGES,
-    defaultValue: `- Język angielski - poziom B2
-- Język niemiecki - poziom A2`,
   },
   
   // Interests fields
@@ -141,9 +124,6 @@ Nazwa szkoły | Profil | Okres
     type: 'textarea',
     required: false,
     section: SECTIONS.INTERESTS,
-    defaultValue: `- Zainteresowanie 1
-- Zainteresowanie 2
-- Zainteresowanie 3`,
   },
   
   // Clause
@@ -154,7 +134,6 @@ Nazwa szkoły | Profil | Okres
     type: 'textarea',
     required: true,
     section: SECTIONS.CLAUSE,
-    defaultValue: 'Wyrażam zgodę na przetwarzanie moich danych osobowych dla potrzeb niezbędnych do realizacji procesu rekrutacji (zgodnie z ustawą z dnia 10 maja 2018 roku o ochronie danych osobowych (Dz. Ustaw z 2018, poz. 1000) oraz zgodnie z Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (RODO)).',
   },
   
   // Skills color configuration

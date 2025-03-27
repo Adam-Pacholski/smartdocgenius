@@ -71,7 +71,12 @@ const Editor: React.FC = () => {
     // Initialize empty form data with field IDs from the template
     const initialData: Record<string, string> = {};
     template.fields.forEach(field => {
-      initialData[field.id] = field.defaultValue || '';
+      // Only set color fields with defaults
+      if (field.type === 'color' && field.defaultValue) {
+        initialData[field.id] = field.defaultValue;
+      } else {
+        initialData[field.id] = '';
+      }
     });
     setFormData(initialData);
     
