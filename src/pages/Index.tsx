@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, FileText, Sparkles, CheckCircle } from 'lucide-react';
@@ -28,6 +28,23 @@ const features = [
 
 const Index: React.FC = () => {
   const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  
+  // Ensure hydration is complete before showing theme-dependent UI
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
+  // Hero background style based on theme
+  const bgStyle = theme === 'dark' 
+    ? { 
+        backgroundColor: 'var(--background)', 
+        background: 'radial-gradient(125% 125% at 50% 10%, #1a1a1a 40%, #111 100%)' 
+      }
+    : { 
+        backgroundColor: 'white', 
+        background: 'radial-gradient(125% 125% at 50% 10%, #fff 40%, #f3f4f6 100%)' 
+      };
   
   return (
     <Layout>
@@ -61,7 +78,10 @@ const Index: React.FC = () => {
           </div>
         </div>
         
-        <div className={`absolute inset-0 -z-10 h-full w-full ${theme === 'dark' ? 'bg-background' : 'bg-white'} ${theme === 'dark' ? '[background:radial-gradient(125%_125%_at_50%_10%,#1a1a1a_40%,#111_100%)]' : '[background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#f3f4f6_100%)]'}`} />
+        <div 
+          className="absolute inset-0 -z-10 h-full w-full"
+          style={mounted ? bgStyle : { visibility: 'hidden' }}
+        />
       </section>
       
       {/* Features section */}
