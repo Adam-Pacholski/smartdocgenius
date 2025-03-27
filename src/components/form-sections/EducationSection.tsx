@@ -52,13 +52,13 @@ const EducationSection: React.FC<EducationSectionProps> = ({
         >
           {entries.map((entry, index) => (
             <SortableItem key={`edu-${index}`} id={`edu-${index}`}>
-              <div className="p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 mb-4 form-list-item shadow-sm">
+              <div className="p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 dark:border-gray-700 mb-4 form-list-item shadow-sm">
                 <div className="flex items-center justify-between mb-3 pb-2 border-b dark:border-gray-700">
                   <div className="flex items-center gap-2">
                     <div className="text-gray-400 cursor-move">
                       <GripVertical className="h-5 w-5" />
                     </div>
-                    <h4 className="font-medium text-primary">Wykształcenie {index + 1}</h4>
+                    <h4 className="font-medium text-primary dark:text-primary">Wykształcenie {index + 1}</h4>
                   </div>
                   <Button 
                     variant="ghost" 
@@ -79,7 +79,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                       value={entry.school?.toString() || ''}
                       onChange={(e) => onUpdateEntry('edukacja', index, 'school', e.target.value)}
                       placeholder="np. Uniwersytet Warszawski"
-                      className="border-input/80 focus:border-primary dark:bg-gray-900/70 dark:border-gray-700"
+                      className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
                   </div>
                   <div className="space-y-2">
@@ -89,45 +89,42 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                       value={entry.degree?.toString() || ''}
                       onChange={(e) => onUpdateEntry('edukacja', index, 'degree', e.target.value)}
                       placeholder="np. Informatyka, mgr"
-                      className="border-input/80 focus:border-primary dark:bg-gray-900/70 dark:border-gray-700"
+                      className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-                  <DatePickerInput 
-                    label="Data rozpoczęcia" 
-                    value={entry.startDate?.toString() || ''} 
-                    onChange={(value) => onUpdateEntry('edukacja', index, 'startDate', value)}
-                    id={`edu-start-date-${index}`}
-                  />
-                  
                   <div className="space-y-2">
+                    <DatePickerInput 
+                      label="Data rozpoczęcia" 
+                      value={entry.startDate?.toString() || ''} 
+                      onChange={(value) => onUpdateEntry('edukacja', index, 'startDate', value)}
+                      id={`edu-start-date-${index}`}
+                    />
+                  </div>
+                  
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor={`edu-end-date-${index}`}>Data zakończenia</Label>
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id={`edu-is-current-${index}`}
-                          checked={!!entry.isCurrent}
-                          onCheckedChange={(checked) => {
-                            onUpdateEntry('edukacja', index, 'isCurrent', Boolean(checked));
-                          }}
-                        />
-                        <Label htmlFor={`edu-is-current-${index}`} className="text-sm cursor-pointer">
-                          W trakcie
-                        </Label>
-                      </div>
+                      <Label htmlFor={`edu-is-current-${index}`}>W trakcie</Label>
+                      <Switch
+                        id={`edu-is-current-${index}`}
+                        checked={!!entry.isCurrent}
+                        onCheckedChange={(checked) => {
+                          onUpdateEntry('edukacja', index, 'isCurrent', Boolean(checked));
+                        }}
+                      />
                     </div>
                     
                     {!entry.isCurrent ? (
                       <DatePickerInput 
-                        label="" 
+                        label="Data zakończenia" 
                         value={entry.endDate?.toString() || ''} 
                         onChange={(value) => onUpdateEntry('edukacja', index, 'endDate', value)}
                         id={`edu-end-date-${index}`}
                       />
                     ) : (
-                      <div className="h-10 flex items-center px-3 py-2 border border-input/70 rounded-md bg-muted/50 dark:bg-gray-900/50 dark:border-gray-700 text-muted-foreground">
+                      <div className="h-10 flex items-center px-3 py-2 border border-input rounded-md bg-muted/50 dark:bg-gray-900/50 dark:border-gray-700 text-muted-foreground">
                         do teraz
                       </div>
                     )}
@@ -141,7 +138,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     value={entry.details?.toString() || ''}
                     onChange={(e) => onUpdateEntry('edukacja', index, 'details', e.target.value)}
                     placeholder="- Specjalizacja&#10;- Ważne projekty"
-                    className="min-h-[100px] border-input/80 focus:border-primary dark:bg-gray-900/70 dark:border-gray-700"
+                    className="min-h-[100px] dark:bg-gray-900/80 dark:border-gray-700"
                   />
                 </div>
               </div>
@@ -153,7 +150,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
       <Button 
         type="button" 
         variant="outline" 
-        className="w-full mt-2 border-dashed border-2" 
+        className="w-full mt-2 border-dashed border-2 dark:border-gray-700" 
         onClick={() => onAddEntry('edukacja')}
       >
         <Plus className="h-4 w-4 mr-1" />

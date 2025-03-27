@@ -52,7 +52,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
         >
           {entries.map((entry, index) => (
             <SortableItem key={`exp-${index}`} id={`exp-${index}`}>
-              <div className="p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 mb-4 form-list-item shadow-sm">
+              <div className="p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 dark:border-gray-700 mb-4 form-list-item shadow-sm">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div className="text-gray-400 cursor-move">
@@ -79,7 +79,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                       value={entry.company?.toString() || ''}
                       onChange={(e) => onUpdateEntry('doswiadczenie', index, 'company', e.target.value)}
                       placeholder="np. ABC Sp. z o.o."
-                      className="dark:bg-gray-900/70 dark:border-gray-700"
+                      className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
                   </div>
                   <div className="space-y-2">
@@ -89,45 +89,42 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                       value={entry.position?.toString() || ''}
                       onChange={(e) => onUpdateEntry('doswiadczenie', index, 'position', e.target.value)}
                       placeholder="np. Specjalista ds. marketingu"
-                      className="dark:bg-gray-900/70 dark:border-gray-700"
+                      className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-                  <DatePickerInput 
-                    label="Data rozpoczęcia" 
-                    value={entry.startDate?.toString() || ''} 
-                    onChange={(value) => onUpdateEntry('doswiadczenie', index, 'startDate', value)}
-                    id={`start-date-${index}`}
-                  />
-                  
                   <div className="space-y-2">
+                    <DatePickerInput 
+                      label="Data rozpoczęcia" 
+                      value={entry.startDate?.toString() || ''} 
+                      onChange={(value) => onUpdateEntry('doswiadczenie', index, 'startDate', value)}
+                      id={`start-date-${index}`}
+                    />
+                  </div>
+                  
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor={`end-date-${index}`}>Data zakończenia</Label>
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id={`is-current-${index}`}
-                          checked={!!entry.isCurrent}
-                          onCheckedChange={(checked) => {
-                            onUpdateEntry('doswiadczenie', index, 'isCurrent', Boolean(checked));
-                          }}
-                        />
-                        <Label htmlFor={`is-current-${index}`} className="text-sm cursor-pointer">
-                          W trakcie
-                        </Label>
-                      </div>
+                      <Label htmlFor={`is-current-${index}`}>Obecnie pracuję</Label>
+                      <Switch
+                        id={`is-current-${index}`}
+                        checked={!!entry.isCurrent}
+                        onCheckedChange={(checked) => {
+                          onUpdateEntry('doswiadczenie', index, 'isCurrent', Boolean(checked));
+                        }}
+                      />
                     </div>
                     
                     {!entry.isCurrent ? (
                       <DatePickerInput 
-                        label="" 
+                        label="Data zakończenia" 
                         value={entry.endDate?.toString() || ''} 
                         onChange={(value) => onUpdateEntry('doswiadczenie', index, 'endDate', value)}
                         id={`end-date-${index}`}
                       />
                     ) : (
-                      <div className="h-10 flex items-center px-3 py-2 border border-input rounded-md bg-muted dark:bg-gray-900/50 dark:border-gray-700 text-muted-foreground">
+                      <div className="h-10 flex items-center px-3 py-2 border border-input rounded-md bg-muted/50 dark:bg-gray-900/50 dark:border-gray-700 text-muted-foreground">
                         do teraz
                       </div>
                     )}
@@ -141,7 +138,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     value={entry.details?.toString() || ''}
                     onChange={(e) => onUpdateEntry('doswiadczenie', index, 'details', e.target.value)}
                     placeholder="- Osiągnięcie 1&#10;- Osiągnięcie 2"
-                    className="min-h-[100px] dark:bg-gray-900/70 dark:border-gray-700"
+                    className="min-h-[100px] dark:bg-gray-900/80 dark:border-gray-700"
                   />
                 </div>
               </div>
@@ -153,7 +150,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
       <Button 
         type="button" 
         variant="outline" 
-        className="w-full mt-2 border-dashed" 
+        className="w-full mt-2 border-dashed dark:border-gray-700" 
         onClick={() => onAddEntry('doswiadczenie')}
       >
         <Plus className="h-4 w-4 mr-1" />

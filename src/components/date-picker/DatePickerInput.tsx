@@ -43,7 +43,7 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
+      {label && <Label htmlFor={id}>{label}</Label>}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -58,7 +58,7 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
             {date ? format(date, 'dd.MM.yyyy') : <span>Wybierz datę</span>}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="w-auto p-0 bg-popover border-border" align="start">
           <CalendarComponent
             mode="single"
             selected={date}
@@ -66,7 +66,7 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
               setDate(newDate);
               if (newDate) {
                 onChange(format(newDate, 'dd.MM.yyyy'));
-                setOpen(false); // Close the popover after selecting a date
+                setOpen(false);
               }
             }}
             initialFocus

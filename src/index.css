@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -172,15 +173,15 @@
 
 /* Dark mode form styles */
 .dark .form-list-item {
-  @apply bg-gray-800 border-gray-700;
+  @apply bg-gray-800/90 border-gray-700;
 }
 
 .dark .form-input {
-  @apply bg-gray-900 border-gray-700 text-white;
+  @apply bg-gray-900/80 border-gray-700 text-white;
 }
 
 .dark textarea.form-input {
-  @apply bg-gray-900 border-gray-700 text-white;
+  @apply bg-gray-900/80 border-gray-700 text-white;
 }
 
 .dark .day-outside {
@@ -202,4 +203,24 @@
 
 .dark .react-datepicker__day--selected {
   @apply bg-blue-600;
+}
+
+/* Popover styles in dark mode */
+.dark .popover-content {
+  @apply bg-gray-800 border-gray-700;
+}
+
+/* Form panel styles */
+.dark .form-panel {
+  @apply bg-gray-800/90 border-gray-700 text-gray-100;
+}
+
+/* Input styles */
+.dark input, .dark textarea, .dark select {
+  @apply bg-gray-900/80 border-gray-700 text-gray-100;
+}
+
+/* Color picker fix */
+.dark input[type="color"] {
+  @apply bg-transparent;
 }

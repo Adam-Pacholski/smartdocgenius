@@ -43,7 +43,7 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="space-y-4 mb-4 p-4 border rounded-md bg-gray-50">
+      <div className="space-y-4 mb-4 p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 dark:border-gray-700">
         <Label htmlFor="skillsProgressColor">Kolor paska umiejętności</Label>
         <div className="flex items-center gap-3">
           <input
@@ -51,7 +51,7 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
             id="skillsProgressColor"
             value={progressColor || '#3498db'}
             onChange={(e) => onProgressColorChange(e.target.value)}
-            className="w-14 h-10 cursor-pointer rounded border"
+            className="w-14 h-10 cursor-pointer rounded border dark:border-gray-700"
           />
           <div className="flex-1">
             <Progress 
@@ -78,7 +78,7 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
         >
           {entries.map((entry, index) => (
             <SortableItem key={`skill-${index}`} id={`skill-${index}`}>
-              <div className="p-4 border rounded-md bg-gray-50 mb-4">
+              <div className="p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 dark:border-gray-700 mb-4">
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-medium">Umiejętność {index + 1}</h4>
                   <Button 
@@ -99,6 +99,7 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
                     value={entry.skill?.toString() || ''}
                     onChange={(e) => onUpdateEntry('umiejetnosci', index, 'skill', e.target.value)}
                     placeholder="np. Tworzenie stron internetowych"
+                    className="dark:bg-gray-900/80 dark:border-gray-700"
                   />
                 </div>
                 
@@ -131,7 +132,7 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
       <Button 
         type="button" 
         variant="outline" 
-        className="w-full mt-2" 
+        className="w-full mt-2 border-dashed dark:border-gray-700" 
         onClick={() => onAddEntry('umiejetnosci')}
       >
         <Plus className="h-4 w-4 mr-1" />

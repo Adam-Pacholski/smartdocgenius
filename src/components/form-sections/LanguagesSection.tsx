@@ -6,7 +6,7 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, GripVertical } from 'lucide-react';
 import SortableItem from '@/components/sortable/SortableItem';
 
 interface LanguagesSectionProps {
@@ -49,14 +49,19 @@ const LanguagesSection: React.FC<LanguagesSectionProps> = ({
         >
           {entries.map((entry, index) => (
             <SortableItem key={`lang-${index}`} id={`lang-${index}`}>
-              <div className="p-4 border rounded-md bg-gray-50 mb-4">
+              <div className="p-4 border rounded-md bg-section-bg-secondary dark:bg-gray-800/90 dark:border-gray-700 mb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium">Język {index + 1}</h4>
+                  <div className="flex items-center gap-2">
+                    <div className="text-gray-400 cursor-move">
+                      <GripVertical className="h-5 w-5" />
+                    </div>
+                    <h4 className="font-medium">Język {index + 1}</h4>
+                  </div>
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={() => onRemoveEntry('jezyki', index)}
-                    className="h-8 text-destructive"
+                    className="h-8 text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
                     Usuń
@@ -71,6 +76,7 @@ const LanguagesSection: React.FC<LanguagesSectionProps> = ({
                       value={entry.language?.toString() || ''}
                       onChange={(e) => onUpdateEntry('jezyki', index, 'language', e.target.value)}
                       placeholder="np. Język angielski"
+                      className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
                   </div>
                   <div className="space-y-2">
@@ -80,6 +86,7 @@ const LanguagesSection: React.FC<LanguagesSectionProps> = ({
                       value={entry.level?.toString() || ''}
                       onChange={(e) => onUpdateEntry('jezyki', index, 'level', e.target.value)}
                       placeholder="np. poziom B2"
+                      className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
                   </div>
                 </div>
@@ -92,7 +99,7 @@ const LanguagesSection: React.FC<LanguagesSectionProps> = ({
       <Button 
         type="button" 
         variant="outline" 
-        className="w-full mt-2" 
+        className="w-full mt-2 border-dashed dark:border-gray-700" 
         onClick={() => onAddEntry('jezyki')}
       >
         <Plus className="h-4 w-4 mr-1" />
