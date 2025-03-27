@@ -12,11 +12,11 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<Theme>(() => {
-    // Spróbuj pobrać zapisany motyw z localStorage
+    // Try to get saved theme from localStorage
     const savedTheme = localStorage.getItem("theme") as Theme;
     
-    // Jeśli jest zapisany, użyj go, w przeciwnym razie użyj preferencji systemowych
-    // lub defaultowo "light"
+    // If there's a saved theme, use it, otherwise use system preferences
+    // or default to "light"
     if (savedTheme) {
       return savedTheme;
     }
@@ -28,11 +28,17 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return "light";
   });
 
+  // Apply theme class immediately during initial render
   useEffect(() => {
-    // Zapisz motyw w localStorage
+    // Apply the current theme immediately to avoid flash
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, []);
+
+  useEffect(() => {
+    // Save theme to localStorage
     localStorage.setItem("theme", theme);
     
-    // Aktualizuj klasę na dokumencie
+    // Update class on document
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
     } else {

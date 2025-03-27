@@ -15,27 +15,40 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/editor" element={<Editor />} />
-            <Route path="/o-mnie" element={<About />} />
-            <Route path="/kontakt" element={<Contact />} />
-            <Route path="/polityka-prywatnosci" element={<PrivacyPolicy />} />
-            <Route path="/inny-dokument" element={<Navigate to="/kontakt" />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <CookieConsent />
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // Get the initial theme before rendering to avoid flash
+  const initialTheme = localStorage.getItem("theme") || 
+    (window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  
+  // Apply theme class to html element immediately
+  if (initialTheme === "dark") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/editor" element={<Editor />} />
+              <Route path="/o-mnie" element={<About />} />
+              <Route path="/kontakt" element={<Contact />} />
+              <Route path="/polityka-prywatnosci" element={<PrivacyPolicy />} />
+              <Route path="/inny-dokument" element={<Navigate to="/kontakt" />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <CookieConsent />
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
