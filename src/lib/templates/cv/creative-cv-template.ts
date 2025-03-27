@@ -17,7 +17,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
   console.log('Creative CV data being rendered:', data);
   
   return `
-    <div style="font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; max-width: 21cm; margin: 0 auto; padding: 0;">
+    <div style="font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; max-width: 21cm; margin: 0 auto; padding: 200px;">
       <!-- Creative Header with Circular Photo -->
       <div style="background: linear-gradient(135deg, ${primaryColor}, #34495e); color: white; padding: 40px; text-align: center; border-radius: 0 0 50% 50% / 20%;">
         ${data.photo ? `

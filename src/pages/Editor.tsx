@@ -10,6 +10,7 @@ import documentTypes, { DocumentTemplate } from '@/lib/templates';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { SECTIONS } from '@/lib/types/document-types';
 import { generatePdfFromHtml } from '@/lib/utils/pdf-generator';
+import {useLanguage} from "@/contexts/LanguageContext.tsx";
 
 enum EditorStep {
   SelectType,
@@ -39,6 +40,7 @@ const CV_SECTION_ORDER = [
 
 const Editor: React.FC = () => {
   const previewRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState<EditorStep>(EditorStep.SelectType);
   const [selectedTypeId, setSelectedTypeId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
@@ -50,6 +52,7 @@ const Editor: React.FC = () => {
     fontSize: '12px',
     skillsProgressColor: '#3498db',
   });
+
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
   // Get the appropriate section order based on the document type

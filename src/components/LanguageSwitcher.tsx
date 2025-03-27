@@ -33,7 +33,8 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'default'
   if (variant === 'minimal') {
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+          <span> Tłumaczenie... </span>
+          <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="w-8 h-8 px-0">
             <Globe className="h-4 w-4" />
           </Button>
@@ -56,6 +57,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'default'
   
   return (
     <DropdownMenu>
+        <p>Tłumaczenie...</p>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="h-8">
           <Globe className="h-4 w-4 mr-2" />

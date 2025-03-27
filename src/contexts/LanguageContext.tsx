@@ -138,6 +138,8 @@ const translations: Record<Language, Record<string, string>> = {
     'contact.support.desc2': 'Twoje wsparcie pomaga mi utrzymać aplikację darmową i dostępną dla wszystkich.',
     
     // Privacy policy page
+    'privacy.cookie.title':'Polityka cookie',
+    'privacy.cookie.content':' Ta strona używa plików cookie, aby zapewnić najlepsze doświadczenie użytkownika. Korzystając z naszej strony, zgadzasz się na używanie plików cookie zgodnie z naszą',
     'privacy.title': 'Polityka Prywatności i Plików Cookie',
     'privacy.section1.title': '1. Informacje ogólne',
     'privacy.section1.content': 'Niniejsza Polityka Prywatności i Plików Cookie określa zasady przetwarzania i ochrony danych osobowych oraz wykorzystywania plików cookie w ramach serwisu APDocs.',
@@ -260,6 +262,7 @@ const translations: Record<Language, Record<string, string>> = {
     'contact.support.desc2': 'Your support helps me keep the application free and available to everyone.',
     
     // Privacy policy page
+    'privacy.cookie.title':'Cookie Policy',
     'privacy.title': 'Privacy and Cookies Policy',
     'privacy.section1.title': '1. General Information',
     'privacy.section1.content': 'This Privacy and Cookie Policy defines the rules for processing and protecting personal data and the use of cookies within the APDocs service.',
