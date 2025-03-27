@@ -26,6 +26,7 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
 }) => {
   const [date, setDate] = useState<Date | undefined>();
   const [open, setOpen] = useState(false);
+  const [calendarMonth, setCalendarMonth] = useState<Date | undefined>();
   const { language, t } = useLanguage();
 
   // Function to format date based on current language
@@ -43,6 +44,7 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
         const parsedDate = new Date(year, month, day);
         if (!isNaN(parsedDate.getTime())) {
           setDate(parsedDate);
+          setCalendarMonth(parsedDate);
         }
       }
     }
@@ -53,11 +55,13 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
       const newDate = new Date(date);
       newDate.setFullYear(newDate.getFullYear() + increment);
       setDate(newDate);
+      setCalendarMonth(newDate); // Update the calendar view
       onChange(formatDateForDisplay(newDate));
     } else {
       const newDate = new Date();
       newDate.setFullYear(newDate.getFullYear() + increment);
       setDate(newDate);
+      setCalendarMonth(newDate); // Update the calendar view
       onChange(formatDateForDisplay(newDate));
     }
   };
@@ -117,6 +121,9 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
           <CalendarComponent
             mode="single"
             selected={date}
+            defaultMonth={calendarMonth}
+            month={calendarMonth}
+            onMonthChange={setCalendarMonth}
             onSelect={(newDate) => {
               setDate(newDate);
               if (newDate) {
