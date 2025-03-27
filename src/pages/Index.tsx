@@ -6,6 +6,7 @@ import { ArrowRight, FileText, Sparkles, CheckCircle } from 'lucide-react';
 import Layout from '@/components/Layout';
 import RoadmapSection from '@/components/RoadmapSection';
 import { Separator } from '@/components/ui/separator';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const features = [
   {
@@ -26,6 +27,8 @@ const features = [
 ];
 
 const Index: React.FC = () => {
+  const { theme } = useTheme();
+  
   return (
     <Layout>
       {/* Hero section */}
@@ -58,7 +61,7 @@ const Index: React.FC = () => {
           </div>
         </div>
         
-        <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#f3f4f6_100%)]" />
+        <div className={`absolute inset-0 -z-10 h-full w-full ${theme === 'dark' ? 'bg-background' : 'bg-white'} ${theme === 'dark' ? '[background:radial-gradient(125%_125%_at_50%_10%,#1a1a1a_40%,#111_100%)]' : '[background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#f3f4f6_100%)]'}`} />
       </section>
       
       {/* Features section */}
