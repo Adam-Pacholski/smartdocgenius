@@ -118,23 +118,25 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
               +5 {t('datepicker.years')}
             </Button>
           </div>
-          <div className="w-[300px] h-[300px]"> {/* Fixed size container for the calendar */}
-            <CalendarComponent
-              mode="single"
-              selected={date}
-              defaultMonth={calendarMonth}
-              month={calendarMonth}
-              onMonthChange={setCalendarMonth}
-              onSelect={(newDate) => {
-                setDate(newDate);
-                if (newDate) {
-                  onChange(formatDateForDisplay(newDate));
-                  setOpen(false);
-                }
-              }}
-              initialFocus
-              className={cn("p-3 pointer-events-auto")}
-            />
+          <div className="w-[300px]"> {/* Fixed width container */}
+            <div className="h-[300px]"> {/* Fixed height container */}
+              <CalendarComponent
+                mode="single"
+                selected={date}
+                defaultMonth={calendarMonth}
+                month={calendarMonth}
+                onMonthChange={setCalendarMonth}
+                onSelect={(newDate) => {
+                  setDate(newDate);
+                  if (newDate) {
+                    onChange(formatDateForDisplay(newDate));
+                    setOpen(false);
+                  }
+                }}
+                initialFocus
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </div>
           </div>
         </PopoverContent>
       </Popover>
