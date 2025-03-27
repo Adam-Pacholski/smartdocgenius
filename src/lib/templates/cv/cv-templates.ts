@@ -6,7 +6,7 @@ import { creativeCVTemplate } from './creative-cv-template';
 import { professionalCVTemplate } from './professional-cv-template';
 import { getCVFieldsForTemplate } from '../../form-fields/cv-fields';
 
-// CV template thumbnails
+// CV template thumbnails - these files should be placed in the public directory
 const cv_basic = '/cv-basic.jpg';
 const cv_modern = '/cv-modern.jpg';
 const cv_creative = '/cv-creative.jpg';
