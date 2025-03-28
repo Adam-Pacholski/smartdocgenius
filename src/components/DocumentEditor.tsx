@@ -6,12 +6,13 @@ import { parseMultiEntryData } from '@/lib/templates/template-utils';
 import { DragEndEvent } from '@dnd-kit/core';
 import { DocumentTemplate } from '@/lib/templates';
 
-// Import our new components
+// Import our components
 import ExperienceSection from '@/components/form-sections/ExperienceSection';
 import EducationSection from '@/components/form-sections/EducationSection';
 import SkillsSection from '@/components/form-sections/SkillsSection';
 import LanguagesSection from '@/components/form-sections/LanguagesSection';
 import InterestsSection from '@/components/form-sections/InterestsSection';
+import PortfolioSection from '@/components/form-sections/PortfolioSection';
 import GenericFieldsSection from '@/components/form-sections/GenericFieldsSection';
 
 interface DocumentEditorProps {
@@ -39,6 +40,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     umiejetnosci: [],
     jezyki: [],
     zainteresowania: [],
+    portfolio: [],
   });
 
   useEffect(() => {
@@ -48,6 +50,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       umiejetnosci: parseExistingSkills(),
       jezyki: parseExistingLanguages(),
       zainteresowania: parseExistingInterests(),
+      portfolio: parseExistingPortfolio(),
     });
   }, [formData]);
 
@@ -214,6 +217,26 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   }
 
+  function parseExistingPortfolio(): Array<Record<string, string | number | boolean>> {
+    if (!formData.portfolio) return [];
+    
+    try {
+      return formData.portfolio.split('\n')
+        .filter(line => line.trim() !== '')
+        .map(line => {
+          const parts = line.replace(/^-\s*/, '').split('|').map(part => part.trim());
+          return {
+            title: parts[0] || '',
+            url: parts.length > 1 ? parts[1] : '',
+            type: parts.length > 2 ? parts[2] : 'website'
+          };
+        });
+    } catch (e) {
+      console.error("Error parsing portfolio links:", e);
+      return [];
+    }
+  }
+
   function formatEntriesToString(fieldName: string, entries: Array<Record<string, string | number | boolean>>): string {
     let result = '';
     
@@ -248,6 +271,8 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         result += `- ${entry.language ? entry.language.toString() : ''} - ${entry.level ? entry.level.toString() : ''}\n`;
       } else if (fieldName === 'zainteresowania') {
         result += `- ${entry.interest ? entry.interest.toString() : ''}\n`;
+      } else if (fieldName === 'portfolio') {
+        result += `${entry.title ? entry.title.toString() : ''} | ${entry.url ? entry.url.toString() : ''} | ${entry.type ? entry.type.toString() : 'website'}\n`;
       }
       
       result += '\n';
@@ -330,6 +355,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     'edukacja': 'Wykształcenie',
     'umiejetnosci': 'Umiejętności',
     'jezyki': 'Języki obce',
+    'portfolio': 'Portfolio i linki',
     'zainteresowania': 'Zainteresowania'
   };
 
@@ -343,6 +369,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     'edukacja': 'Uzupełnij dane o swoim wykształceniu',
     'umiejetnosci': 'Wymień swoje umiejętności',
     'jezyki': 'Podaj znane Ci języki obce i poziom ich znajomości',
+    'portfolio': 'Dodaj linki do swojego portfolio i mediów społecznościowych',
     'zainteresowania': 'Opisz swoje zainteresowania i hobby'
   };
 
@@ -398,6 +425,17 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         return (
           <InterestsSection
             entries={multiEntries.zainteresowania}
+            onDragEnd={handleDragEnd}
+            onAddEntry={addEntry}
+            onRemoveEntry={removeEntry}
+            onUpdateEntry={updateEntry}
+          />
+        );
+
+      case 'portfolio':
+        return (
+          <PortfolioSection
+            entries={multiEntries.portfolio}
             onDragEnd={handleDragEnd}
             onAddEntry={addEntry}
             onRemoveEntry={removeEntry}

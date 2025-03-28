@@ -167,37 +167,43 @@ export const formatInterestsSection = (interestsData: string): string => {
   }
 };
 
-export const formatLinksSection = (linksData: string): string => {
+export const formatPortfolioSection = (portfolioData: string): string => {
+  if (!portfolioData) return '';
+  
   try {
-    const links = linksData.split('\n')
-      .filter(line => line.trim().length > 0)
+    const links = portfolioData.split('\n')
+      .filter(line => line.trim() !== '')
       .map(line => {
-        const parts = line.replace(/^-\s*/, '').split('|').map(part => part.trim());
+        const parts = line.split('|').map(part => part.trim());
         const title = parts[0] || '';
         const url = parts.length > 1 ? parts[1] : '';
+        const type = parts.length > 2 ? parts[2] : 'website';
         
-        // Determine appropriate icon
-        let iconType = 'link';
-        if (url.includes('github.com')) {
-          iconType = 'github';
-        } else if (url.includes('linkedin.com')) {
-          iconType = 'linkedin';
-        }
-        
-        return `
-          <div style="margin-bottom: 8px;">
-            <strong>${title}:</strong> 
-            <a href="${url}" target="_blank" style="color: #555; text-decoration: underline;">
-              ${url}
-            </a>
-          </div>
-        `;
+        return {
+          title,
+          url,
+          type
+        };
       });
     
-    return links.join('');
+    let output = '<ul class="portfolio-links">';
+    
+    links.forEach(link => {
+      output += `
+        <li>
+          <strong>${link.title}:</strong> 
+          <a href="${link.url}" target="_blank" style="color: #555; text-decoration: underline;">
+            ${link.url}
+          </a>
+        </li>
+      `;
+    });
+    
+    output += '</ul>';
+    return output;
   } catch (error) {
-    console.error('Error formatting links section:', error);
-    return '';
+    console.error('Error formatting portfolio section:', error);
+    return `<p>Error formatting portfolio links</p>`;
   }
 };
 
