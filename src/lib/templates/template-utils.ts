@@ -314,3 +314,5 @@ export const getClauseSection = (data: Record<string, string>): string => {
     </div>
   `;
 };
+
+export const formatLinksSection = formatPortfolioSection;

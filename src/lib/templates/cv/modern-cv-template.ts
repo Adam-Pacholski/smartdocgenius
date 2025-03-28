@@ -1,5 +1,6 @@
 
-import { formatExperienceSection, formatEducationSection, formatSkillsSection, formatLanguagesSection, formatInterestsSection, formatLinksSection } from '../template-utils';
+
+import { formatExperienceSection, formatEducationSection, formatSkillsSection, formatLanguagesSection, formatInterestsSection, formatPortfolioSection } from '../template-utils';
 
 export const modernCVTemplate = (data: Record<string, string>, config: Record<string, any> = {}) => {
   // Default config values
@@ -64,7 +65,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
           ${data.linki ? `
             <section style="margin-bottom: 30px;">
               <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Portfolio & Linki</h2>
-              ${formatLinksSection(data.linki)}
+              ${formatPortfolioSection(data.linki)}
             </section>
           ` : ''}
           
@@ -114,3 +115,4 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
     </div>
   `;
 };
+
