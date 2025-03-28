@@ -42,5 +42,6 @@ export const SECTIONS = {
   EDUCATION: 'edukacja',
   SKILLS: 'umiejetnosci',
   LANGUAGES: 'jezyki',
-  INTERESTS: 'zainteresowania'
+  INTERESTS: 'zainteresowania',
+  PORTFOLIO: 'portfolio'  // Added the missing PORTFOLIO section
 };
