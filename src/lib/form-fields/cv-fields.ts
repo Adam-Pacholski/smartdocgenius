@@ -116,14 +116,14 @@ export const cvBaseFields: TemplateField[] = [
     section: SECTIONS.LANGUAGES,
   },
   
-  // Portfolio fields
+  // Portfolio & Links fields - NEW SECTION
   {
     id: 'portfolio',
     label: 'Portfolio & Linki',
-    placeholder: 'Wpisz linki do swojego portfolio, np. GitHub, LinkedIn, strona osobista',
+    placeholder: 'Wpisz linki do swoich profili (np. GitHub, LinkedIn, strona osobista)',
     type: 'textarea',
     required: false,
-    section: SECTIONS.SKILLS,
+    section: SECTIONS.PORTFOLIO,
   },
   
   // Interests fields
