@@ -1,5 +1,5 @@
 
-import { formatExperienceSection, formatEducationSection, formatSkillsSection, formatLanguagesSection, formatInterestsSection } from '../template-utils';
+import { formatExperienceSection, formatEducationSection, formatSkillsSection, formatLanguagesSection, formatInterestsSection, formatPortfolioSection } from '../template-utils';
 
 export const creativeCVTemplate = (data: Record<string, string>, config: Record<string, any> = {}) => {
   // Default config values
@@ -17,7 +17,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
   console.log('Creative CV data being rendered:', data);
   
   return `
-    <div style="font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; max-width: 21cm; margin: 0 auto; padding: 200px;">
+    <div style="font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; max-width: 21cm; margin: 0 auto; padding: 30px;">
       <!-- Creative Header with Circular Photo -->
       <div style="background: linear-gradient(135deg, ${primaryColor}, #34495e); color: white; padding: 40px; text-align: center; border-radius: 0 0 50% 50% / 20%;">
         ${data.photo ? `
@@ -38,7 +38,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
       </div>
       
       <!-- Main Content in Creative Layout -->
-      <div style="padding: 40px 40px 80px;">
+      <div style="padding: 40px 0 80px;">
         <!-- Two Column Layout for Skills and Languages -->
         <div style="display: flex; gap: 30px; margin-bottom: 40px;">
           <!-- Skills Section -->
@@ -64,9 +64,20 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
           ` : ''}
         </div>
         
+        <!-- Portfolio/Links Section -->
+        ${data.portfolio ? `
+          <section style="margin-bottom: 40px; page-break-inside: avoid;">
+            <h2 style="font-size: 22px; color: ${primaryColor}; margin-bottom: 15px; position: relative; padding-bottom: 10px;">
+              Portfolio & Linki
+              <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
+            </h2>
+            ${formatPortfolioSection(data.portfolio)}
+          </section>
+        ` : ''}
+        
         <!-- Experience Section with Timeline Style -->
         ${data.doswiadczenie ? `
-          <section style="margin-bottom: 40px;">
+          <section style="margin-bottom: 40px; page-break-inside: avoid;">
             <h2 style="font-size: 22px; color: ${primaryColor}; margin-bottom: 20px; position: relative; padding-bottom: 10px;">
               Doświadczenie zawodowe
               <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
@@ -77,7 +88,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
         
         <!-- Education Section -->
         ${data.edukacja ? `
-          <section style="margin-bottom: 40px;">
+          <section style="margin-bottom: 40px; page-break-inside: avoid;">
             <h2 style="font-size: 22px; color: ${primaryColor}; margin-bottom: 20px; position: relative; padding-bottom: 10px;">
               Wykształcenie
               <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
@@ -88,7 +99,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
         
         <!-- Interests Section -->
         ${data.zainteresowania ? `
-          <section>
+          <section style="page-break-inside: avoid;">
             <h2 style="font-size: 22px; color: ${primaryColor}; margin-bottom: 15px; position: relative; padding-bottom: 10px;">
               Zainteresowania
               <span style="position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background-color: ${primaryColor};"></span>
@@ -100,7 +111,7 @@ export const creativeCVTemplate = (data: Record<string, string>, config: Record<
       
       <!-- Footer with Clause -->
       ${data.clause ? `
-        <footer style="padding: 20px 30px 60px; font-size: 10px; color: #777; background-color: #f5f5f5; border-top: 2px solid ${primaryColor}; clear: both;">
+        <footer style="padding: 20px 30px 60px; font-size: 10px; color: #777; background-color: #f5f5f5; border-top: 2px solid ${primaryColor}; clear: both; margin-top: 60px;">
           ${data.clause}
         </footer>
       ` : ''}

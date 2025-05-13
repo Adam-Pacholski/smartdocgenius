@@ -1,5 +1,5 @@
 
-import { formatExperienceSection, formatEducationSection, formatSkillsSection, formatLanguagesSection, formatInterestsSection } from '../template-utils';
+import { formatExperienceSection, formatEducationSection, formatSkillsSection, formatLanguagesSection, formatInterestsSection, formatPortfolioSection } from '../template-utils';
 
 export const professionalCVTemplate = (data: Record<string, string>, config: Record<string, any> = {}) => {
   // Default config values
@@ -45,7 +45,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
         <div style="flex: 2; padding: 25px 30px 70px 30px; border-right: 1px solid #eee;">
           <!-- Profile Summary -->
           ${data.summary ? `
-            <section style="margin-bottom: 30px;">
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="color: #2c3e50; font-size: 22px; margin-top: 0; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 PROFIL ZAWODOWY
               </h2>
@@ -55,7 +55,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
           
           <!-- Experience Section -->
           ${data.doswiadczenie ? `
-            <section style="margin-bottom: 30px;">
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="color: #2c3e50; font-size: 22px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 DOŚWIADCZENIE ZAWODOWE
               </h2>
@@ -65,11 +65,21 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
           
           <!-- Education Section -->
           ${data.edukacja ? `
-            <section>
+            <section style="page-break-inside: avoid;">
               <h2 style="color: #2c3e50; font-size: 22px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 WYKSZTAŁCENIE
               </h2>
               ${formatEducationSection(data.edukacja)}
+            </section>
+          ` : ''}
+          
+          <!-- Portfolio Section -->
+          ${data.portfolio ? `
+            <section style="margin-top: 30px; page-break-inside: avoid;">
+              <h2 style="color: #2c3e50; font-size: 22px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
+                PORTFOLIO & LINKI
+              </h2>
+              ${formatPortfolioSection(data.portfolio)}
             </section>
           ` : ''}
         </div>
@@ -78,7 +88,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
         <div style="flex: 1; padding: 25px 30px 70px 30px; background-color: #f8f9fa;">
           <!-- Skills Section -->
           ${data.umiejetnosci ? `
-            <section style="margin-bottom: 30px;">
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="color: #2c3e50; font-size: 22px; margin-top: 0; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 UMIEJĘTNOŚCI
               </h2>
@@ -88,7 +98,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
           
           <!-- Languages Section -->
           ${data.jezyki ? `
-            <section style="margin-bottom: 30px;">
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="color: #2c3e50; font-size: 22px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 JĘZYKI OBCE
               </h2>
@@ -98,7 +108,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
           
           <!-- Interests Section -->
           ${data.zainteresowania ? `
-            <section>
+            <section style="page-break-inside: avoid;">
               <h2 style="color: #2c3e50; font-size: 22px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px;">
                 ZAINTERESOWANIA
               </h2>
@@ -110,7 +120,7 @@ export const professionalCVTemplate = (data: Record<string, string>, config: Rec
       
       <!-- Footer with Clause -->
       ${data.clause ? `
-        <footer style="padding: 20px 30px 60px; font-size: 10px; color: #777; background-color: #f1f1f1; border-top: 2px solid ${primaryColor}; clear: both;">
+        <footer style="padding: 20px 30px 60px; font-size: 10px; color: #777; background-color: #f1f1f1; border-top: 2px solid ${primaryColor}; clear: both; margin-top: 40px;">
           ${data.clause}
         </footer>
       ` : ''}

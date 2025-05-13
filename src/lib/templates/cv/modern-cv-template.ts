@@ -1,5 +1,4 @@
 
-
 import { formatExperienceSection, formatEducationSection, formatSkillsSection, formatLanguagesSection, formatInterestsSection, formatPortfolioSection } from '../template-utils';
 
 export const modernCVTemplate = (data: Record<string, string>, config: Record<string, any> = {}) => {
@@ -37,7 +36,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
           ` : ''}
           
           <!-- Contact Information -->
-          <section style="margin-bottom: 30px;">
+          <section style="margin-bottom: 30px; page-break-inside: avoid;">
             <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Kontakt</h2>
             ${data.email ? `<p style="margin: 5px 0;"><strong>Email:</strong> ${data.email}</p>` : ''}
             ${data.phone ? `<p style="margin: 5px 0;"><strong>Telefon:</strong> ${data.phone}</p>` : ''}
@@ -47,7 +46,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
           
           <!-- Skills Section -->
           ${data.umiejetnosci ? `
-            <section style="margin-bottom: 30px;">
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Umiejętności</h2>
               ${formatSkillsSection(data.umiejetnosci, config.skillsProgressColor || primaryColor)}
             </section>
@@ -55,17 +54,17 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
           
           <!-- Languages Section -->
           ${data.jezyki ? `
-            <section style="margin-bottom: 30px;">
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Języki obce</h2>
               ${formatLanguagesSection(data.jezyki)}
             </section>
           ` : ''}
           
-          <!-- Links Section -->
-          ${data.linki ? `
-            <section style="margin-bottom: 30px;">
+          <!-- Portfolio/Links Section -->
+          ${data.portfolio ? `
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="font-size: 18px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 15px;">Portfolio & Linki</h2>
-              ${formatPortfolioSection(data.linki)}
+              ${formatPortfolioSection(data.portfolio)}
             </section>
           ` : ''}
           
@@ -82,7 +81,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
         <div style="flex: 2; padding: 30px 30px 70px 30px;">
           <!-- Summary Section -->
           ${summary ? `
-            <section style="margin-bottom: 30px;">
+            <section style="margin-bottom: 30px; page-break-inside: avoid;">
               <h2 style="font-size: 22px; color: ${primaryColor}; border-bottom: 2px solid ${primaryColor}; padding-bottom: 10px; margin-bottom: 20px;">Podsumowanie zawodowe</h2>
               <p>${summary}</p>
             </section>
@@ -108,11 +107,10 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
       
       <!-- Footer with Clause -->
       ${data.clause ? `
-        <footer style="padding: 20px 30px 60px; border-top: 1px solid #eee; font-size: 10px; color: #777; background-color: #f9f9f9; clear: both; page-break-inside: avoid;">
+        <footer style="padding: 20px 30px 60px; border-top: 1px solid #eee; font-size: 10px; color: #777; background-color: #f9f9f9; clear: both; page-break-inside: avoid; margin-top: 40px;">
           ${data.clause}
         </footer>
       ` : ''}
     </div>
   `;
 };
-

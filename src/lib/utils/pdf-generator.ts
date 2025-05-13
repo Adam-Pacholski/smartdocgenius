@@ -56,24 +56,48 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     clone.style.background = 'white';
     clone.style.transform = 'none'; // Remove any scaling that might be applied
     
-    // Ensure adequate spacing for content sections and the clause at the bottom
+    // Add padding to the bottom of the clone to ensure content isn't cut off
+    clone.style.paddingBottom = '100px';
+    
+    // Fix creative template scaling issue
+    const creativeTemplates = clone.querySelectorAll('div[style*="padding: 200px"]');
+    creativeTemplates.forEach(template => {
+      if (template instanceof HTMLElement) {
+        template.style.padding = '30px';
+      }
+    });
+    
+    // Ensure adequate spacing for content sections
     const contentDivs = clone.querySelectorAll('div[style*="flex:"]');
     contentDivs.forEach(div => {
       if (div instanceof HTMLElement) {
         // Check if this is a content column
         if (div.style.flex && !div.style.paddingBottom) {
-          div.style.paddingBottom = '70px';
+          div.style.paddingBottom = '100px';
         }
       }
     });
+    
+    // Add extra margin at page breaks
+    const pageBreakHeight = 1123; // A4 height in pixels at display resolution
+    for (let i = 1; i < pageCount; i++) {
+      const breakPosition = i * pageBreakHeight;
+      const pageBreakMarker = document.createElement('div');
+      pageBreakMarker.style.height = '100px';
+      pageBreakMarker.style.width = '100%';
+      pageBreakMarker.style.position = 'absolute';
+      pageBreakMarker.style.top = `${breakPosition - 50}px`;
+      pageBreakMarker.style.background = 'transparent';
+      pageBreakMarker.dataset.pageBreak = 'true';
+      clone.appendChild(pageBreakMarker);
+    }
     
     // Ensure the clause has enough spacing
     const footers = clone.querySelectorAll('footer');
     footers.forEach(footer => {
       if (footer instanceof HTMLElement) {
-        if (!footer.style.paddingBottom || parseInt(footer.style.paddingBottom) < 60) {
-          footer.style.paddingBottom = '60px';
-        }
+        footer.style.paddingBottom = '120px';
+        footer.style.marginTop = '80px';
         footer.style.clear = 'both'; // Ensure footer doesn't overlap with content
       }
     });
@@ -101,24 +125,37 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
           y: yStart,
           scrollY: -yStart,
           height: 1123, // A4 height at 96 DPI for display
-          // Add a small margin to prevent content touching the bottom edge
+          // Improved page break handling
           onclone: (document, element) => {
-            const containers = element.querySelectorAll('div[style*="padding"]');
-            containers.forEach(container => {
-              if (container instanceof HTMLElement) {
-                // Ensure adequate bottom padding
-                if (!container.style.paddingBottom || parseInt(container.style.paddingBottom) < 60) {
-                  container.style.paddingBottom = '60px';
-                }
+            // Add extra padding to sections near page breaks
+            const pageBreakElements = element.querySelectorAll('[data-page-break]');
+            pageBreakElements.forEach(pageBreak => {
+              if (pageBreak instanceof HTMLElement) {
+                const elementsNearBreak = document.elementsFromPoint(
+                  pageBreak.offsetLeft + 100, 
+                  pageBreak.offsetTop
+                );
+                
+                elementsNearBreak.forEach(nearElement => {
+                  if (nearElement instanceof HTMLElement && 
+                      nearElement !== pageBreak && 
+                      !nearElement.contains(pageBreak)) {
+                    nearElement.style.pageBreakInside = 'avoid';
+                    nearElement.style.pageBreakAfter = 'always';
+                    if (parseInt(nearElement.style.marginBottom || '0') < 60) {
+                      nearElement.style.marginBottom = '60px';
+                    }
+                  }
+                });
               }
             });
             
-            // Special handling for clause sections to ensure they're fully visible
-            const clauseElements = element.querySelectorAll('[data-clause], footer');
-            clauseElements.forEach(clause => {
-              if (clause instanceof HTMLElement) {
-                clause.style.marginBottom = '70px';
-                clause.style.paddingBottom = '70px';
+            // Add proper spacing to all sections
+            const sections = element.querySelectorAll('section');
+            sections.forEach(section => {
+              if (section instanceof HTMLElement) {
+                section.style.pageBreakInside = 'avoid';
+                section.style.marginBottom = '30px';
               }
             });
           }
