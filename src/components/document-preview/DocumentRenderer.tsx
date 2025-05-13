@@ -2,6 +2,7 @@
 import React from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import PageBreakIndicator from './PageBreakIndicator';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 interface DocumentRendererProps {
   htmlContent: string;
@@ -41,7 +42,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
       </div>
       
       {/* Improved bottom padding to prevent content from touching the edge */}
-      <div className="h-24"></div>
+      <div className="h-36"></div>
       
       {/* Page break indicators */}
       {previewLoaded && <PageBreakIndicator pageCount={pageCount} />}

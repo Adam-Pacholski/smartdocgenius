@@ -6,7 +6,7 @@ import { DocumentTemplate } from '@/lib/templates';
 import { generatePdfFromHtml, estimatePageCount } from '@/lib/utils/pdf-generator';
 import { toast } from '@/components/ui/use-toast';
 
-// Import our new components
+// Import our components
 import DocumentRenderer from './document-preview/DocumentRenderer';
 import NavigationOverlay from './document-preview/NavigationOverlay';
 import PreviewPagination from './document-preview/PreviewPagination';
@@ -37,8 +37,25 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const [previewLoaded, setPreviewLoaded] = useState(false);
   const [scale, setScale] = useState(1);
   
-  // Generate HTML content once from the template and form data
-  const htmlContent = template.template(formData, config);
+  // Process form data to fix trailing spaces and new lines
+  const processedFormData = React.useMemo(() => {
+    const processed = {...formData};
+    // Process all text fields to preserve trailing spaces and new lines
+    Object.keys(processed).forEach(key => {
+      if (typeof processed[key] === 'string') {
+        // Replace multiple spaces with non-breaking spaces to preserve them in HTML
+        processed[key] = processed[key].replace(/  +/g, (match) => {
+          return ' ' + '\u00A0'.repeat(match.length - 1);
+        });
+        // Replace line breaks with <br> tags
+        processed[key] = processed[key].replace(/\n/g, '<br>');
+      }
+    });
+    return processed;
+  }, [formData]);
+  
+  // Generate HTML content from the template and processed form data
+  const htmlContent = template.template(processedFormData, config);
   
   // Handle resize to update scale when container size changes
   const updateScale = useCallback(() => {

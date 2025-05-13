@@ -30,7 +30,7 @@ export const modernCVTemplate = (data: Record<string, string>, config: Record<st
         <!-- Left Sidebar -->
         <div style="flex: 1; background-color: #f5f5f5; padding: 30px 30px 70px 30px; page-break-inside: avoid;">
           ${data.photo ? `
-            <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: 0 auto 20px;">
+            <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: 0 auto 20px; display: flex; justify-content: center; align-items: center;">
               <img src="${data.photo}" alt="${fullName}" style="width: 100%; height: 100%; object-fit: cover;" />
             </div>
           ` : ''}

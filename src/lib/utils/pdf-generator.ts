@@ -57,7 +57,65 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     clone.style.transform = 'none'; // Remove any scaling that might be applied
     
     // Add padding to the bottom of the clone to ensure content isn't cut off
-    clone.style.paddingBottom = '100px';
+    clone.style.paddingBottom = '150px';
+    
+    // Fix image scaling issues - ensure all circular images maintain aspect ratio with object-fit: cover
+    const circularImages = clone.querySelectorAll('img[style*="border-radius: 50%"]');
+    circularImages.forEach(img => {
+      if (img instanceof HTMLElement) {
+        img.style.objectFit = 'cover';
+        
+        // Create a wrapper for the image if it doesn't exist already
+        const parent = img.parentElement;
+        if (parent && !parent.classList.contains('image-container')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'image-container';
+          wrapper.style.width = img.style.width;
+          wrapper.style.height = img.style.height;
+          wrapper.style.borderRadius = img.style.borderRadius;
+          wrapper.style.overflow = 'hidden';
+          wrapper.style.display = 'flex';
+          wrapper.style.justifyContent = 'center';
+          wrapper.style.alignItems = 'center';
+          
+          parent.insertBefore(wrapper, img);
+          wrapper.appendChild(img);
+          
+          // Reset image styles inside the wrapper
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
+        }
+      }
+    });
+    
+    // Improve spacing around headings to prevent them from being cut at page breaks
+    const headings = clone.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(heading => {
+      if (heading instanceof HTMLElement) {
+        heading.style.pageBreakBefore = 'avoid';
+        heading.style.marginTop = '30px';
+        heading.style.paddingBottom = '8px';
+      }
+    });
+    
+    // Add extra margin between sections to prevent content from being too close to page breaks
+    const sections = clone.querySelectorAll('section');
+    sections.forEach(section => {
+      if (section instanceof HTMLElement) {
+        section.style.pageBreakInside = 'avoid';
+        section.style.paddingBottom = '40px';
+        section.style.marginBottom = '20px';
+      }
+    });
+    
+    // Prevent tables from breaking across pages
+    const tables = clone.querySelectorAll('table');
+    tables.forEach(table => {
+      if (table instanceof HTMLElement) {
+        table.style.pageBreakInside = 'avoid';
+      }
+    });
     
     // Fix creative template scaling issue
     const creativeTemplates = clone.querySelectorAll('div[style*="padding: 200px"]');
@@ -83,10 +141,10 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     for (let i = 1; i < pageCount; i++) {
       const breakPosition = i * pageBreakHeight;
       const pageBreakMarker = document.createElement('div');
-      pageBreakMarker.style.height = '100px';
+      pageBreakMarker.style.height = '120px'; // Increased from 100px to 120px for more spacing
       pageBreakMarker.style.width = '100%';
       pageBreakMarker.style.position = 'absolute';
-      pageBreakMarker.style.top = `${breakPosition - 50}px`;
+      pageBreakMarker.style.top = `${breakPosition - 60}px`; // Shifted up a bit to create more margin
       pageBreakMarker.style.background = 'transparent';
       pageBreakMarker.dataset.pageBreak = 'true';
       clone.appendChild(pageBreakMarker);
@@ -96,8 +154,8 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     const footers = clone.querySelectorAll('footer');
     footers.forEach(footer => {
       if (footer instanceof HTMLElement) {
-        footer.style.paddingBottom = '120px';
-        footer.style.marginTop = '80px';
+        footer.style.paddingBottom = '150px'; // Increased from 120px to 150px
+        footer.style.marginTop = '100px'; // Increased from 80px to 100px
         footer.style.clear = 'both'; // Ensure footer doesn't overlap with content
       }
     });
@@ -142,9 +200,7 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
                       !nearElement.contains(pageBreak)) {
                     nearElement.style.pageBreakInside = 'avoid';
                     nearElement.style.pageBreakAfter = 'always';
-                    if (parseInt(nearElement.style.marginBottom || '0') < 60) {
-                      nearElement.style.marginBottom = '60px';
-                    }
+                    nearElement.style.marginBottom = '80px'; // Increased from 60px to 80px
                   }
                 });
               }
@@ -155,7 +211,7 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
             sections.forEach(section => {
               if (section instanceof HTMLElement) {
                 section.style.pageBreakInside = 'avoid';
-                section.style.marginBottom = '30px';
+                section.style.marginBottom = '40px'; // Increased from 30px to 40px
               }
             });
           }
