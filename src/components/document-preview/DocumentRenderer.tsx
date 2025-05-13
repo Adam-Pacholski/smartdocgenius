@@ -2,7 +2,6 @@
 import React from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import PageBreakIndicator from './PageBreakIndicator';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 interface DocumentRendererProps {
   htmlContent: string;
@@ -34,17 +33,15 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             minHeight: '1123px', // A4 height at 96 DPI
             transform: `scale(${scale})`,
             margin: `0 0 ${(scale - 1) * -600}px 0`, // Adjust bottom margin to prevent scroll issues
-            padding: '30px 30px 80px 30px', // Added bottom padding to ensure content doesn't touch bottom
-            maxWidth: '100%',
-            pageBreakInside: 'avoid', // Help with page breaks 
-            position: 'relative' // For proper positioning of elements
+            padding: 0,
+            maxWidth: '100%'
           }}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
       </div>
       
       {/* Improved bottom padding to prevent content from touching the edge */}
-      <div className="h-36"></div>
+      <div className="h-24"></div>
       
       {/* Page break indicators */}
       {previewLoaded && <PageBreakIndicator pageCount={pageCount} />}

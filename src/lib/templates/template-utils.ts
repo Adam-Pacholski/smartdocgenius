@@ -1,4 +1,3 @@
-
 import { format } from "date-fns";
 import { formatDateByLanguage, currentDate } from '../utils/document-utils';
 
@@ -6,47 +5,28 @@ export const formatExperienceSection = (experienceText: string): string => {
   if (!experienceText) return '';
   
   try {
-    // Split by double newlines to get separate experiences
-    const experienceBlocks = experienceText.split('\n\n').filter(block => block.trim());
+    const experiences = experienceText.split('\n\n').filter(exp => exp.trim() !== '');
     let output = '';
     
-    for (const block of experienceBlocks) {
-      const lines = block.split('\n');
-      let headerParts = [];
-      let detailLines = [];
-      let foundHeader = false;
+    experiences.forEach(experience => {
+      const lines = experience.split('\n');
+      const header = lines[0];
+      const details = lines.slice(1).join('\n');
       
-      // Find header line with pipe separator
-      for (const line of lines) {
-        if (line.includes('|') && !foundHeader) {
-          headerParts = line.split('|').map(part => part.trim());
-          foundHeader = true;
-        } else {
-          detailLines.push(line);
-        }
-      }
+      const [company, position, period] = header.split('|').map(item => item.trim());
       
-      // Only process if we found a header
-      if (headerParts.length > 0) {
-        const company = headerParts[0] || '';
-        const position = headerParts[1] || '';
-        const period = headerParts[2] || '';
-        const details = detailLines.join('\n').trim();
-        
-        output += `
-          <div style="margin-bottom: 15px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-              <strong>${company}</strong>
-              <span>${period}</span>
-            </div>
-            <div style="margin-bottom: 5px;">${position}</div>
-            ${details ? `<div style="color: #555; font-size: 0.95em;">${details}</div>` : ''}
+      output += `
+        <div style="margin-bottom: 15px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <strong>${company}</strong>
+            <span>${period}</span>
           </div>
-        `;
-      }
-    }
+          <div style="margin-bottom: 5px;">${position}</div>
+          ${details ? `<div style="color: #555; font-size: 0.95em;">${details.replace(/\n/g, '<br>')}</div>` : ''}
+        </div>
+      `;
+    });
     
-    console.log('Formatted experience output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting experience section:', error);
@@ -58,47 +38,27 @@ export const formatEducationSection = (educationText: string): string => {
   if (!educationText) return '';
   
   try {
-    // Split by double newlines to get separate education entries
-    const educationBlocks = educationText.split('\n\n').filter(block => block.trim());
+    const entries = parseMultiEntryData(educationText);
     let output = '';
     
-    for (const block of educationBlocks) {
-      const lines = block.split('\n');
-      let headerParts = [];
-      let detailLines = [];
-      let foundHeader = false;
+    entries.forEach(entry => {
+      const school = entry.school || '';
+      const degree = entry.degree || '';
+      const period = entry.period || '';
+      const details = entry.details || '';
       
-      // Find header line with pipe separator
-      for (const line of lines) {
-        if (line.includes('|') && !foundHeader) {
-          headerParts = line.split('|').map(part => part.trim());
-          foundHeader = true;
-        } else {
-          detailLines.push(line);
-        }
-      }
-      
-      // Only process if we found a header
-      if (headerParts.length > 0) {
-        const school = headerParts[0] || '';
-        const degree = headerParts[1] || '';
-        const period = headerParts[2] || '';
-        const details = detailLines.join('\n').trim();
-        
-        output += `
-          <div style="margin-bottom: 15px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-              <strong>${school}</strong>
-              <span>${period}</span>
-            </div>
-            <div style="margin-bottom: 5px;">${degree}</div>
-            ${details ? `<div style="color: #555; font-size: 0.95em;">${details}</div>` : ''}
+      output += `
+        <div style="margin-bottom: 15px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <strong>${school}</strong>
+            <span>${period}</span>
           </div>
-        `;
-      }
-    }
+          <div style="margin-bottom: 5px;">${degree}</div>
+          ${details ? `<div style="color: #555; font-size: 0.95em;">${details.replace(/\n/g, '<br>')}</div>` : ''}
+        </div>
+      `;
+    });
     
-    console.log('Formatted education output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting education section:', error);
@@ -110,31 +70,28 @@ export const formatSkillsSection = (skillsData: string, progressColor = '#3498db
   if (!skillsData) return '';
   
   try {
-    const skillLines = skillsData.split('\n')
-      .filter(line => line.trim() !== '');
-    
-    const skills = skillLines.map(line => {
-      const cleanLine = line.replace(/^-\s*/, '').trim();
-      if (cleanLine.includes('|')) {
-        const [skill, proficiencyStr] = cleanLine.split('|').map(part => part.trim());
-        const proficiency = parseInt(proficiencyStr) || 3;
-        const percentage = (proficiency / 5) * 100;
+    const skills = skillsData.split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => {
+        const cleanLine = line.replace(/^-\s*/, '').trim();
+        if (cleanLine.includes('|')) {
+          const [skill, proficiencyStr] = cleanLine.split('|').map(part => part.trim());
+          const proficiency = parseInt(proficiencyStr) || 3;
+          const percentage = (proficiency / 5) * 100;
+          
+          return {
+            skill,
+            proficiency,
+            percentage
+          };
+        }
         
         return {
-          skill,
-          proficiency,
-          percentage
+          skill: cleanLine,
+          proficiency: 3,
+          percentage: 60
         };
-      }
-      
-      return {
-        skill: cleanLine,
-        proficiency: 3,
-        percentage: 60
-      };
-    });
-    
-    console.log('Parsed skills:', skills);
+      });
     
     let output = '<div style="margin-top: 10px;">';
     
@@ -153,7 +110,6 @@ export const formatSkillsSection = (skillsData: string, progressColor = '#3498db
     });
     
     output += '</div>';
-    console.log('Formatted skills output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting skills section:', error);
@@ -165,31 +121,23 @@ export const formatLanguagesSection = (languagesData: string): string => {
   if (!languagesData) return '';
   
   try {
-    const languageLines = languagesData.split('\n')
-      .filter(line => line.trim() !== '');
+    const languages = languagesData.split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => {
+        const parts = line.replace(/^-\s*/, '').split('-').map(part => part.trim());
+        return {
+          language: parts[0],
+          level: parts.length > 1 ? parts[1] : ''
+        };
+      });
     
-    console.log('Language lines:', languageLines);
-    
-    const languages = languageLines.map(line => {
-      const cleanLine = line.replace(/^-\s*/, '').trim();
-      const parts = cleanLine.split('-').map(part => part.trim());
-      
-      return {
-        language: parts[0],
-        level: parts.length > 1 ? parts[1] : ''
-      };
-    });
-    
-    console.log('Parsed languages:', languages);
-    
-    let output = '<ul style="list-style-type: none; padding-left: 0; margin-top: 10px;">';
+    let output = '<ul>';
     
     languages.forEach(({ language, level }) => {
-      output += `<li style="margin-bottom: 8px;"><strong>${language}</strong>${level ? ` - ${level}` : ''}</li>`;
+      output += `<li>${language} ${level ? ` - ${level}` : ''}</li>`;
     });
     
     output += '</ul>';
-    console.log('Formatted languages output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting languages section:', error);
@@ -201,21 +149,17 @@ export const formatInterestsSection = (interestsData: string): string => {
   if (!interestsData) return '';
   
   try {
-    const interestLines = interestsData.split('\n')
-      .filter(line => line.trim() !== '');
+    const interests = interestsData.split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => line.replace(/^-\s*/, '').trim());
     
-    const interests = interestLines.map(line => line.replace(/^-\s*/, '').trim());
-    
-    console.log('Parsed interests:', interests);
-    
-    let output = '<ul style="list-style-type: none; padding-left: 0; margin-top: 10px;">';
+    let output = '<ul>';
     
     interests.forEach(interest => {
-      output += `<li style="margin-bottom: 8px;">${interest}</li>`;
+      output += `<li>${interest}</li>`;
     });
     
     output += '</ul>';
-    console.log('Formatted interests output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting interests section:', error);
@@ -227,25 +171,26 @@ export const formatPortfolioSection = (portfolioData: string): string => {
   if (!portfolioData) return '';
   
   try {
-    const linkLines = portfolioData.split('\n')
-      .filter(line => line.trim() !== '');
+    const links = portfolioData.split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => {
+        const parts = line.split('|').map(part => part.trim());
+        const title = parts[0] || '';
+        const url = parts.length > 1 ? parts[1] : '';
+        const type = parts.length > 2 ? parts[2] : 'website';
+        
+        return {
+          title,
+          url,
+          type
+        };
+      });
     
-    const links = linkLines.map(line => {
-      const parts = line.split('|').map(part => part.trim());
-      return {
-        title: parts[0] || '',
-        url: parts.length > 1 ? parts[1] : '',
-        type: parts.length > 2 ? parts[2] : 'website'
-      };
-    });
-    
-    console.log('Parsed portfolio links:', links);
-    
-    let output = '<ul class="portfolio-links" style="list-style-type: none; padding-left: 0; margin-top: 10px;">';
+    let output = '<ul class="portfolio-links">';
     
     links.forEach(link => {
       output += `
-        <li style="margin-bottom: 10px;">
+        <li>
           <strong>${link.title}:</strong> 
           <a href="${link.url}" target="_blank" style="color: #555; text-decoration: underline;">
             ${link.url}
@@ -255,7 +200,6 @@ export const formatPortfolioSection = (portfolioData: string): string => {
     });
     
     output += '</ul>';
-    console.log('Formatted portfolio output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting portfolio section:', error);

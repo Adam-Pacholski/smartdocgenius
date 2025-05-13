@@ -41,8 +41,8 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
       
       <!-- Profile Summary -->
       ${data.summary ? `
-        <div style="padding: 20px 30px; margin-bottom: 20px;">
-          <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Podsumowanie zawodowe</h2>
+        <div style="padding: 20px 30px;">
+          <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px;">Podsumowanie zawodowe</h2>
           <p>${data.summary}</p>
         </div>
       ` : ''}
@@ -53,24 +53,24 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
         <div style="flex: 2; padding: 20px 30px 60px 30px; page-break-inside: avoid;">
           <!-- Experience Section -->
           ${data.doswiadczenie ? `
-            <section style="page-break-inside: avoid; margin-bottom: 40px;">
-              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 25px; margin-bottom: 20px;">Doświadczenie zawodowe</h2>
+            <section style="page-break-inside: avoid;">
+              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 25px;">Doświadczenie zawodowe</h2>
               ${formatExperienceSection(data.doswiadczenie)}
             </section>
           ` : ''}
           
           <!-- Education Section -->
           ${data.edukacja ? `
-            <section style="page-break-inside: avoid; margin-top: 40px; margin-bottom: 40px;">
-              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Wykształcenie</h2>
+            <section style="page-break-inside: avoid; margin-top: 40px;">
+              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px;">Wykształcenie</h2>
               ${formatEducationSection(data.edukacja)}
             </section>
           ` : ''}
           
           <!-- Portfolio Section -->
           ${data.portfolio ? `
-            <section style="page-break-inside: avoid; margin-top: 40px; margin-bottom: 40px;">
-              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Portfolio & Linki</h2>
+            <section style="page-break-inside: avoid; margin-top: 40px;">
+              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px;">Portfolio & Linki</h2>
               ${formatPortfolioSection(data.portfolio)}
             </section>
           ` : ''}
@@ -80,24 +80,24 @@ export const basicCVTemplate = (data: Record<string, string>, config: Record<str
         <div style="flex: 1; padding: 20px 30px 60px 30px; background-color: #f9f9f9; page-break-inside: avoid;">
           <!-- Skills Section -->
           ${data.umiejetnosci ? `
-            <section style="page-break-inside: avoid; margin-bottom: 40px;">
-              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; margin-bottom: 20px;">Umiejętności</h2>
+            <section style="page-break-inside: avoid;">
+              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;">Umiejętności</h2>
               ${formatSkillsSection(data.umiejetnosci, config.skillsProgressColor || primaryColor)}
             </section>
           ` : ''}
           
           <!-- Languages Section -->
           ${data.jezyki ? `
-            <section style="page-break-inside: avoid; margin-top: 40px; margin-bottom: 40px;">
-              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Języki obce</h2>
+            <section style="page-break-inside: avoid; margin-top: 40px;">
+              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px;">Języki obce</h2>
               ${formatLanguagesSection(data.jezyki)}
             </section>
           ` : ''}
           
           <!-- Interests Section -->
           ${data.zainteresowania ? `
-            <section style="page-break-inside: avoid; margin-top: 40px; margin-bottom: 40px;">
-              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Zainteresowania</h2>
+            <section style="page-break-inside: avoid; margin-top: 40px;">
+              <h2 style="color: ${primaryColor}; border-bottom: 1px solid #eee; padding-bottom: 10px;">Zainteresowania</h2>
               ${formatInterestsSection(data.zainteresowania)}
             </section>
           ` : ''}
