@@ -22,8 +22,8 @@ export const cvBaseFields: TemplateField[] = [
   {
     id: 'dateOfBirth',
     label: 'Data urodzenia',
-    placeholder: 'RRRR-MM-DD',
-    type: 'date',
+    placeholder: 'DD.MM.RRRR (np. 01.05.1990)',
+    type: 'text',
     required: false,
     section: SECTIONS.PERSONAL,
   },

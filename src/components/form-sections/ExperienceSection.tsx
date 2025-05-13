@@ -10,7 +10,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
 import SortableItem from '@/components/sortable/SortableItem';
-import DatePickerInput from '@/components/date-picker/DatePickerInput';
 
 interface ExperienceSectionProps {
   entries: Array<Record<string, string | number | boolean>>;
@@ -96,21 +95,28 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                   <div className="space-y-2">
-                    <DatePickerInput 
-                      label="Data rozpoczęcia" 
-                      value={entry.startDate?.toString() || ''} 
-                      onChange={(value) => onUpdateEntry('doswiadczenie', index, 'startDate', value)}
+                    <Label htmlFor={`start-date-${index}`}>Data rozpoczęcia</Label>
+                    <Input
                       id={`start-date-${index}`}
+                      value={entry.startDate?.toString() || ''}
+                      onChange={(e) => onUpdateEntry('doswiadczenie', index, 'startDate', e.target.value)}
+                      placeholder="np. 01.05.2023"
+                      className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     />
+                    <p className="text-xs text-muted-foreground">Format: DD.MM.RRRR (np. 01.05.2023)</p>
                   </div>
                   
                   <div className="space-y-2">
-                    <DatePickerInput 
-                      label="Data zakończenia" 
-                      value={entry.endDate?.toString() || ''} 
-                      onChange={(value) => onUpdateEntry('doswiadczenie', index, 'endDate', value)}
+                    <Label htmlFor={`end-date-${index}`}>Data zakończenia</Label>
+                    <Input
                       id={`end-date-${index}`}
+                      value={entry.endDate?.toString() || ''}
+                      onChange={(e) => onUpdateEntry('doswiadczenie', index, 'endDate', e.target.value)}
+                      placeholder="np. 01.05.2024"
+                      className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
+                      disabled={!!entry.isCurrent}
                     />
+                    <p className="text-xs text-muted-foreground">Format: DD.MM.RRRR (np. 01.05.2024)</p>
                   </div>
                 </div>
                 

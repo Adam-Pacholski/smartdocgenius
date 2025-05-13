@@ -10,7 +10,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
 import SortableItem from '@/components/sortable/SortableItem';
-import DatePickerInput from '@/components/date-picker/DatePickerInput';
 
 interface EducationSectionProps {
   entries: Array<Record<string, string | number | boolean>>;
@@ -96,21 +95,28 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                   <div className="space-y-2">
-                    <DatePickerInput 
-                      label="Data rozpoczęcia" 
-                      value={entry.startDate?.toString() || ''} 
-                      onChange={(value) => onUpdateEntry('edukacja', index, 'startDate', value)}
+                    <Label htmlFor={`edu-start-date-${index}`}>Data rozpoczęcia</Label>
+                    <Input
                       id={`edu-start-date-${index}`}
+                      value={entry.startDate?.toString() || ''}
+                      onChange={(e) => onUpdateEntry('edukacja', index, 'startDate', e.target.value)}
+                      placeholder="np. 01.10.2018"
+                      className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
+                    <p className="text-xs text-muted-foreground">Format: DD.MM.RRRR (np. 01.10.2018)</p>
                   </div>
                   
                   <div className="space-y-2">
-                    <DatePickerInput 
-                      label="Data zakończenia" 
-                      value={entry.endDate?.toString() || ''} 
-                      onChange={(value) => onUpdateEntry('edukacja', index, 'endDate', value)}
+                    <Label htmlFor={`edu-end-date-${index}`}>Data zakończenia</Label>
+                    <Input
                       id={`edu-end-date-${index}`}
+                      value={entry.endDate?.toString() || ''}
+                      onChange={(e) => onUpdateEntry('edukacja', index, 'endDate', e.target.value)}
+                      placeholder="np. 30.06.2023"
+                      className="dark:bg-gray-900/80 dark:border-gray-700"
+                      disabled={!!entry.isCurrent}
                     />
+                    <p className="text-xs text-muted-foreground">Format: DD.MM.RRRR (np. 30.06.2023)</p>
                   </div>
                 </div>
                 
