@@ -1,3 +1,4 @@
+
 import { format } from "date-fns";
 import { formatDateByLanguage, currentDate } from '../utils/document-utils';
 
@@ -5,38 +6,45 @@ export const formatExperienceSection = (experienceText: string): string => {
   if (!experienceText) return '';
   
   try {
-    const experiences = experienceText.split('\n\n').filter(exp => exp.trim() !== '');
+    // Split by double newlines to get separate experiences
+    const experienceBlocks = experienceText.split('\n\n').filter(block => block.trim());
     let output = '';
     
-    experiences.forEach(experience => {
-      const lines = experience.split('\n');
-      let headerLine = '';
+    for (const block of experienceBlocks) {
+      const lines = block.split('\n');
+      let headerParts = [];
+      let detailLines = [];
+      let foundHeader = false;
       
-      // Find the first line that has the format company | position | period
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].includes('|')) {
-          headerLine = lines[i];
-          lines.splice(i, 1);
-          break;
+      // Find header line with pipe separator
+      for (const line of lines) {
+        if (line.includes('|') && !foundHeader) {
+          headerParts = line.split('|').map(part => part.trim());
+          foundHeader = true;
+        } else {
+          detailLines.push(line);
         }
       }
       
-      if (!headerLine) return;
-      
-      const [company, position, period] = headerLine.split('|').map(item => item.trim());
-      const details = lines.join('\n');
-      
-      output += `
-        <div style="margin-bottom: 15px;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-            <strong>${company}</strong>
-            <span>${period}</span>
+      // Only process if we found a header
+      if (headerParts.length > 0) {
+        const company = headerParts[0] || '';
+        const position = headerParts[1] || '';
+        const period = headerParts[2] || '';
+        const details = detailLines.join('\n').trim();
+        
+        output += `
+          <div style="margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <strong>${company}</strong>
+              <span>${period}</span>
+            </div>
+            <div style="margin-bottom: 5px;">${position}</div>
+            ${details ? `<div style="color: #555; font-size: 0.95em;">${details}</div>` : ''}
           </div>
-          <div style="margin-bottom: 5px;">${position}</div>
-          ${details ? `<div style="color: #555; font-size: 0.95em;">${details.replace(/\n/g, '<br>')}</div>` : ''}
-        </div>
-      `;
-    });
+        `;
+      }
+    }
     
     console.log('Formatted experience output:', output);
     return output;
@@ -50,38 +58,45 @@ export const formatEducationSection = (educationText: string): string => {
   if (!educationText) return '';
   
   try {
-    const entries = educationText.split('\n\n').filter(entry => entry.trim() !== '');
+    // Split by double newlines to get separate education entries
+    const educationBlocks = educationText.split('\n\n').filter(block => block.trim());
     let output = '';
     
-    entries.forEach(entry => {
-      const lines = entry.split('\n');
-      let headerLine = '';
+    for (const block of educationBlocks) {
+      const lines = block.split('\n');
+      let headerParts = [];
+      let detailLines = [];
+      let foundHeader = false;
       
-      // Find the first line that has the format school | degree | period
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].includes('|')) {
-          headerLine = lines[i];
-          lines.splice(i, 1);
-          break;
+      // Find header line with pipe separator
+      for (const line of lines) {
+        if (line.includes('|') && !foundHeader) {
+          headerParts = line.split('|').map(part => part.trim());
+          foundHeader = true;
+        } else {
+          detailLines.push(line);
         }
       }
       
-      if (!headerLine) return;
-      
-      const [school, degree, period] = headerLine.split('|').map(item => item.trim());
-      const details = lines.join('\n');
-      
-      output += `
-        <div style="margin-bottom: 15px;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-            <strong>${school}</strong>
-            <span>${period}</span>
+      // Only process if we found a header
+      if (headerParts.length > 0) {
+        const school = headerParts[0] || '';
+        const degree = headerParts[1] || '';
+        const period = headerParts[2] || '';
+        const details = detailLines.join('\n').trim();
+        
+        output += `
+          <div style="margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <strong>${school}</strong>
+              <span>${period}</span>
+            </div>
+            <div style="margin-bottom: 5px;">${degree}</div>
+            ${details ? `<div style="color: #555; font-size: 0.95em;">${details}</div>` : ''}
           </div>
-          <div style="margin-bottom: 5px;">${degree}</div>
-          ${details ? `<div style="color: #555; font-size: 0.95em;">${details.replace(/\n/g, '<br>')}</div>` : ''}
-        </div>
-      `;
-    });
+        `;
+      }
+    }
     
     console.log('Formatted education output:', output);
     return output;
@@ -95,28 +110,29 @@ export const formatSkillsSection = (skillsData: string, progressColor = '#3498db
   if (!skillsData) return '';
   
   try {
-    const skills = skillsData.split('\n')
-      .filter(line => line.trim() !== '')
-      .map(line => {
-        const cleanLine = line.replace(/^-\s*/, '').trim();
-        if (cleanLine.includes('|')) {
-          const [skill, proficiencyStr] = cleanLine.split('|').map(part => part.trim());
-          const proficiency = parseInt(proficiencyStr) || 3;
-          const percentage = (proficiency / 5) * 100;
-          
-          return {
-            skill,
-            proficiency,
-            percentage
-          };
-        }
+    const skillLines = skillsData.split('\n')
+      .filter(line => line.trim() !== '');
+    
+    const skills = skillLines.map(line => {
+      const cleanLine = line.replace(/^-\s*/, '').trim();
+      if (cleanLine.includes('|')) {
+        const [skill, proficiencyStr] = cleanLine.split('|').map(part => part.trim());
+        const proficiency = parseInt(proficiencyStr) || 3;
+        const percentage = (proficiency / 5) * 100;
         
         return {
-          skill: cleanLine,
-          proficiency: 3,
-          percentage: 60
+          skill,
+          proficiency,
+          percentage
         };
-      });
+      }
+      
+      return {
+        skill: cleanLine,
+        proficiency: 3,
+        percentage: 60
+      };
+    });
     
     console.log('Parsed skills:', skills);
     
@@ -149,15 +165,20 @@ export const formatLanguagesSection = (languagesData: string): string => {
   if (!languagesData) return '';
   
   try {
-    const languages = languagesData.split('\n')
-      .filter(line => line.trim() !== '')
-      .map(line => {
-        const parts = line.replace(/^-\s*/, '').split('-').map(part => part.trim());
-        return {
-          language: parts[0],
-          level: parts.length > 1 ? parts[1] : ''
-        };
-      });
+    const languageLines = languagesData.split('\n')
+      .filter(line => line.trim() !== '');
+    
+    console.log('Language lines:', languageLines);
+    
+    const languages = languageLines.map(line => {
+      const cleanLine = line.replace(/^-\s*/, '').trim();
+      const parts = cleanLine.split('-').map(part => part.trim());
+      
+      return {
+        language: parts[0],
+        level: parts.length > 1 ? parts[1] : ''
+      };
+    });
     
     console.log('Parsed languages:', languages);
     
@@ -180,9 +201,10 @@ export const formatInterestsSection = (interestsData: string): string => {
   if (!interestsData) return '';
   
   try {
-    const interests = interestsData.split('\n')
-      .filter(line => line.trim() !== '')
-      .map(line => line.replace(/^-\s*/, '').trim());
+    const interestLines = interestsData.split('\n')
+      .filter(line => line.trim() !== '');
+    
+    const interests = interestLines.map(line => line.replace(/^-\s*/, '').trim());
     
     console.log('Parsed interests:', interests);
     
@@ -205,20 +227,17 @@ export const formatPortfolioSection = (portfolioData: string): string => {
   if (!portfolioData) return '';
   
   try {
-    const links = portfolioData.split('\n')
-      .filter(line => line.trim() !== '')
-      .map(line => {
-        const parts = line.split('|').map(part => part.trim());
-        const title = parts[0] || '';
-        const url = parts.length > 1 ? parts[1] : '';
-        const type = parts.length > 2 ? parts[2] : 'website';
-        
-        return {
-          title,
-          url,
-          type
-        };
-      });
+    const linkLines = portfolioData.split('\n')
+      .filter(line => line.trim() !== '');
+    
+    const links = linkLines.map(line => {
+      const parts = line.split('|').map(part => part.trim());
+      return {
+        title: parts[0] || '',
+        url: parts.length > 1 ? parts[1] : '',
+        type: parts.length > 2 ? parts[2] : 'website'
+      };
+    });
     
     console.log('Parsed portfolio links:', links);
     

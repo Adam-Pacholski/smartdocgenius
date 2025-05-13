@@ -55,12 +55,13 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     clone.style.position = 'relative';
     clone.style.background = 'white';
     clone.style.transform = 'none'; // Remove any scaling that might be applied
+    clone.style.padding = '30px'; // Add padding to ensure content isn't cut off
     
-    // Add padding to the bottom of the clone to ensure content isn't cut off
+    // Additional padding at the bottom of the document
     clone.style.paddingBottom = '150px';
     
     // Fix image scaling issues - ensure all circular images maintain aspect ratio with object-fit: cover
-    const circularImages = clone.querySelectorAll('img[style*="border-radius: 50%"]');
+    const circularImages = clone.querySelectorAll('img[style*="border-radius: 50%"], img.circular-image, .circular-image img');
     circularImages.forEach(img => {
       if (img instanceof HTMLElement) {
         img.style.objectFit = 'cover';
@@ -70,9 +71,9 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
         if (parent && !parent.classList.contains('image-container')) {
           const wrapper = document.createElement('div');
           wrapper.className = 'image-container';
-          wrapper.style.width = img.style.width;
-          wrapper.style.height = img.style.height;
-          wrapper.style.borderRadius = img.style.borderRadius;
+          wrapper.style.width = img.style.width || '100px';
+          wrapper.style.height = img.style.height || '100px';
+          wrapper.style.borderRadius = img.style.borderRadius || '50%';
           wrapper.style.overflow = 'hidden';
           wrapper.style.display = 'flex';
           wrapper.style.justifyContent = 'center';
@@ -95,17 +96,17 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
       if (heading instanceof HTMLElement) {
         heading.style.pageBreakBefore = 'avoid';
         heading.style.marginTop = '30px';
-        heading.style.paddingBottom = '8px';
+        heading.style.paddingBottom = '15px';
       }
     });
     
     // Add extra margin between sections to prevent content from being too close to page breaks
-    const sections = clone.querySelectorAll('section');
+    const sections = clone.querySelectorAll('section, .section, div[class*="section"]');
     sections.forEach(section => {
       if (section instanceof HTMLElement) {
         section.style.pageBreakInside = 'avoid';
         section.style.paddingBottom = '40px';
-        section.style.marginBottom = '20px';
+        section.style.marginBottom = '30px';
       }
     });
     
@@ -117,8 +118,18 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
       }
     });
     
-    // Fix creative template scaling issue
-    const creativeTemplates = clone.querySelectorAll('div[style*="padding: 200px"]');
+    // Set proper spacing for all experience/education entries
+    const entries = clone.querySelectorAll('div[style*="margin-bottom: 15px"]');
+    entries.forEach(entry => {
+      if (entry instanceof HTMLElement) {
+        entry.style.pageBreakInside = 'avoid';
+        entry.style.marginBottom = '25px';
+        entry.style.paddingBottom = '10px';
+      }
+    });
+    
+    // Fix Creative template scaling issues
+    const creativeTemplates = clone.querySelectorAll('div[style*="padding: 200px"], div[style*="padding: 100px"]');
     creativeTemplates.forEach(template => {
       if (template instanceof HTMLElement) {
         template.style.padding = '30px';
@@ -141,22 +152,31 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     for (let i = 1; i < pageCount; i++) {
       const breakPosition = i * pageBreakHeight;
       const pageBreakMarker = document.createElement('div');
-      pageBreakMarker.style.height = '120px'; // Increased from 100px to 120px for more spacing
+      pageBreakMarker.style.height = '200px'; // Increased from 100px to 200px for more spacing
       pageBreakMarker.style.width = '100%';
       pageBreakMarker.style.position = 'absolute';
-      pageBreakMarker.style.top = `${breakPosition - 60}px`; // Shifted up a bit to create more margin
+      pageBreakMarker.style.top = `${breakPosition - 100}px`; // Centered on the break point
       pageBreakMarker.style.background = 'transparent';
       pageBreakMarker.dataset.pageBreak = 'true';
       clone.appendChild(pageBreakMarker);
     }
     
     // Ensure the clause has enough spacing
-    const footers = clone.querySelectorAll('footer');
+    const footers = clone.querySelectorAll('footer, div[style*="position: absolute; bottom:"]');
     footers.forEach(footer => {
       if (footer instanceof HTMLElement) {
-        footer.style.paddingBottom = '150px'; // Increased from 120px to 150px
-        footer.style.marginTop = '100px'; // Increased from 80px to 100px
+        footer.style.paddingBottom = '160px'; // Increased from 120px to 160px
+        footer.style.marginTop = '120px'; // Increased from 80px to 120px
         footer.style.clear = 'both'; // Ensure footer doesn't overlap with content
+      }
+    });
+    
+    // Fix line spacing issues - make sure there's proper space between paragraphs
+    const paragraphs = clone.querySelectorAll('p');
+    paragraphs.forEach(paragraph => {
+      if (paragraph instanceof HTMLElement) {
+        paragraph.style.marginBottom = '10px';
+        paragraph.style.lineHeight = '1.5';
       }
     });
     
@@ -200,18 +220,33 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
                       !nearElement.contains(pageBreak)) {
                     nearElement.style.pageBreakInside = 'avoid';
                     nearElement.style.pageBreakAfter = 'always';
-                    nearElement.style.marginBottom = '80px'; // Increased from 60px to 80px
+                    nearElement.style.marginBottom = '100px'; // Increased from 60px to 100px
+                    nearElement.style.paddingBottom = '50px';
                   }
                 });
               }
             });
             
             // Add proper spacing to all sections
-            const sections = element.querySelectorAll('section');
+            const sections = element.querySelectorAll('section, .section, div[class*="section"]');
             sections.forEach(section => {
               if (section instanceof HTMLElement) {
                 section.style.pageBreakInside = 'avoid';
-                section.style.marginBottom = '40px'; // Increased from 30px to 40px
+                section.style.marginBottom = '50px'; // Increased from 30px to 50px
+                section.style.paddingBottom = '20px';
+              }
+            });
+            
+            // Make sure images display correctly
+            const images = element.querySelectorAll('img');
+            images.forEach(img => {
+              if (img instanceof HTMLElement) {
+                // For circular images
+                if (img.style.borderRadius === '50%' || 
+                    img.classList.contains('circular-image') || 
+                    (img.parentElement && img.parentElement.classList.contains('circular-image'))) {
+                  img.style.objectFit = 'cover';
+                }
               }
             });
           }

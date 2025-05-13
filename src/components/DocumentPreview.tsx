@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -39,6 +40,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   // Process form data to fix trailing spaces and new lines
   const processedFormData = React.useMemo(() => {
     const processed = {...formData};
+    
     // Process all text fields to preserve trailing spaces and new lines
     Object.keys(processed).forEach(key => {
       if (typeof processed[key] === 'string') {
@@ -46,10 +48,15 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         processed[key] = processed[key].replace(/  +/g, (match) => {
           return ' ' + '\u00A0'.repeat(match.length - 1);
         });
+        
+        // Replace single spaces at the end of lines with non-breaking spaces
+        processed[key] = processed[key].replace(/ $/gm, '\u00A0');
+        
         // Replace line breaks with <br> tags
         processed[key] = processed[key].replace(/\n/g, '<br>');
       }
     });
+    
     return processed;
   }, [formData]);
   
