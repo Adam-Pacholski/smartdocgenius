@@ -32,7 +32,7 @@ export const cvTemplates: DocumentTemplate[] = [
   {
     id: 'cv-creative',
     name: 'Kreatywne CV',
-    description: 'Wyróżniający się szablon dla kreatywnych branż',
+    description: 'Nowoczesny szablon z gradientowym nagłówkiem dla branż kreatywnych',
     thumbnail: cv_creative,
     fields: getCVFieldsForTemplate('cv-creative'),
     template: creativeCVTemplate,

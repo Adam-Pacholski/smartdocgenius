@@ -10,10 +10,21 @@ export const formatExperienceSection = (experienceText: string): string => {
     
     experiences.forEach(experience => {
       const lines = experience.split('\n');
-      const header = lines[0];
-      const details = lines.slice(1).join('\n');
+      let headerLine = '';
       
-      const [company, position, period] = header.split('|').map(item => item.trim());
+      // Find the first line that has the format company | position | period
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes('|')) {
+          headerLine = lines[i];
+          lines.splice(i, 1);
+          break;
+        }
+      }
+      
+      if (!headerLine) return;
+      
+      const [company, position, period] = headerLine.split('|').map(item => item.trim());
+      const details = lines.join('\n');
       
       output += `
         <div style="margin-bottom: 15px;">
@@ -27,6 +38,7 @@ export const formatExperienceSection = (experienceText: string): string => {
       `;
     });
     
+    console.log('Formatted experience output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting experience section:', error);
@@ -38,14 +50,26 @@ export const formatEducationSection = (educationText: string): string => {
   if (!educationText) return '';
   
   try {
-    const entries = parseMultiEntryData(educationText);
+    const entries = educationText.split('\n\n').filter(entry => entry.trim() !== '');
     let output = '';
     
     entries.forEach(entry => {
-      const school = entry.school || '';
-      const degree = entry.degree || '';
-      const period = entry.period || '';
-      const details = entry.details || '';
+      const lines = entry.split('\n');
+      let headerLine = '';
+      
+      // Find the first line that has the format school | degree | period
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes('|')) {
+          headerLine = lines[i];
+          lines.splice(i, 1);
+          break;
+        }
+      }
+      
+      if (!headerLine) return;
+      
+      const [school, degree, period] = headerLine.split('|').map(item => item.trim());
+      const details = lines.join('\n');
       
       output += `
         <div style="margin-bottom: 15px;">
@@ -59,6 +83,7 @@ export const formatEducationSection = (educationText: string): string => {
       `;
     });
     
+    console.log('Formatted education output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting education section:', error);
@@ -93,6 +118,8 @@ export const formatSkillsSection = (skillsData: string, progressColor = '#3498db
         };
       });
     
+    console.log('Parsed skills:', skills);
+    
     let output = '<div style="margin-top: 10px;">';
     
     skills.forEach(({ skill, proficiency, percentage }) => {
@@ -110,6 +137,7 @@ export const formatSkillsSection = (skillsData: string, progressColor = '#3498db
     });
     
     output += '</div>';
+    console.log('Formatted skills output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting skills section:', error);
@@ -131,13 +159,16 @@ export const formatLanguagesSection = (languagesData: string): string => {
         };
       });
     
-    let output = '<ul>';
+    console.log('Parsed languages:', languages);
+    
+    let output = '<ul style="list-style-type: none; padding-left: 0; margin-top: 10px;">';
     
     languages.forEach(({ language, level }) => {
-      output += `<li>${language} ${level ? ` - ${level}` : ''}</li>`;
+      output += `<li style="margin-bottom: 8px;"><strong>${language}</strong>${level ? ` - ${level}` : ''}</li>`;
     });
     
     output += '</ul>';
+    console.log('Formatted languages output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting languages section:', error);
@@ -153,13 +184,16 @@ export const formatInterestsSection = (interestsData: string): string => {
       .filter(line => line.trim() !== '')
       .map(line => line.replace(/^-\s*/, '').trim());
     
-    let output = '<ul>';
+    console.log('Parsed interests:', interests);
+    
+    let output = '<ul style="list-style-type: none; padding-left: 0; margin-top: 10px;">';
     
     interests.forEach(interest => {
-      output += `<li>${interest}</li>`;
+      output += `<li style="margin-bottom: 8px;">${interest}</li>`;
     });
     
     output += '</ul>';
+    console.log('Formatted interests output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting interests section:', error);
@@ -186,11 +220,13 @@ export const formatPortfolioSection = (portfolioData: string): string => {
         };
       });
     
-    let output = '<ul class="portfolio-links">';
+    console.log('Parsed portfolio links:', links);
+    
+    let output = '<ul class="portfolio-links" style="list-style-type: none; padding-left: 0; margin-top: 10px;">';
     
     links.forEach(link => {
       output += `
-        <li>
+        <li style="margin-bottom: 10px;">
           <strong>${link.title}:</strong> 
           <a href="${link.url}" target="_blank" style="color: #555; text-decoration: underline;">
             ${link.url}
@@ -200,6 +236,7 @@ export const formatPortfolioSection = (portfolioData: string): string => {
     });
     
     output += '</ul>';
+    console.log('Formatted portfolio output:', output);
     return output;
   } catch (error) {
     console.error('Error formatting portfolio section:', error);
