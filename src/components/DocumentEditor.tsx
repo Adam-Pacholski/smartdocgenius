@@ -82,7 +82,8 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     
     try {
       console.log(`Parsing ${fieldName} data:`, formData[fieldName]);
-      const lines = formData[fieldName].split('\n').filter(line => line.trim() !== '' || line === '\n');
+      // Preserve all lines, including empty ones that represent line breaks
+      const lines = formData[fieldName].split('\n');
       const entries = [];
       let currentEntry: Record<string, string | number | boolean> = {};
       let currentLines: string[] = [];
@@ -138,8 +139,8 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             }
           }
         } 
-        else if (line.trim().length > 0 || line === '\n') {
-          // Add any non-empty line or explicit line breaks to the details
+        else {
+          // Always add lines to preserve empty lines which represent line breaks
           currentLines.push(line);
         }
       }
@@ -252,6 +253,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
         result += `${entry.company ? entry.company.toString() : ''}|${entry.position ? entry.position.toString() : ''}|${period}\n`;
         if (entry.details) {
+          // Preserve all line breaks in the details
           result += `${entry.details.toString()}\n`;
         }
       } else if (fieldName === 'edukacja') {
@@ -264,6 +266,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
         result += `${entry.school ? entry.school.toString() : ''}|${entry.degree ? entry.degree.toString() : ''}|${period}\n`;
         if (entry.details) {
+          // Preserve all line breaks in the details
           result += `${entry.details.toString()}\n`;
         }
       } else if (fieldName === 'umiejetnosci') {

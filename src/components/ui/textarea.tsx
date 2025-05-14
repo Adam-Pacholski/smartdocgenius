@@ -1,7 +1,7 @@
 
 import * as React from "react"
 
-import { cn, preserveWhitespace } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 
 export interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -13,16 +13,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     // Ensure value is never undefined - convert to empty string
     const safeValue = value === undefined || value === null ? '' : value;
     
-    // If preserveWhitespace is true, process the value to preserve whitespace
-    const displayValue = shouldPreserveWhitespace && typeof safeValue === 'string' 
-      ? preserveWhitespace(safeValue)
-      : safeValue;
-    
     return (
       <textarea
-        value={displayValue}
+        value={safeValue}
         className={cn(
-          "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 whitespace-pre-wrap",
           className
         )}
         ref={ref}
