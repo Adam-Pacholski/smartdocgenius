@@ -54,6 +54,7 @@ const GenericFieldsSection: React.FC<GenericFieldsSectionProps> = ({
                   value={formData[field.id] || ''}
                   onChange={(e) => handleChange(field.id, e.target.value)}
                   className="min-h-[150px] dark:bg-gray-900/70 dark:border-gray-700"
+                  preserveWhitespace={true}
                 />
                 {field.description && (
                   <p className="text-sm text-muted-foreground">{field.description}</p>

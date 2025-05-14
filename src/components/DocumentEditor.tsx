@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -83,7 +82,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     
     try {
       console.log(`Parsing ${fieldName} data:`, formData[fieldName]);
-      const lines = formData[fieldName].split('\n').filter(line => line.trim() !== '');
+      const lines = formData[fieldName].split('\n').filter(line => line.trim() !== '' || line === '\n');
       const entries = [];
       let currentEntry: Record<string, string | number | boolean> = {};
       let currentLines: string[] = [];
@@ -139,7 +138,8 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             }
           }
         } 
-        else if (line.trim().length > 0) {
+        else if (line.trim().length > 0 || line === '\n') {
+          // Add any non-empty line or explicit line breaks to the details
           currentLines.push(line);
         }
       }

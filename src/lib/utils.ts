@@ -15,9 +15,8 @@ export function cn(...inputs: ClassValue[]) {
 export function preserveWhitespace(text: string): string {
   if (!text) return '';
   
-  // Replace spaces with non-breaking spaces to preserve them
-  // Replace line breaks with <br> tags
-  return text
-    .replace(/ /g, '\u00A0')
-    .replace(/\n/g, '<br />');
+  // We don't need to replace spaces or line breaks for textarea inputs
+  // as the textarea element naturally preserves them
+  // This function is primarily needed for rendering in HTML where whitespace would be collapsed
+  return text;
 }
