@@ -82,7 +82,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     
     try {
       console.log(`Parsing ${fieldName} data:`, formData[fieldName]);
-      // Preserve all lines, including empty ones that represent line breaks
+      // Process the text as-is without filtering any lines
       const lines = formData[fieldName].split('\n');
       const entries = [];
       let currentEntry: Record<string, string | number | boolean> = {};
@@ -140,7 +140,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
           }
         } 
         else {
-          // Always add lines to preserve empty lines which represent line breaks
+          // Add all lines to preserve the exact structure including empty lines
           currentLines.push(line);
         }
       }
@@ -253,8 +253,12 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
         result += `${entry.company ? entry.company.toString() : ''}|${entry.position ? entry.position.toString() : ''}|${period}\n`;
         if (entry.details) {
-          // Preserve all line breaks in the details
-          result += `${entry.details.toString()}\n`;
+          // Preserve the details text exactly as it is
+          result += `${entry.details.toString()}`;
+          // Only add a newline if the details don't already end with one
+          if (!entry.details.toString().endsWith('\n')) {
+            result += '\n';
+          }
         }
       } else if (fieldName === 'edukacja') {
         let period = '';
@@ -266,8 +270,12 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
         result += `${entry.school ? entry.school.toString() : ''}|${entry.degree ? entry.degree.toString() : ''}|${period}\n`;
         if (entry.details) {
-          // Preserve all line breaks in the details
-          result += `${entry.details.toString()}\n`;
+          // Preserve the details text exactly as it is
+          result += `${entry.details.toString()}`;
+          // Only add a newline if the details don't already end with one
+          if (!entry.details.toString().endsWith('\n')) {
+            result += '\n';
+          }
         }
       } else if (fieldName === 'umiejetnosci') {
         result += `- ${entry.skill ? entry.skill.toString() : ''}|${entry.proficiency !== undefined ? entry.proficiency.toString() : '3'}\n`;

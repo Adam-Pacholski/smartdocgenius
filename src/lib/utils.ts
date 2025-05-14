@@ -15,8 +15,8 @@ export function cn(...inputs: ClassValue[]) {
 export function preserveWhitespace(text: string): string {
   if (!text) return '';
   
-  // Replace spaces with non-breaking spaces to preserve them
-  // Replace line breaks with <br> tags for HTML rendering
+  // This function is only needed for rendering in HTML contexts
+  // where whitespace would normally be collapsed
   return text
     .replace(/ /g, '\u00A0')
     .replace(/\n/g, '<br />');
