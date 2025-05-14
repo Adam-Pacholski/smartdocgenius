@@ -37,6 +37,12 @@ const EducationSection: React.FC<EducationSectionProps> = ({
     })
   );
 
+  // Helper function to handle input value changes properly preserving spaces
+  const handleInputChange = (section: string, index: number, field: string, value: string) => {
+    // Directly pass the value without any trimming to preserve spaces
+    onUpdateEntry(section, index, field, value);
+  };
+
   return (
     <div className="space-y-6">
       <DndContext
@@ -76,7 +82,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     <Input
                       id={`school-${index}`}
                       value={entry.school?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('edukacja', index, 'school', e.target.value)}
+                      onChange={(e) => handleInputChange('edukacja', index, 'school', e.target.value)}
                       placeholder="np. Uniwersytet Warszawski"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
@@ -86,7 +92,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     <Input
                       id={`degree-${index}`}
                       value={entry.degree?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('edukacja', index, 'degree', e.target.value)}
+                      onChange={(e) => handleInputChange('edukacja', index, 'degree', e.target.value)}
                       placeholder="np. Informatyka, mgr"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
@@ -99,7 +105,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     <Input
                       id={`edu-start-date-${index}`}
                       value={entry.startDate?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('edukacja', index, 'startDate', e.target.value)}
+                      onChange={(e) => handleInputChange('edukacja', index, 'startDate', e.target.value)}
                       placeholder="np. 01.10.2018"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
@@ -111,7 +117,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     <Input
                       id={`edu-end-date-${index}`}
                       value={entry.endDate?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('edukacja', index, 'endDate', e.target.value)}
+                      onChange={(e) => handleInputChange('edukacja', index, 'endDate', e.target.value)}
                       placeholder="np. 30.06.2023"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                       disabled={!!entry.isCurrent}
@@ -138,9 +144,11 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                   <Textarea
                     id={`edu-details-${index}`}
                     value={entry.details?.toString() || ''}
-                    onChange={(e) => onUpdateEntry('edukacja', index, 'details', e.target.value)}
+                    onChange={(e) => handleInputChange('edukacja', index, 'details', e.target.value)}
                     placeholder="- Specjalizacja&#10;- Ważne projekty"
                     className="min-h-[100px] dark:bg-gray-900/80 dark:border-gray-700"
+                    spellCheck={false}
+                    preserveWhitespace
                   />
                 </div>
               </div>

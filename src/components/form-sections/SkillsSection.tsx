@@ -40,6 +40,12 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+  
+  // Helper function to handle input value changes properly preserving spaces
+  const handleInputChange = (section: string, index: number, field: string, value: string) => {
+    // Directly pass the value without any trimming to preserve spaces
+    onUpdateEntry(section, index, field, value);
+  };
 
   return (
     <div className="space-y-4">
@@ -97,7 +103,7 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
                   <Input
                     id={`skill-${index}`}
                     value={entry.skill?.toString() || ''}
-                    onChange={(e) => onUpdateEntry('umiejetnosci', index, 'skill', e.target.value)}
+                    onChange={(e) => handleInputChange('umiejetnosci', index, 'skill', e.target.value)}
                     placeholder="np. Tworzenie stron internetowych"
                     className="dark:bg-gray-900/80 dark:border-gray-700"
                   />

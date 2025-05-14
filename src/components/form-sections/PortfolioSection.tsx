@@ -42,6 +42,12 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
     })
   );
 
+  // Helper function to handle input value changes properly preserving spaces
+  const handleInputChange = (section: string, index: number, field: string, value: string) => {
+    // Directly pass the value without any trimming to preserve spaces
+    onUpdateEntry(section, index, field, value);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     onDragEnd(event, 'portfolio');
   };
@@ -97,7 +103,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                       <Input
                         id={`link-title-${index}`}
                         value={entry.title?.toString() || ''}
-                        onChange={(e) => onUpdateEntry('portfolio', index, 'title', e.target.value)}
+                        onChange={(e) => handleInputChange('portfolio', index, 'title', e.target.value)}
                         placeholder="np. Mój GitHub"
                         className="w-full"
                       />
@@ -132,7 +138,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                       <Input
                         id={`link-url-${index}`}
                         value={entry.url?.toString() || ''}
-                        onChange={(e) => onUpdateEntry('portfolio', index, 'url', e.target.value)}
+                        onChange={(e) => handleInputChange('portfolio', index, 'url', e.target.value)}
                         placeholder="https://"
                         className="w-full"
                       />

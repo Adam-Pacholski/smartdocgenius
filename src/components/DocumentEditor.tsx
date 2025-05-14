@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -100,7 +101,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             currentLines = [];
           }
           
-          const parts = line.split('|').map(part => part.trim());
+          const parts = line.split('|').map(part => part);
           
           if (fieldName === 'doswiadczenie') {
             currentEntry.company = parts[0] || '';
@@ -110,7 +111,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             currentEntry.isCurrent = periodText.includes('do teraz');
             
             if (periodText) {
-              const dateParts = periodText.split('-').map(d => d.trim());
+              const dateParts = periodText.split('-').map(d => d);
               currentEntry.startDate = dateParts[0] || '';
               
               if (dateParts.length > 1 && !currentEntry.isCurrent) {
@@ -127,7 +128,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             currentEntry.isCurrent = periodText.includes('do teraz');
             
             if (periodText) {
-              const dateParts = periodText.split('-').map(d => d.trim());
+              const dateParts = periodText.split('-').map(d => d);
               currentEntry.startDate = dateParts[0] || '';
               
               if (dateParts.length > 1 && !currentEntry.isCurrent) {
@@ -166,14 +167,14 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         .filter(line => line.trim() !== '')
         .map(line => {
           if (line.includes('|')) {
-            const parts = line.replace(/^-\s*/, '').split('|').map(part => part.trim());
+            const parts = line.replace(/^-\s*/, '').split('|');
             return {
               skill: parts[0],
               proficiency: parseInt(parts[1]) || 3
             };
           }
           return {
-            skill: line.replace(/^-\s*/, '').trim(),
+            skill: line.replace(/^-\s*/, ''),
             proficiency: 3
           };
         });
@@ -190,7 +191,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       return formData.jezyki.split('\n')
         .filter(line => line.trim() !== '')
         .map(line => {
-          const parts = line.replace(/^-\s*/, '').split('-').map(part => part.trim());
+          const parts = line.replace(/^-\s*/, '').split('-');
           return {
             language: parts[0],
             level: parts.length > 1 ? parts[1] : ''
@@ -209,7 +210,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       return formData.zainteresowania.split('\n')
         .filter(line => line.trim() !== '')
         .map(line => ({
-          interest: line.replace(/^-\s*/, '').trim()
+          interest: line.replace(/^-\s*/, '')
         }));
     } catch (e) {
       console.error("Error parsing interests:", e);
@@ -224,7 +225,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       return formData.portfolio.split('\n')
         .filter(line => line.trim() !== '')
         .map(line => {
-          const parts = line.replace(/^-\s*/, '').split('|').map(part => part.trim());
+          const parts = line.replace(/^-\s*/, '').split('|');
           return {
             title: parts[0] || '',
             url: parts.length > 1 ? parts[1] : '',
@@ -249,7 +250,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
           period = entry.isCurrent ? `${start} - do teraz` : `${start}${end ? ` - ${end}` : ''}`;
         }
 
-        result += `${entry.company ? entry.company.toString() : ''} | ${entry.position ? entry.position.toString() : ''} | ${period}\n`;
+        result += `${entry.company ? entry.company.toString() : ''}|${entry.position ? entry.position.toString() : ''}|${period}\n`;
         if (entry.details) {
           result += `${entry.details.toString()}\n`;
         }
@@ -261,24 +262,24 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
           period = entry.isCurrent ? `${start} - do teraz` : `${start}${end ? ` - ${end}` : ''}`;
         }
 
-        result += `${entry.school ? entry.school.toString() : ''} | ${entry.degree ? entry.degree.toString() : ''} | ${period}\n`;
+        result += `${entry.school ? entry.school.toString() : ''}|${entry.degree ? entry.degree.toString() : ''}|${period}\n`;
         if (entry.details) {
           result += `${entry.details.toString()}\n`;
         }
       } else if (fieldName === 'umiejetnosci') {
-        result += `- ${entry.skill ? entry.skill.toString() : ''} | ${entry.proficiency !== undefined ? entry.proficiency.toString() : '3'}\n`;
+        result += `- ${entry.skill ? entry.skill.toString() : ''}|${entry.proficiency !== undefined ? entry.proficiency.toString() : '3'}\n`;
       } else if (fieldName === 'jezyki') {
-        result += `- ${entry.language ? entry.language.toString() : ''} - ${entry.level ? entry.level.toString() : ''}\n`;
+        result += `- ${entry.language ? entry.language.toString() : ''}-${entry.level ? entry.level.toString() : ''}\n`;
       } else if (fieldName === 'zainteresowania') {
         result += `- ${entry.interest ? entry.interest.toString() : ''}\n`;
       } else if (fieldName === 'portfolio') {
-        result += `${entry.title ? entry.title.toString() : ''} | ${entry.url ? entry.url.toString() : ''} | ${entry.type ? entry.type.toString() : 'website'}\n`;
+        result += `${entry.title ? entry.title.toString() : ''}|${entry.url ? entry.url.toString() : ''}|${entry.type ? entry.type.toString() : 'website'}\n`;
       }
       
       result += '\n';
     });
     
-    return result.trim();
+    return result;
   }
 
   const handleChange = (id: string, value: string) => {
