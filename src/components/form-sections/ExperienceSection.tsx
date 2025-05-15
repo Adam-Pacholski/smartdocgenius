@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
@@ -36,6 +36,27 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+  
+  // Local state to handle textarea inputs
+  const [textInputs, setTextInputs] = useState<Record<string, string>>({});
+  
+  // Handle text input change with local state
+  const handleTextChange = (index: number, field: string, value: string) => {
+    const key = `exp-${index}-${field}`;
+    setTextInputs(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+  
+  // Apply changes to parent state when blur occurs
+  const handleTextBlur = (index: number, field: string) => {
+    const key = `exp-${index}-${field}`;
+    const value = textInputs[key];
+    if (value !== undefined) {
+      onUpdateEntry('doswiadczenie', index, field, value);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -75,8 +96,11 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     <Label htmlFor={`company-${index}`}>Nazwa firmy</Label>
                     <Input
                       id={`company-${index}`}
-                      value={entry.company?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('doswiadczenie', index, 'company', e.target.value)}
+                      value={textInputs[`exp-${index}-company`] !== undefined 
+                        ? textInputs[`exp-${index}-company`] 
+                        : entry.company?.toString() || ''}
+                      onChange={(e) => handleTextChange(index, 'company', e.target.value)}
+                      onBlur={() => handleTextBlur(index, 'company')}
                       placeholder="np. ABC Sp. z o.o."
                       className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     />
@@ -85,8 +109,11 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     <Label htmlFor={`position-${index}`}>Stanowisko</Label>
                     <Input
                       id={`position-${index}`}
-                      value={entry.position?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('doswiadczenie', index, 'position', e.target.value)}
+                      value={textInputs[`exp-${index}-position`] !== undefined 
+                        ? textInputs[`exp-${index}-position`] 
+                        : entry.position?.toString() || ''}
+                      onChange={(e) => handleTextChange(index, 'position', e.target.value)}
+                      onBlur={() => handleTextBlur(index, 'position')}
                       placeholder="np. Specjalista ds. marketingu"
                       className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     />
@@ -98,8 +125,11 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     <Label htmlFor={`start-date-${index}`}>Data rozpoczęcia</Label>
                     <Input
                       id={`start-date-${index}`}
-                      value={entry.startDate?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('doswiadczenie', index, 'startDate', e.target.value)}
+                      value={textInputs[`exp-${index}-startDate`] !== undefined 
+                        ? textInputs[`exp-${index}-startDate`] 
+                        : entry.startDate?.toString() || ''}
+                      onChange={(e) => handleTextChange(index, 'startDate', e.target.value)}
+                      onBlur={() => handleTextBlur(index, 'startDate')}
                       placeholder="np. 01.05.2023"
                       className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     />
@@ -110,8 +140,11 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     <Label htmlFor={`end-date-${index}`}>Data zakończenia</Label>
                     <Input
                       id={`end-date-${index}`}
-                      value={entry.endDate?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('doswiadczenie', index, 'endDate', e.target.value)}
+                      value={textInputs[`exp-${index}-endDate`] !== undefined 
+                        ? textInputs[`exp-${index}-endDate`] 
+                        : entry.endDate?.toString() || ''}
+                      onChange={(e) => handleTextChange(index, 'endDate', e.target.value)}
+                      onBlur={() => handleTextBlur(index, 'endDate')}
                       placeholder="np. 01.05.2024"
                       className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                       disabled={!!entry.isCurrent}
@@ -138,8 +171,11 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                   <Label htmlFor={`details-${index}`}>Osiągnięcia i zadania</Label>
                   <Textarea
                     id={`details-${index}`}
-                    value={entry.details?.toString() || ''}
-                    onChange={(e) => onUpdateEntry('doswiadczenie', index, 'details', e.target.value)}
+                    value={textInputs[`exp-${index}-details`] !== undefined 
+                      ? textInputs[`exp-${index}-details`] 
+                      : entry.details?.toString() || ''}
+                    onChange={(e) => handleTextChange(index, 'details', e.target.value)}
+                    onBlur={() => handleTextBlur(index, 'details')}
                     placeholder="- Osiągnięcie 1&#10;- Osiągnięcie 2"
                     className="min-h-[100px] dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     preserveWhitespace={true}

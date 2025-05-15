@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
@@ -36,6 +36,27 @@ const EducationSection: React.FC<EducationSectionProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  // Local state to handle text inputs
+  const [textInputs, setTextInputs] = useState<Record<string, string>>({});
+  
+  // Handle text input change with local state
+  const handleTextChange = (index: number, field: string, value: string) => {
+    const key = `edu-${index}-${field}`;
+    setTextInputs(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+  
+  // Apply changes to parent state when blur occurs
+  const handleTextBlur = (index: number, field: string) => {
+    const key = `edu-${index}-${field}`;
+    const value = textInputs[key];
+    if (value !== undefined) {
+      onUpdateEntry('edukacja', index, field, value);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -75,8 +96,11 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     <Label htmlFor={`school-${index}`}>Nazwa uczelni/szkoły</Label>
                     <Input
                       id={`school-${index}`}
-                      value={entry.school?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('edukacja', index, 'school', e.target.value)}
+                      value={textInputs[`edu-${index}-school`] !== undefined 
+                        ? textInputs[`edu-${index}-school`] 
+                        : entry.school?.toString() || ''}
+                      onChange={(e) => handleTextChange(index, 'school', e.target.value)}
+                      onBlur={() => handleTextBlur(index, 'school')}
                       placeholder="np. Uniwersytet Warszawski"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
@@ -85,8 +109,11 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     <Label htmlFor={`degree-${index}`}>Kierunek/Tytuł</Label>
                     <Input
                       id={`degree-${index}`}
-                      value={entry.degree?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('edukacja', index, 'degree', e.target.value)}
+                      value={textInputs[`edu-${index}-degree`] !== undefined 
+                        ? textInputs[`edu-${index}-degree`] 
+                        : entry.degree?.toString() || ''}
+                      onChange={(e) => handleTextChange(index, 'degree', e.target.value)}
+                      onBlur={() => handleTextBlur(index, 'degree')}
                       placeholder="np. Informatyka, mgr"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
@@ -98,8 +125,11 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     <Label htmlFor={`edu-start-date-${index}`}>Data rozpoczęcia</Label>
                     <Input
                       id={`edu-start-date-${index}`}
-                      value={entry.startDate?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('edukacja', index, 'startDate', e.target.value)}
+                      value={textInputs[`edu-${index}-startDate`] !== undefined 
+                        ? textInputs[`edu-${index}-startDate`] 
+                        : entry.startDate?.toString() || ''}
+                      onChange={(e) => handleTextChange(index, 'startDate', e.target.value)}
+                      onBlur={() => handleTextBlur(index, 'startDate')}
                       placeholder="np. 01.10.2018"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
@@ -110,8 +140,11 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     <Label htmlFor={`edu-end-date-${index}`}>Data zakończenia</Label>
                     <Input
                       id={`edu-end-date-${index}`}
-                      value={entry.endDate?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('edukacja', index, 'endDate', e.target.value)}
+                      value={textInputs[`edu-${index}-endDate`] !== undefined 
+                        ? textInputs[`edu-${index}-endDate`] 
+                        : entry.endDate?.toString() || ''}
+                      onChange={(e) => handleTextChange(index, 'endDate', e.target.value)}
+                      onBlur={() => handleTextBlur(index, 'endDate')}
                       placeholder="np. 30.06.2023"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                       disabled={!!entry.isCurrent}
@@ -137,8 +170,11 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                   <Label htmlFor={`edu-details-${index}`}>Dodatkowe informacje</Label>
                   <Textarea
                     id={`edu-details-${index}`}
-                    value={entry.details?.toString() || ''}
-                    onChange={(e) => onUpdateEntry('edukacja', index, 'details', e.target.value)}
+                    value={textInputs[`edu-${index}-details`] !== undefined 
+                      ? textInputs[`edu-${index}-details`] 
+                      : entry.details?.toString() || ''}
+                    onChange={(e) => handleTextChange(index, 'details', e.target.value)}
+                    onBlur={() => handleTextBlur(index, 'details')}
                     placeholder="- Specjalizacja&#10;- Ważne projekty"
                     className="min-h-[100px] dark:bg-gray-900/80 dark:border-gray-700"
                     preserveWhitespace={true}

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
 import SortableItem from '@/components/sortable/SortableItem';
+import { Textarea } from '@/components/ui/textarea';
 
 interface InterestsSectionProps {
   entries: Array<Record<string, string | number | boolean>>;
@@ -34,6 +35,27 @@ const InterestsSection: React.FC<InterestsSectionProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+  
+  // Local state to handle textarea input without causing re-renders
+  const [textInputs, setTextInputs] = useState<Record<string, string>>({});
+
+  // Handle textarea change with local state first
+  const handleTextareaChange = (index: number, field: string, value: string) => {
+    const key = `interest-${index}-${field}`;
+    setTextInputs(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+
+  // Apply changes to parent state when blur occurs
+  const handleTextareaBlur = (index: number, field: string) => {
+    const key = `interest-${index}-${field}`;
+    const value = textInputs[key];
+    if (value !== undefined) {
+      onUpdateEntry('zainteresowania', index, field, value);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -70,10 +92,13 @@ const InterestsSection: React.FC<InterestsSectionProps> = ({
                 
                 <div className="space-y-2">
                   <Label htmlFor={`interest-${index}`}>Zainteresowanie</Label>
-                  <Input
+                  <Textarea
                     id={`interest-${index}`}
-                    value={entry.interest?.toString() || ''}
-                    onChange={(e) => onUpdateEntry('zainteresowania', index, 'interest', e.target.value)}
+                    value={textInputs[`interest-${index}-interest`] !== undefined 
+                      ? textInputs[`interest-${index}-interest`] 
+                      : entry.interest?.toString() || ''}
+                    onChange={(e) => handleTextareaChange(index, 'interest', e.target.value)}
+                    onBlur={() => handleTextareaBlur(index, 'interest')}
                     placeholder="np. Fotografia"
                     className="dark:bg-gray-900/80 dark:border-gray-700"
                   />

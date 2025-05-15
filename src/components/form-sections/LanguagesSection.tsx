@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
 import SortableItem from '@/components/sortable/SortableItem';
+import { Textarea } from '@/components/ui/textarea';
 
 interface LanguagesSectionProps {
   entries: Array<Record<string, string | number | boolean>>;
@@ -34,6 +35,27 @@ const LanguagesSection: React.FC<LanguagesSectionProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  // Local state for text inputs
+  const [textInputs, setTextInputs] = useState<Record<string, string>>({});
+
+  // Handle input change with local state
+  const handleInputChange = (index: number, field: string, value: string) => {
+    const key = `lang-${index}-${field}`;
+    setTextInputs(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+
+  // Apply changes when input loses focus
+  const handleInputBlur = (index: number, field: string) => {
+    const key = `lang-${index}-${field}`;
+    const value = textInputs[key];
+    if (value !== undefined) {
+      onUpdateEntry('jezyki', index, field, value);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -71,20 +93,26 @@ const LanguagesSection: React.FC<LanguagesSectionProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor={`language-${index}`}>Język</Label>
-                    <Input
+                    <Textarea
                       id={`language-${index}`}
-                      value={entry.language?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('jezyki', index, 'language', e.target.value)}
+                      value={textInputs[`lang-${index}-language`] !== undefined 
+                        ? textInputs[`lang-${index}-language`] 
+                        : entry.language?.toString() || ''}
+                      onChange={(e) => handleInputChange(index, 'language', e.target.value)}
+                      onBlur={() => handleInputBlur(index, 'language')}
                       placeholder="np. Język angielski"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor={`level-${index}`}>Poziom</Label>
-                    <Input
+                    <Textarea
                       id={`level-${index}`}
-                      value={entry.level?.toString() || ''}
-                      onChange={(e) => onUpdateEntry('jezyki', index, 'level', e.target.value)}
+                      value={textInputs[`lang-${index}-level`] !== undefined 
+                        ? textInputs[`lang-${index}-level`] 
+                        : entry.level?.toString() || ''}
+                      onChange={(e) => handleInputChange(index, 'level', e.target.value)}
+                      onBlur={() => handleInputBlur(index, 'level')}
                       placeholder="np. poziom B2"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
