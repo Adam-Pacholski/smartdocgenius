@@ -9,7 +9,7 @@ export interface TextareaProps
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, value, preserveWhitespace: shouldPreserveWhitespace, ...props }, ref) => {
+  ({ className, value, preserveWhitespace = true, ...props }, ref) => {
     // Ensure value is never undefined - convert to empty string
     const safeValue = value === undefined || value === null ? '' : value;
     

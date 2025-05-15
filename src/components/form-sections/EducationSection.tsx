@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -146,7 +147,6 @@ const EducationSection: React.FC<EducationSectionProps> = ({
                     onChange={(e) => handleInputChange('edukacja', index, 'details', e.target.value)}
                     placeholder="- Specjalizacja&#10;- Ważne projekty"
                     className="min-h-[100px] dark:bg-gray-900/80 dark:border-gray-700"
-                    spellCheck={false}
                     preserveWhitespace={true}
                   />
                 </div>

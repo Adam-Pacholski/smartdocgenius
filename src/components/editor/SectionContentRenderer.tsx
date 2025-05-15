@@ -8,7 +8,6 @@ import LanguagesSection from '@/components/form-sections/LanguagesSection';
 import InterestsSection from '@/components/form-sections/InterestsSection';
 import PortfolioSection from '@/components/form-sections/PortfolioSection';
 import GenericFieldsSection from '@/components/form-sections/GenericFieldsSection';
-import { DocumentTemplate } from '@/lib/templates';
 
 interface SectionContentRendererProps {
   currentSection: string;

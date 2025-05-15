@@ -148,7 +148,6 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     onChange={(e) => handleInputChange('doswiadczenie', index, 'details', e.target.value)}
                     placeholder="- Osiągnięcie 1&#10;- Osiągnięcie 2"
                     className="min-h-[100px] dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
-                    spellCheck={false}
                     preserveWhitespace={true}
                   />
                 </div>
