@@ -37,14 +37,17 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
   });
 
   useEffect(() => {
-    setMultiEntries({
+    // Parse existing entries from form data
+    const parsed = {
       doswiadczenie: parseExistingEntries('doswiadczenie', formData),
       edukacja: parseExistingEntries('edukacja', formData),
       umiejetnosci: parseExistingEntries('umiejetnosci', formData),
       jezyki: parseExistingEntries('jezyki', formData),
       zainteresowania: parseExistingEntries('zainteresowania', formData),
       portfolio: parseExistingEntries('portfolio', formData),
-    });
+    };
+    
+    setMultiEntries(parsed);
   }, [formData]);
 
   function handleDragEnd(event: DragEndEvent, section: string) {
@@ -60,7 +63,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
         items.splice(newIndex, 0, movedItem);
         
         const formattedString = formatEntriesToString(section, items);
-        handleChange(section, formattedString);
+        setFormData(prevData => ({ ...prevData, [section]: formattedString }));
         
         return {
           ...prev,
@@ -90,7 +93,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       const newEntries = [...prev[section], {}];
       
       const formattedString = formatEntriesToString(section, newEntries);
-      handleChange(section, formattedString);
+      setFormData(prevData => ({ ...prevData, [section]: formattedString }));
       
       return {
         ...prev,
@@ -104,7 +107,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       const newEntries = prev[section].filter((_, i) => i !== index);
       
       const formattedString = formatEntriesToString(section, newEntries);
-      handleChange(section, formattedString);
+      setFormData(prevData => ({ ...prevData, [section]: formattedString }));
       
       return {
         ...prev,
@@ -123,7 +126,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
       newEntries[index][field] = value;
       
       const formattedString = formatEntriesToString(section, newEntries);
-      handleChange(section, formattedString);
+      setFormData(prevData => ({ ...prevData, [section]: formattedString }));
       
       return {
         ...prev,

@@ -35,12 +35,6 @@ const LanguagesSection: React.FC<LanguagesSectionProps> = ({
     })
   );
 
-  // Helper function to handle input value changes properly preserving spaces
-  const handleInputChange = (section: string, index: number, field: string, value: string) => {
-    // Directly pass the value without any trimming to preserve spaces
-    onUpdateEntry(section, index, field, value);
-  };
-
   return (
     <div className="space-y-4">
       <DndContext
@@ -80,7 +74,7 @@ const LanguagesSection: React.FC<LanguagesSectionProps> = ({
                     <Input
                       id={`language-${index}`}
                       value={entry.language?.toString() || ''}
-                      onChange={(e) => handleInputChange('jezyki', index, 'language', e.target.value)}
+                      onChange={(e) => onUpdateEntry('jezyki', index, 'language', e.target.value)}
                       placeholder="np. Język angielski"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                     />
@@ -90,7 +84,7 @@ const LanguagesSection: React.FC<LanguagesSectionProps> = ({
                     <Input
                       id={`level-${index}`}
                       value={entry.level?.toString() || ''}
-                      onChange={(e) => handleInputChange('jezyki', index, 'level', e.target.value)}
+                      onChange={(e) => onUpdateEntry('jezyki', index, 'level', e.target.value)}
                       placeholder="np. poziom B2"
                       className="dark:bg-gray-900/80 dark:border-gray-700"
                     />

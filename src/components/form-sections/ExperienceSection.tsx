@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -35,11 +36,6 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-  
-  // Helper function that simply passes the value without any processing
-  const handleInputChange = (section: string, index: number, field: string, value: string) => {
-    onUpdateEntry(section, index, field, value);
-  };
 
   return (
     <div className="space-y-4">
@@ -80,7 +76,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     <Input
                       id={`company-${index}`}
                       value={entry.company?.toString() || ''}
-                      onChange={(e) => handleInputChange('doswiadczenie', index, 'company', e.target.value)}
+                      onChange={(e) => onUpdateEntry('doswiadczenie', index, 'company', e.target.value)}
                       placeholder="np. ABC Sp. z o.o."
                       className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     />
@@ -90,7 +86,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     <Input
                       id={`position-${index}`}
                       value={entry.position?.toString() || ''}
-                      onChange={(e) => handleInputChange('doswiadczenie', index, 'position', e.target.value)}
+                      onChange={(e) => onUpdateEntry('doswiadczenie', index, 'position', e.target.value)}
                       placeholder="np. Specjalista ds. marketingu"
                       className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     />
@@ -103,7 +99,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     <Input
                       id={`start-date-${index}`}
                       value={entry.startDate?.toString() || ''}
-                      onChange={(e) => handleInputChange('doswiadczenie', index, 'startDate', e.target.value)}
+                      onChange={(e) => onUpdateEntry('doswiadczenie', index, 'startDate', e.target.value)}
                       placeholder="np. 01.05.2023"
                       className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     />
@@ -115,7 +111,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     <Input
                       id={`end-date-${index}`}
                       value={entry.endDate?.toString() || ''}
-                      onChange={(e) => handleInputChange('doswiadczenie', index, 'endDate', e.target.value)}
+                      onChange={(e) => onUpdateEntry('doswiadczenie', index, 'endDate', e.target.value)}
                       placeholder="np. 01.05.2024"
                       className="dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                       disabled={!!entry.isCurrent}
@@ -143,7 +139,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                   <Textarea
                     id={`details-${index}`}
                     value={entry.details?.toString() || ''}
-                    onChange={(e) => handleInputChange('doswiadczenie', index, 'details', e.target.value)}
+                    onChange={(e) => onUpdateEntry('doswiadczenie', index, 'details', e.target.value)}
                     placeholder="- Osiągnięcie 1&#10;- Osiągnięcie 2"
                     className="min-h-[100px] dark:bg-gray-900/80 dark:border-gray-700 focus:ring-1 focus:ring-primary/20"
                     preserveWhitespace={true}

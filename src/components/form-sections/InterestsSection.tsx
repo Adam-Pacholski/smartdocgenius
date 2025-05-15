@@ -35,12 +35,6 @@ const InterestsSection: React.FC<InterestsSectionProps> = ({
     })
   );
 
-  // Helper function to handle input value changes properly preserving spaces
-  const handleInputChange = (section: string, index: number, field: string, value: string) => {
-    // Directly pass the value without any trimming to preserve spaces
-    onUpdateEntry(section, index, field, value);
-  };
-
   return (
     <div className="space-y-4">
       <DndContext
@@ -79,7 +73,7 @@ const InterestsSection: React.FC<InterestsSectionProps> = ({
                   <Input
                     id={`interest-${index}`}
                     value={entry.interest?.toString() || ''}
-                    onChange={(e) => handleInputChange('zainteresowania', index, 'interest', e.target.value)}
+                    onChange={(e) => onUpdateEntry('zainteresowania', index, 'interest', e.target.value)}
                     placeholder="np. Fotografia"
                     className="dark:bg-gray-900/80 dark:border-gray-700"
                   />
