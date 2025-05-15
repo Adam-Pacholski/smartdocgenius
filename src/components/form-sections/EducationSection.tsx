@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -37,9 +36,8 @@ const EducationSection: React.FC<EducationSectionProps> = ({
     })
   );
 
-  // Helper function to handle input value changes properly preserving spaces
+  // Helper function that directly passes the value without modifying it
   const handleInputChange = (section: string, index: number, field: string, value: string) => {
-    // Directly pass the value without any trimming to preserve spaces
     onUpdateEntry(section, index, field, value);
   };
 
