@@ -36,7 +36,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({
     })
   );
 
-  // Helper function that directly passes the value without modifying it
+  // Helper function that simply passes the value without any processing
   const handleInputChange = (section: string, index: number, field: string, value: string) => {
     onUpdateEntry(section, index, field, value);
   };
