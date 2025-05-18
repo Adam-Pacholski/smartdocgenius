@@ -1,4 +1,3 @@
-
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { toast } from '@/components/ui/use-toast';
@@ -57,7 +56,7 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     clone.style.transform = 'none'; // Remove any scaling that might be applied
     
     // Add padding to the bottom of the clone to ensure content isn't cut off
-    clone.style.paddingBottom = '100px';
+    clone.style.paddingBottom = '120px'; // Zwiększony dolny padding
     
     // Fix creative template scaling issue
     const creativeTemplates = clone.querySelectorAll('div[style*="padding: 200px"]');
@@ -73,32 +72,63 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
       if (div instanceof HTMLElement) {
         // Check if this is a content column
         if (div.style.flex && !div.style.paddingBottom) {
-          div.style.paddingBottom = '100px';
+          div.style.paddingBottom = '120px'; // Zwiększony padding dla elementów content
         }
       }
     });
     
-    // Add extra margin at page breaks
+    // Enhance page break handling with better spacing
     const pageBreakHeight = 1123; // A4 height in pixels at display resolution
     for (let i = 1; i < pageCount; i++) {
       const breakPosition = i * pageBreakHeight;
-      const pageBreakMarker = document.createElement('div');
-      pageBreakMarker.style.height = '100px';
-      pageBreakMarker.style.width = '100%';
-      pageBreakMarker.style.position = 'absolute';
-      pageBreakMarker.style.top = `${breakPosition - 50}px`;
-      pageBreakMarker.style.background = 'transparent';
-      pageBreakMarker.dataset.pageBreak = 'true';
-      clone.appendChild(pageBreakMarker);
+      
+      // Add margin zones at page breaks
+      const pageBreakMarkerTop = document.createElement('div');
+      pageBreakMarkerTop.style.height = '60px'; // Increased safety zone above the break
+      pageBreakMarkerTop.style.width = '100%';
+      pageBreakMarkerTop.style.position = 'absolute';
+      pageBreakMarkerTop.style.top = `${breakPosition - 60}px`;
+      pageBreakMarkerTop.style.background = 'transparent';
+      pageBreakMarkerTop.dataset.pageBreak = 'top';
+      clone.appendChild(pageBreakMarkerTop);
+      
+      const pageBreakMarkerBottom = document.createElement('div');
+      pageBreakMarkerBottom.style.height = '60px'; // Safety zone below the break
+      pageBreakMarkerBottom.style.width = '100%';
+      pageBreakMarkerBottom.style.position = 'absolute';
+      pageBreakMarkerBottom.style.top = `${breakPosition}px`;
+      pageBreakMarkerBottom.style.background = 'transparent';
+      pageBreakMarkerBottom.dataset.pageBreak = 'bottom';
+      clone.appendChild(pageBreakMarkerBottom);
     }
     
     // Ensure the clause has enough spacing
     const footers = clone.querySelectorAll('footer');
     footers.forEach(footer => {
       if (footer instanceof HTMLElement) {
-        footer.style.paddingBottom = '120px';
-        footer.style.marginTop = '80px';
+        footer.style.paddingBottom = '120px'; // Increased footer padding
+        footer.style.marginTop = '100px';   // Increased footer top margin
         footer.style.clear = 'both'; // Ensure footer doesn't overlap with content
+      }
+    });
+    
+    // Ensure clause elements have good spacing
+    const clauses = clone.querySelectorAll('[data-clause]');
+    clauses.forEach(clause => {
+      if (clause instanceof HTMLElement) {
+        clause.style.marginBottom = '100px'; // Increased bottom margin for clauses
+        clause.style.paddingBottom = '120px';
+      }
+    });
+    
+    // Add proper spacing to all paragraphs near page breaks
+    const paragraphs = clone.querySelectorAll('p');
+    paragraphs.forEach(paragraph => {
+      if (paragraph instanceof HTMLElement) {
+        // Bottom margin for all paragraphs to prevent cutting at page breaks
+        if (parseInt(paragraph.style.marginBottom || '0') < 20) {
+          paragraph.style.marginBottom = '20px';
+        }
       }
     });
     
@@ -142,8 +172,9 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
                       !nearElement.contains(pageBreak)) {
                     nearElement.style.pageBreakInside = 'avoid';
                     nearElement.style.pageBreakAfter = 'always';
-                    if (parseInt(nearElement.style.marginBottom || '0') < 60) {
-                      nearElement.style.marginBottom = '60px';
+                    // Increase bottom margin for elements near page breaks
+                    if (parseInt(nearElement.style.marginBottom || '0') < 80) {
+                      nearElement.style.marginBottom = '80px';
                     }
                   }
                 });
@@ -155,9 +186,15 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
             sections.forEach(section => {
               if (section instanceof HTMLElement) {
                 section.style.pageBreakInside = 'avoid';
-                section.style.marginBottom = '30px';
+                section.style.marginBottom = '40px'; // Increased bottom margin
               }
             });
+            
+            // Add proper page margins to container
+            const contentContainer = element.querySelector('.a4-preview');
+            if (contentContainer instanceof HTMLElement) {
+              contentContainer.style.paddingBottom = '120px'; // Large bottom padding for all pages
+            }
           }
         });
         
@@ -166,8 +203,10 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
           pdf.addPage();
         }
         
-        // Add the canvas as an image to the PDF
+        // Add the canvas as an image to the PDF with adjusted margins
         const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        
+        // Add image with proper margins (top, right, bottom, left)
         pdf.addImage(imgData, 'JPEG', 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM, '', 'FAST');
         
       } catch (pageError) {

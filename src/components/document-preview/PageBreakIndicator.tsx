@@ -20,9 +20,13 @@ const PageBreakIndicator: React.FC<PageBreakIndicatorProps> = ({ pageCount }) =>
           <div className="absolute right-0 bg-red-100 text-red-800 px-2 py-0.5 text-xs rounded-tl-md">
             Podział strony
           </div>
-          {/* Add a safe zone indicator */}
-          <div className="absolute left-0 right-0 h-[100px] bg-red-100/10 pointer-events-none" 
-               style={{ top: '-50px' }}>
+          {/* Dodano wyraźniejszą bezpieczną strefę */}
+          <div className="absolute left-0 right-0 h-[100px] bg-red-100/20 pointer-events-none" 
+               style={{ top: '-50px', borderTop: '1px dotted #f87171' }}>
+          </div>
+          {/* Dodano bezpieczną strefę na dole strony */}
+          <div className="absolute left-0 right-0 h-[50px] bg-red-100/20 pointer-events-none" 
+               style={{ top: '0px', borderBottom: '1px dotted #f87171' }}>
           </div>
         </div>
       ))}

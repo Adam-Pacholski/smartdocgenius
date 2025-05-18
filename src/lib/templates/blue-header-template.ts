@@ -81,34 +81,34 @@ export const blueHeaderTemplate: DocumentTemplate = {
         </div>
         
         <!-- Document Body -->
-        <div style="padding: 20px 30px 50px; background-color: #ffffff; position: relative; min-height: 800px; box-sizing: border-box;">
+        <div style="padding: 30px 30px 80px; background-color: #ffffff; position: relative; min-height: 800px; box-sizing: border-box;">
           <!-- Date -->
-          <p style="margin-bottom: 15px;">${formattedDate}</p>
+          <p style="margin-bottom: 25px;">${formattedDate}</p>
           
           <!-- Recipient -->
           ${getRecipientSection(data)}
           
           <!-- Subject line -->
-          ${data.subject ? `<p style="margin: 20px 0; font-weight: bold;">Temat: ${data.subject}</p>` : ''}
+          ${data.subject ? `<p style="margin: 30px 0; font-weight: bold;">Temat: ${data.subject}</p>` : ''}
           
           <!-- Greeting -->
-          <p style="margin-bottom: 15px;">${data.opening || 'Szanowni Państwo,'}</p>
+          <p style="margin-bottom: 25px;">${data.opening || 'Szanowni Państwo,'}</p>
           
           <!-- Content -->
           <div style="text-align: justify;">
-            <p style="white-space: pre-line; margin-bottom: 20px;">${data.body || ''}</p>
+            <p style="white-space: pre-line; margin-bottom: 30px; line-height: 1.6;">${data.body || ''}</p>
           </div>
           
           <!-- Closing -->
-          <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
-          <p style="margin-top: 5px; font-weight: bold;">${fullName}</p>
+          <p style="margin-top: 30px; margin-bottom: 15px;">${data.closing || 'Z wyrazami szacunku,'}</p>
+          <p style="margin-top: 15px; margin-bottom: 30px; font-weight: bold;">${fullName}</p>
           
           <!-- Clause - Fixed positioning to avoid overlap -->
-          <div style="margin-top: 60px; padding-top: 40px; padding-bottom: 20px;">
-            <p data-clause style="font-size: 10px; color: #666; text-align: justify;">
+          <footer style="margin-top: 80px; padding-top: 60px; padding-bottom: 60px;">
+            <p data-clause style="font-size: 10px; color: #666; text-align: justify; margin-bottom: 60px;">
               ${data.clause || ''}
             </p>
-          </div>
+          </footer>
         </div>
       </div>
     `;

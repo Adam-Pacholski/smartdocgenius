@@ -28,8 +28,11 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
       // Calculate the pixel position for the current page (A4 height at 96 DPI)
       const scrollPosition = (currentPage - 1) * 1123;
       
-      // Scroll the container to that position
-      scrollAreaRef.current.scrollTop = scrollPosition;
+      // Scroll the container to that position with smooth animation
+      scrollAreaRef.current.scrollTo({
+        top: scrollPosition,
+        behavior: 'smooth'
+      });
     }
   }, [currentPage, pageCount, previewLoaded]);
 
