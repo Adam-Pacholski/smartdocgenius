@@ -61,16 +61,16 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
     
     return `
       <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 40px; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.4; color: #333; box-sizing: border-box;">
-        <!-- Header with name and position -->
+        <!-- Header with name and position - centered vertically with photo -->
         <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-          <div>
+          <div style="display: flex; flex-direction: column; justify-content: center;">
             <h1 style="color: ${primaryColor}; margin: 0; font-size: 26px;">${fullName}</h1>
             <p style="margin: 5px 0 0; font-size: 14px; color: #555;">${position}</p>
           </div>
           
-          <!-- Photo on the right - now using a square format instead of circle -->
+          <!-- Photo on the right - square format -->
           ${data.photo ? `
-            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 8px; border: 1px solid #eee;">
+            <div style="width: 100px; height: 140px; overflow: hidden; border-radius: 6px; border: 1px solid #eee;">
               <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover;" alt="${fullName}" />
             </div>
           ` : ''}
@@ -101,12 +101,12 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
         </div>
         
         <!-- Closing -->
-        <p style="margin-top: 20px;">${data.closing || 'Z wyrazami szacunku,'}</p>
-        <p style="margin-top: 5px;">${fullName}</p>
+        <p style="margin-top: 40px;">${data.closing || 'Z wyrazami szacunku,'}</p>
+        <p style="margin-top: 20px;">${fullName}</p>
         
         <!-- Clause -->
-        <div style="margin-top: 80px; padding-bottom: 80px;">
-          <p style="font-size: 9px; color: #666; text-align: justify;">${data.clause || ''}</p>
+        <div style="margin-top: 80px; padding-bottom: 100px;" data-clause>
+          <p style="font-size: 9px; color: #666; text-align: justify; margin-bottom: 100px;">${data.clause || ''}</p>
         </div>
       </div>
     `;

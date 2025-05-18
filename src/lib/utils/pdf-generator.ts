@@ -57,7 +57,7 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     clone.style.transform = 'none'; // Remove any scaling that might be applied
     
     // Add padding to the bottom of the clone to ensure content isn't cut off
-    clone.style.paddingBottom = '160px'; // Zwiększony dolny padding
+    clone.style.paddingBottom = '180px'; // Increased bottom padding
     
     // Fix creative template scaling issue
     const creativeTemplates = clone.querySelectorAll('div[style*="padding: 200px"]');
@@ -73,28 +73,28 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
       if (div instanceof HTMLElement) {
         // Check if this is a content column
         if (div.style.flex && !div.style.paddingBottom) {
-          div.style.paddingBottom = '150px'; // Zwiększony padding dla elementów content
+          div.style.paddingBottom = '150px'; // Increased padding for content elements
         }
       }
     });
     
-    // Enhance page break handling with better spacing
+    // Enhanced page break handling with better spacing
     const pageBreakHeight = 1123; // A4 height in pixels at display resolution
     for (let i = 1; i < pageCount; i++) {
       const breakPosition = i * pageBreakHeight;
       
       // Add margin zones at page breaks - improved top and bottom margins
       const pageBreakMarkerTop = document.createElement('div');
-      pageBreakMarkerTop.style.height = '120px'; // Increased safety zone above the break
+      pageBreakMarkerTop.style.height = '150px'; // Increased safety zone above the break
       pageBreakMarkerTop.style.width = '100%';
       pageBreakMarkerTop.style.position = 'absolute';
-      pageBreakMarkerTop.style.top = `${breakPosition - 120}px`;
+      pageBreakMarkerTop.style.top = `${breakPosition - 150}px`;
       pageBreakMarkerTop.style.background = 'transparent';
       pageBreakMarkerTop.dataset.pageBreak = 'top';
       clone.appendChild(pageBreakMarkerTop);
       
       const pageBreakMarkerBottom = document.createElement('div');
-      pageBreakMarkerBottom.style.height = '120px'; // Increased safety zone below the break
+      pageBreakMarkerBottom.style.height = '150px'; // Increased safety zone below the break
       pageBreakMarkerBottom.style.width = '100%';
       pageBreakMarkerBottom.style.position = 'absolute';
       pageBreakMarkerBottom.style.top = `${breakPosition}px`;
@@ -107,8 +107,8 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     const footers = clone.querySelectorAll('footer');
     footers.forEach(footer => {
       if (footer instanceof HTMLElement) {
-        footer.style.paddingBottom = '150px'; // Increased footer padding
-        footer.style.marginTop = '120px';   // Increased footer top margin
+        footer.style.paddingBottom = '180px'; // Increased footer padding
+        footer.style.marginTop = '150px';   // Increased footer top margin
         footer.style.clear = 'both'; // Ensure footer doesn't overlap with content
       }
     });
@@ -117,8 +117,8 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     const clauses = clone.querySelectorAll('[data-clause]');
     clauses.forEach(clause => {
       if (clause instanceof HTMLElement) {
-        clause.style.marginBottom = '120px'; // Increased bottom margin for clauses
-        clause.style.paddingBottom = '150px';
+        clause.style.marginBottom = '150px'; // Increased bottom margin for clauses
+        clause.style.paddingBottom = '180px';
       }
     });
     
@@ -127,8 +127,8 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     paragraphs.forEach(paragraph => {
       if (paragraph instanceof HTMLElement) {
         // Bottom margin for all paragraphs to prevent cutting at page breaks
-        if (parseInt(paragraph.style.marginBottom || '0') < 30) {
-          paragraph.style.marginBottom = '30px';
+        if (parseInt(paragraph.style.marginBottom || '0') < 40) {
+          paragraph.style.marginBottom = '40px';
         }
       }
     });
@@ -137,7 +137,7 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
     const pageContentDivs = clone.querySelectorAll('div[style*="padding:"]');
     pageContentDivs.forEach(contentDiv => {
       if (contentDiv instanceof HTMLElement && !contentDiv.style.paddingTop) {
-        contentDiv.style.paddingTop = '40px'; // Add top padding to all content containers
+        contentDiv.style.paddingTop = '50px'; // Increased top padding for all content containers
       }
     });
 
@@ -148,8 +148,24 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
         // Check if this is at the top of a new page
         const divTop = div.offsetTop;
         if (divTop > 0 && divTop % 1123 < 5) { // Close to page break
-          div.style.paddingTop = '60px';
-          div.style.marginTop = '60px';
+          div.style.paddingTop = '80px'; // Increased top padding
+          div.style.marginTop = '80px'; // Increased top margin
+        }
+      }
+    });
+    
+    // Fix name alignment in templates
+    const nameHeaders = clone.querySelectorAll('h1');
+    nameHeaders.forEach(header => {
+      if (header instanceof HTMLElement) {
+        // Check if this is in the header area
+        const parentBg = getComputedStyle(header.parentElement || document.body).backgroundColor;
+        if (parentBg !== 'rgba(0, 0, 0, 0)' && parentBg !== 'transparent') {
+          // This might be in a colored header - ensure it's vertically centered
+          if (header.parentElement instanceof HTMLElement) {
+            header.parentElement.style.display = 'flex';
+            header.parentElement.style.alignItems = 'center';
+          }
         }
       }
     });
@@ -195,12 +211,12 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
                     nearElement.style.pageBreakInside = 'avoid';
                     nearElement.style.pageBreakAfter = 'always';
                     // Increase bottom margin for elements near page breaks
-                    if (parseInt(nearElement.style.marginBottom || '0') < 100) {
-                      nearElement.style.marginBottom = '100px';
+                    if (parseInt(nearElement.style.marginBottom || '0') < 120) {
+                      nearElement.style.marginBottom = '120px';
                     }
                     // Increase top margin for elements at the top of a new page
                     if (nearElement.offsetTop % 1123 < 10) {
-                      nearElement.style.marginTop = '100px';
+                      nearElement.style.marginTop = '120px';
                     }
                   }
                 });
@@ -212,15 +228,15 @@ export const generatePdfFromHtml = async (elementRef: HTMLElement, fileName: str
             sections.forEach(section => {
               if (section instanceof HTMLElement) {
                 section.style.pageBreakInside = 'avoid';
-                section.style.marginBottom = '60px'; // Increased bottom margin
+                section.style.marginBottom = '80px'; // Increased bottom margin
               }
             });
             
             // Add proper page margins to container
             const contentContainer = element.querySelector('.a4-preview');
             if (contentContainer instanceof HTMLElement) {
-              contentContainer.style.paddingBottom = '150px'; // Large bottom padding for all pages
-              contentContainer.style.paddingTop = '40px'; // Add top padding to all pages
+              contentContainer.style.paddingBottom = '180px'; // Large bottom padding for all pages
+              contentContainer.style.paddingTop = '50px'; // Add top padding to all pages
             }
           }
         });
