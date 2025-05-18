@@ -34,13 +34,20 @@ const PreviewPagination: React.FC<PreviewPaginationProps> = ({
   
   const sortedPages = Array.from(pagesToShow).sort((a, b) => a - b);
   
+  const handlePageClick = (page: number) => {
+    if (page >= 1 && page <= pageCount && page !== currentPage) {
+      onPageChange(page);
+    }
+  };
+  
   return (
     <Pagination className="mt-4">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious 
-            onClick={() => onPageChange(currentPage - 1)}
-            className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+            onClick={() => handlePageClick(currentPage - 1)}
+            className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+            aria-disabled={currentPage === 1}
           />
         </PaginationItem>
         
@@ -54,8 +61,9 @@ const PreviewPagination: React.FC<PreviewPaginationProps> = ({
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink 
-                    onClick={() => onPageChange(page)}
+                    onClick={() => handlePageClick(page)}
                     isActive={currentPage === page}
+                    className="cursor-pointer"
                   >
                     {page}
                   </PaginationLink>
@@ -67,8 +75,9 @@ const PreviewPagination: React.FC<PreviewPaginationProps> = ({
           return (
             <PaginationItem key={page}>
               <PaginationLink 
-                onClick={() => onPageChange(page)}
+                onClick={() => handlePageClick(page)}
                 isActive={currentPage === page}
+                className="cursor-pointer"
               >
                 {page}
               </PaginationLink>
@@ -78,8 +87,9 @@ const PreviewPagination: React.FC<PreviewPaginationProps> = ({
         
         <PaginationItem>
           <PaginationNext 
-            onClick={() => onPageChange(currentPage + 1)}
-            className={currentPage === pageCount ? 'pointer-events-none opacity-50' : ''}
+            onClick={() => handlePageClick(currentPage + 1)}
+            className={currentPage === pageCount ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+            aria-disabled={currentPage === pageCount}
           />
         </PaginationItem>
       </PaginationContent>

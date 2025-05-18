@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { DocumentTemplate } from '@/lib/templates';
@@ -121,12 +121,6 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= pageCount) {
       setCurrentPage(page);
-      
-      if (actualRef.current) {
-        // Scroll to the appropriate position in the preview
-        const scrollPosition = (page - 1) * 1123; // A4 height in pixels for display
-        actualRef.current.scrollTop = scrollPosition;
-      }
     }
   };
   
@@ -169,6 +163,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
               scale={scale}
               previewLoaded={previewLoaded}
               previewRef={actualRef}
+              currentPage={currentPage}
             />
             
             {/* Page navigation overlay */}

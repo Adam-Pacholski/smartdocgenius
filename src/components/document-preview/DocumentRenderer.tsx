@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import PageBreakIndicator from './PageBreakIndicator';
 
@@ -9,6 +9,7 @@ interface DocumentRendererProps {
   scale: number;
   previewLoaded: boolean;
   previewRef: React.RefObject<HTMLDivElement>;
+  currentPage: number;
 }
 
 const DocumentRenderer: React.FC<DocumentRendererProps> = ({
@@ -16,10 +17,25 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   pageCount,
   scale,
   previewLoaded,
-  previewRef
+  previewRef,
+  currentPage
 }) => {
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  // Effect to scroll to the correct page position when currentPage changes
+  useEffect(() => {
+    if (scrollAreaRef.current && previewLoaded && pageCount > 1) {
+      // Calculate the pixel position for the current page (A4 height at 96 DPI)
+      const scrollPosition = (currentPage - 1) * 1123;
+      
+      // Scroll the container to that position
+      scrollAreaRef.current.scrollTop = scrollPosition;
+    }
+  }, [currentPage, pageCount, previewLoaded]);
+
   return (
     <ScrollArea 
+      ref={scrollAreaRef}
       className="w-full h-[800px]"
       scrollHideDelay={0}
     >
