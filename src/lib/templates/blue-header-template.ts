@@ -62,10 +62,10 @@ export const blueHeaderTemplate: DocumentTemplate = {
     return `
       <div style="width: 100%; max-width: 21cm; margin: 0 auto; padding: 0; font-family: ${fontFamily}; font-size: ${fontSize}; line-height: 1.5; color: #333; box-sizing: border-box;">
         <!-- Header -->
-        <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px; margin: 0; width: 100%; box-sizing: border-box; border-radius: 6px 6px 0 0; align-items: center;">
+        <div style="display: flex; background-color: ${primaryColor}; color: white; padding: 20px; margin: 0; width: 100%; box-sizing: border-box; border-radius: 6px 6px 0 0; align-items: flex-start;">
           <div style="flex: 1; padding: 0;">
             <h1 style="margin: 0; font-size: 24px; text-transform: uppercase;">${fullName}</h1>
-            <p style="margin: 0; text-transform: uppercase; font-size: 14px;">${position}</p>
+            <p style="margin: 5px 0 0; text-transform: uppercase; font-size: 14px;">${position}</p>
             <div style="margin-top: 15px; font-size: 13px;">
               ${data.email ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>✉</span> ${data.email}</p>` : ''}
               ${data.phone ? `<p style="margin: 0 0 5px; word-break: break-word;"><span>✆</span> ${data.phone}</p>` : ''}
@@ -81,7 +81,7 @@ export const blueHeaderTemplate: DocumentTemplate = {
         </div>
         
         <!-- Document Body -->
-        <div style="padding: 30px 30px 80px; background-color: #ffffff; position: relative; min-height: 800px; box-sizing: border-box;">
+        <div style="padding: 40px 30px 80px; background-color: #ffffff; position: relative; min-height: 800px; box-sizing: border-box;">
           <!-- Date -->
           <p style="margin-bottom: 25px;">${formattedDate}</p>
           
@@ -104,8 +104,8 @@ export const blueHeaderTemplate: DocumentTemplate = {
           <p style="margin-top: 15px; margin-bottom: 30px; font-weight: bold;">${fullName}</p>
           
           <!-- Clause - Fixed positioning to avoid overlap -->
-          <footer style="margin-top: 80px; padding-top: 60px; padding-bottom: 60px;">
-            <p data-clause style="font-size: 10px; color: #666; text-align: justify; margin-bottom: 60px;">
+          <footer style="margin-top: 80px; padding-top: 60px; padding-bottom: 80px;">
+            <p data-clause style="font-size: 10px; color: #666; text-align: justify; margin-bottom: 80px;">
               ${data.clause || ''}
             </p>
           </footer>

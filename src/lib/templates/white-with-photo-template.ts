@@ -68,9 +68,9 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
             <p style="margin: 5px 0 0; font-size: 14px; color: #555;">${position}</p>
           </div>
           
-          <!-- Photo on the right -->
+          <!-- Photo on the right - now using a square format instead of circle -->
           ${data.photo ? `
-            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%;">
+            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 8px; border: 1px solid #eee;">
               <img src="${data.photo}" style="width: 100%; height: 100%; object-fit: cover;" alt="${fullName}" />
             </div>
           ` : ''}
@@ -105,7 +105,7 @@ export const whiteWithPhotoTemplate: DocumentTemplate = {
         <p style="margin-top: 5px;">${fullName}</p>
         
         <!-- Clause -->
-        <div style="margin-top: 60px;">
+        <div style="margin-top: 80px; padding-bottom: 80px;">
           <p style="font-size: 9px; color: #666; text-align: justify;">${data.clause || ''}</p>
         </div>
       </div>
